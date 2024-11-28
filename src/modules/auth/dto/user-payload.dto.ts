@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsNumber, IsString, MinLength } from 'class-validator';
 
-export class UserLoginDto {
+//UserLoginDto with id - for payload/user login
+export class UserPayloadDto {
+  @IsNumber()
+  id: number;
+
   @ApiProperty()
   @IsString()
   @MinLength(4)

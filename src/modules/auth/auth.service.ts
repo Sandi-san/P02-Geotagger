@@ -3,53 +3,62 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { JwtPayloadDto } from './dto/jwt-payload.dto';
-import { User } from '../../entities/user.entity';
+import { JwtPayloadDto } from './dto/index';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserPayloadDto } from './dto/user-payload.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    //@InjectRepository(User)
+    private prisma: PrismaService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async register(username: string, password: string) {
-    const user = await this.usersRepository.findOne({ username });
+  async register(email: string, password: string) {
+    const user = await this.prisma.user.findFirst({ where: { email } });
 
     if (user) {
-      throw new BadRequestException(`${username} is already taken`);
+      throw new BadRequestException(`${email} is already taken`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const { password: pw, ...savedUser } = await this.usersRepository.save({
-      username,
-      password: hashedPassword,
-    });
+    const { password: pw, ...savedUser } = await this.prisma.user.create(
+      {
+        data: {
+          email,
+          password: hashedPassword,
+        }
+      });
 
     return savedUser;
   }
 
-  async login(user: User) {
-    const payload: JwtPayloadDto = { username: user.username, sub: user.id };
+  async login(user: UserPayloadDto) {
+    const payload: JwtPayloadDto =
+    {
+      sub: user.id,
+      username: user.email
+    };
     return {
       // eslint-disable-next-line @typescript-eslint/camelcase
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async validateUser(username: string, password: string) {
-    const user = await this.usersRepository.findOne(
-      { username },
-      { select: ['id', 'username', 'password'] },
+  async validateUser(email: string, password: string) {
+    const user = await this.prisma.user.findFirst(
+      {
+        where: { email },
+        //return fields of id, email, password
+        select: {id: true, email: true, password: true}
+      }
     );
 
     if (!user) {
-      throw new NotFoundException(`User with username ${username} not found`);
+      throw new NotFoundException(`User with email ${email} not found`);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

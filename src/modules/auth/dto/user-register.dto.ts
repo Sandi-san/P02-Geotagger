@@ -5,7 +5,7 @@ export class UserRegisterDto {
   @ApiProperty()
   @IsString()
   @MinLength(4)
-  username: string;
+  email: string;
 
   @ApiProperty()
   @IsString()

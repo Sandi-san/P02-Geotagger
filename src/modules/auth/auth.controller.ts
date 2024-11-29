@@ -15,8 +15,17 @@ export class AuthController {
     return this.authService.login(user);
   }
 
+  //TODO: upload image
   @Post('register')
   async register(@Body() dto: UserRegisterDto) {
-    return this.authService.register(dto.email, dto.password);
+    //register
+    const user = await this.authService.register(dto);
+    //with register data, create UserLoginDto
+    const user_dto: UserLoginDto = {
+      email: user.email,
+      password: dto.password
+    }
+    //immediately login user and return access token (prevents another login after register)
+    return this.login(user_dto);
   }
 }

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { JwtPayloadDto } from './dto/index';
+import { JwtPayloadDto, UserRegisterDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserPayloadDto } from './dto/user-payload.dto';
 
@@ -17,17 +17,20 @@ export class AuthService {
     private jwtService: JwtService,
   ) { }
 
-  async register(email: string, password: string) {
+  async register(dto: UserRegisterDto) {
+    const email = dto.email
     const user = await this.prisma.user.findFirst({ where: { email } });
 
     if (user) {
       throw new BadRequestException(`${email} is already taken`);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
     const { password: pw, ...savedUser } = await this.prisma.user.create(
       {
         data: {
+          firstName: dto.firstName,
+          lastName: dto.lastName,
           email,
           password: hashedPassword,
         }
@@ -58,13 +61,13 @@ export class AuthService {
     );
 
     if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      throw new NotFoundException(`User with email '${email}' not found`);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      throw new BadRequestException('Passwords does not match');
+      throw new BadRequestException('Passwords do not match');
     }
 
     delete user.password;

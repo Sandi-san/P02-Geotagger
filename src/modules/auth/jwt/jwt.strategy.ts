@@ -15,12 +15,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get(EnvVars.JWT_SECRET),
+      //JWT_SECRET as key from .env
+      //secretOrKey: configService.get(EnvVars.JWT_SECRET),
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 
+  //validate token - called on AuthGuard('jwt')
   async validate(payload: JwtPayloadDto) {
-    return await this.prisma.user.findFirstOrThrow(
+    return await this.prisma.user.findUniqueOrThrow(
       {where: {id: payload.sub} });
   }
 }

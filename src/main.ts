@@ -9,11 +9,19 @@ const initSwagger = (app: INestApplication) => {
     .setDescription('Guess the location API')
     .setVersion('1.0')
     .addTag('Guess Location')
-    .addBearerAuth()
+    //.addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('/', app, document);
 };
 
 const initValidation = (app: INestApplication) =>

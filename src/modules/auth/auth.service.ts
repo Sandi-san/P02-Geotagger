@@ -39,7 +39,7 @@ export class AuthService {
     return savedUser;
   }
 
-  async login(user: UserPayloadDto) {
+  async login(user: UserPayloadDto): Promise<{access_token: string}> {
     const payload: JwtPayloadDto =
     {
       sub: user.id,

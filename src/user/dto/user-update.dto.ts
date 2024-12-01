@@ -45,7 +45,7 @@ export class UpdateUserDto {
   @IsString()
   //custom decorator ()
   @Match(UpdateUserDto, (field) => field.password, {
-    message: 'Passwords must match!',
+    message: 'New passwords must match!',
   })
   confirm_password?: string;
 

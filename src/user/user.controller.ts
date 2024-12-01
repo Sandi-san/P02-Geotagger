@@ -33,4 +33,13 @@ export class UserController {
     ): Promise<User> {
         return this.userService.update(id, updateUserDto);
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Patch('update-password')
+    async updatePassword(
+        @GetLoggedUser('id') id: number,
+        @Body() updateUserDto: UpdateUserDto
+    ): Promise<{response: string}> {
+        return this.userService.updatePassword(id, updateUserDto);
+    }
 }

@@ -1,39 +1,36 @@
-import { Controller, Get, HttpCode, HttpStatus, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt-auth.guard';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
-import { GetLoggedUser } from 'src/modules/auth/decorator/get-user.decorator';
+import { GetLoggedUser } from 'src/modules/auth/decorator/index';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UpdateUserDto } from './dto/user-update.dto';
 
 @ApiTags('user')
-@ApiBearerAuth('access-token') //so Swagger can input Authorization into request
+//so Swagger can input Authorization into request
+@ApiBearerAuth('access-token')
 //restrict routes
 @UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService){}
+    constructor(private userService: UserService) { }
 
-    
     @HttpCode(HttpStatus.OK)
     @Get('')
     async get(
         //get validated user object (request.user)
-       @GetLoggedUser() user: User,
-    ): Promise<User>{
-        //return entire user object (@GetLoggedUser('email') for email)
+        @GetLoggedUser() user: User,
+    ): Promise<User> {
+        //return entire user object (or @GetLoggedUser('email') for email)
         return user;
     }
-        /*
-    @UseGuards(JwtAuthGuard)
-    @Get('')
-    async get(
-    ){
-        return {message: 'Protected route.'}
-    }*/
 
     @HttpCode(HttpStatus.OK)
-    @Patch('')
-    async update(){
-
+    @Patch('update')
+    async update(
+        @GetLoggedUser('id') id: number,
+        @Body() updateUserDto: UpdateUserDto
+    ): Promise<User> {
+        return this.userService.update(id, updateUserDto);
     }
 }

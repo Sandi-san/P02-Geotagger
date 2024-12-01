@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-//namesto uporabe @Req Request v user.controller, vrni User objekt
+//instead of using @Req Request in user.controller, return User object
 export const GetLoggedUser = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     //get content of HTTP request

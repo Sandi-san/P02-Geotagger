@@ -30,4 +30,12 @@ export class AuthController {
     //immediately login user and return access token (prevents another login after register)
     return this.login(user_dto);
   }
+
+  /*
+  @HttpCode(HttpStatus.OK)
+  @Post('password')
+  async forgottenPassword(@Body() dto: UserLoginDto): Promise<{ reset_token: string }> {
+    return this.authService.forgottenPassword(dto.email);
+  }
+    */
 }

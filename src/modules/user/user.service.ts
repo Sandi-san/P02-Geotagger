@@ -16,16 +16,14 @@ export class UserService {
         delete updateUserDto.confirm_password;
         delete updateUserDto.old_password;
         delete updateUserDto.password;
-        delete updateUserDto.image;
 
         try {
             const updatedUser = await this.prisma.user.update({
                 where: { id },
                 data: {
                     ...updateUserDto,
-                    //password & image remain unchanged from this method (edge case)
+                    //password remains unchanged from this method (edge case)
                     password: undefined,
-                    image: undefined,
                 },
             });
             return updatedUser;
@@ -59,8 +57,6 @@ export class UserService {
                 throw new BadRequestException('Please input old password!');
             //Note: compare input must be in this exact order
             const pwMatchOld = await bcrypt.compare(old_password, user.password);
-            console.log("Old pass: ",old_password)
-            console.log("DB pass: ",user.password)
             if (!pwMatchOld)
                 throw new BadRequestException('Old password is incorrect!');
 
@@ -81,7 +77,6 @@ export class UserService {
                 return { response: 'Password changed successfully' }
             }
             catch (error) {
-                //check prisma client error
                 if (error instanceof PrismaClientKnownRequestError) {
                     if (error.code === 'P2025')
                         throw new BadRequestException(`Id ${id} is invalid!`);
@@ -96,4 +91,9 @@ export class UserService {
             throw new BadRequestException('Please input and confirm new password!');
         return { response: 'Something went wrong while changing password!' };
     }
+
+    async updateUserImage(id: number, image: string): Promise<User> {
+        //call user update with only avatar string
+        return this.update(id, { image });
+    }  
 }

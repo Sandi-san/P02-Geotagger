@@ -37,7 +37,7 @@ export class AuthService {
     return savedUser;
   }
 
-  async login(user: UserPayloadDto): Promise<{access_token: string}> {
+  async login(user: UserPayloadDto): Promise<{ access_token: string }> {
     const payload: JwtPayloadDto =
     {
       sub: user.id,
@@ -54,7 +54,7 @@ export class AuthService {
       {
         where: { email },
         //return fields of id, email, password
-        select: {id: true, email: true, password: true}
+        select: { id: true, email: true, password: true }
       }
     );
 
@@ -72,4 +72,6 @@ export class AuthService {
 
     return user;
   }
+
+  //async forgottenPassword(email: string): Promise<{ refresh_token: string }> { }
 }

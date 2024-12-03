@@ -1,0 +1,17 @@
+//CUSTOM LOGGER to write in Nest console
+import { Injectable, NestMiddleware } from '@nestjs/common'
+import { NextFunction, Request, Response } from 'express'
+import Logging from 'src/library/Logging'
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
+    //Get request log (uses custom Logger)
+    Logging.info(
+      `Incoming -> Method [${req.method}]- Url: [${req.originalUrl}] - Host: [${req.hostname}] - IP: [${req.socket.remoteAddress}]`,
+    )
+    if (next) {
+      next()
+    }
+  }
+}

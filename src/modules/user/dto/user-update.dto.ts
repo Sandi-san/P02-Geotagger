@@ -49,9 +49,9 @@ export class UpdateUserDto {
   })
   confirm_password?: string;
 
-  //@ApiPropertyOptional()
-  // @IsOptional()
-  // refresh_token?: string
+  @ApiPropertyOptional()
+  @IsOptional()
+  resetToken?: string
 
   @ApiPropertyOptional()
   @IsOptional()

@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/user-update.dto';
 import { User } from '@prisma/client';
@@ -35,7 +35,7 @@ export class UserService {
                 else if (error.code === 'P2025')
                     throw new BadRequestException(`Id ${id} is invalid!`);
             } else {
-                console.log(error);
+                Logger.error(error);
                 throw new BadRequestException(
                     'Something went wrong while updating user!',
                 );
@@ -63,7 +63,7 @@ export class UserService {
             //check new password
             if (password != confirm_password)
                 throw new BadRequestException('Password and confirm password do not match!')
-            const pwMatch = await bcrypt.compare(password,user.password);
+            const pwMatch = await bcrypt.compare(password, user.password);
             if (pwMatch)
                 throw new BadRequestException('New password cannot be same as old password!')
 
@@ -74,26 +74,25 @@ export class UserService {
                     where: { id },
                     data: { password: newPashHash } //change only password
                 });
-                return { response: 'Password changed successfully' }
+                return { response: 'Password changed successfully!' }
             }
             catch (error) {
                 if (error instanceof PrismaClientKnownRequestError) {
                     if (error.code === 'P2025')
                         throw new BadRequestException(`Id ${id} is invalid!`);
                 } else {
+                    Logger.error(error);
                     throw new BadRequestException(
                         'Something went wrong while updating user password!',
                     );
                 }
             }
         }
-        else
-            throw new BadRequestException('Please input and confirm new password!');
-        return { response: 'Something went wrong while changing password!' };
+        throw new BadRequestException('Please input and confirm new password!');
     }
 
     async updateUserImage(id: number, image: string): Promise<User> {
         //call user update with only avatar string
         return this.update(id, { image });
-    }  
+    }
 }

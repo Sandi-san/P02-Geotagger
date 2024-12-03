@@ -2,6 +2,7 @@
 //else Error: require() of ES Module is not supported "file-type")
 const FileType = import('file-type');
 
+import { Logger } from '@nestjs/common';
 import fs from 'fs';
 import { diskStorage, Options } from 'multer';
 import { extname } from 'path';
@@ -64,6 +65,6 @@ export const removeFile = (fullFilePath: string): void => {
   try {
     fs.unlinkSync(fullFilePath);
   } catch (error) {
-    console.log(error);
+    Logger.error(error)
   }
 };

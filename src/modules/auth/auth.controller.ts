@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserLoginDto, UserRegisterDto } from './dto/index';
+import { UserLoginDto, UserRegisterDto, UserEmailDto, UserPasswordDto } from './dto/index';
+import { UpdateUserDto } from '../user/dto/user-update.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,11 +32,20 @@ export class AuthController {
     return this.login(user_dto);
   }
 
-  /*
+  //call for sending reset token to mail
   @HttpCode(HttpStatus.OK)
-  @Post('password')
-  async forgottenPassword(@Body() dto: UserLoginDto): Promise<{ reset_token: string }> {
+  @Post('forgotten-password')
+  //TODO: rate-limit to prevent abuse/overuse
+  async forgottenPassword(@Body() dto: UserEmailDto): Promise<{ response: string }> {
+    console.log(dto)
     return this.authService.forgottenPassword(dto.email);
   }
-    */
+
+  //call for resetting password
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  async resetPassword(@Body() dto: UpdateUserDto): Promise<{ response: string }> {
+    console.log(dto)
+    return this.authService.resetPassword(dto);
+  }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt-auth.guard';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
@@ -68,7 +68,8 @@ export class UserController {
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
         //save file locally
-        console.log(file);
+        Logger.log(file);
+        console.log(file)
         const filename = file?.filename;
         if (!filename)
             throw new BadRequestException('File must be of type png, jpg or jpeg!');

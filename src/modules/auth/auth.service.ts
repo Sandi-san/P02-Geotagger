@@ -25,8 +25,8 @@ export class AuthService {
 
   async register(dto: UserRegisterDto) {
     const { email, firstName, lastName, password } = dto
+    
     const user = await this.prisma.user.findFirst({ where: { email } });
-
     if (user) {
       throw new BadRequestException(`${email} is already taken!`);
     }
@@ -66,6 +66,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string) {
+    
     const user = await this.prisma.user.findFirst(
       {
         where: { email },

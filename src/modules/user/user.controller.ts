@@ -1,5 +1,5 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt-auth.guard';
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/modules/auth/jwt/index';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import { GetLoggedUser } from 'src/modules/auth/decorator/index';
@@ -18,6 +18,9 @@ import { isFileExtensionSafe, removeFile, saveImageToStorage } from 'src/common/
 export class UserController {
     constructor(private userService: UserService) { }
 
+    /*
+    GET LOGGED USER
+    */
     @HttpCode(HttpStatus.OK)
     @Get('')
     async get(
@@ -28,6 +31,9 @@ export class UserController {
         return user;
     }
 
+    /*
+    UPDATE USER (SELF)
+    */
     @HttpCode(HttpStatus.OK)
     @Patch('update')
     async update(
@@ -37,6 +43,9 @@ export class UserController {
         return this.userService.update(id, updateUserDto);
     }
 
+    /*
+    UPDATE USER PASSWORD (SELF)
+    */
     @HttpCode(HttpStatus.OK)
     @Patch('update-password')
     async updatePassword(
@@ -46,6 +55,9 @@ export class UserController {
         return this.userService.updatePassword(id, updateUserDto);
     }
 
+    /*
+    UPDATE USER IMAGE (SELF)
+    */
     @HttpCode(HttpStatus.OK)
     @Post('update-image')
     //For Swagger:
@@ -82,4 +94,7 @@ export class UserController {
         removeFile(fullImagePath);
         throw new BadRequestException('File is corrupted!');
     }
+
+    //TODO: create location under user
+
 }

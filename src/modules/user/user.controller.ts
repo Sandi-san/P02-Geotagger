@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/user-update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { isFileExtensionSafe, removeFile, saveImageToStorage } from 'src/common/helpers/image-storage.helper';
+import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
 
 @ApiTags('user')
 //so Swagger can input Authorization into request
@@ -79,22 +80,11 @@ export class UserController {
         @GetLoggedUser('id') id: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
-        //save file locally
         Logger.log(file);
         console.log(file)
-        const filename = file?.filename;
-        if (!filename)
-            throw new BadRequestException('File must be of type png, jpg or jpeg!');
-        const imagesFolderPath = join(process.cwd(), 'files');
-        const fullImagePath = join(imagesFolderPath + '/' + file.filename);
-        //check if file is valid and then call update
-        if (await isFileExtensionSafe(fullImagePath)) {
-            return this.userService.updateUserImage(id, filename);
-        }
-        removeFile(fullImagePath);
-        throw new BadRequestException('File is corrupted!');
+        //call method that saves image file in /files folder    
+        const filename = await saveImageLocally(file)
+        return this.userService.updateImage(id, filename);
     }
-
-    //TODO: create location under user
 
 }

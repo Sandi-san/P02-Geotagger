@@ -5,20 +5,20 @@ export class UpdateLocationDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    image: string;
+    image?: string;
 
     @ApiPropertyOptional()
     @IsNumber()
     @IsOptional()
-    lat: number;
+    lat?: number;
 
     @ApiPropertyOptional()
     @IsNumber()
     @IsOptional()
-    lon: number;
+    lon?: number;
 
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    address: string;
+    address?: string;
 }

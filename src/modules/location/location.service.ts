@@ -111,4 +111,29 @@ export class LocationService {
             }
         }
     }
+
+    async updateImage(id: number, image: string): Promise<Location> {
+        //call location update with only image string
+        return this.update(id, { image });
+    }
+
+    async delete(id: number): Promise<{ response: string }> {
+        try {
+            await this.prisma.location.delete({
+                where: { id },
+            });
+            return { response: 'Location deleted successfully' }
+        } catch (error) {
+            //check prisma errors
+            if (error instanceof PrismaClientKnownRequestError) {
+                if (error.code === 'P2025')
+                    throw new BadRequestException(`Id ${id} is invalid!`);
+            } else {
+                Logger.error(error);
+                throw new BadRequestException(
+                    'Something went wrong while deleting location!',
+                );
+            }
+        }
+    }
 }

@@ -18,5 +18,5 @@ export class CreateLocationDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    address: string;
+    address?: string;
 }

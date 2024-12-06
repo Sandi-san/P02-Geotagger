@@ -91,7 +91,7 @@ export class UserService {
         throw new BadRequestException('Please input and confirm new password!');
     }
 
-    async updateUserImage(id: number, image: string): Promise<User> {
+    async updateImage(id: number, image: string): Promise<User> {
         //call user update with only avatar string
         return this.update(id, { image });
     }

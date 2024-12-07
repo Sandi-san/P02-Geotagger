@@ -70,7 +70,7 @@ model Guess {
   lat Float
   lon Float
 
-  errorDistance Float
+  errorDistance Float //distance from location in meters 
 
   //FOREIGN KEY
   userId Int

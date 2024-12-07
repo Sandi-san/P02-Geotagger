@@ -1,14 +1,19 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { Location } from '@prisma/client';
+import { Guess, Location, User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLocationDto, UpdateLocationDto } from './dto';
+import { CreateGuessDto } from '../guess/dto/guess-create.dto';
+import { GuessService } from '../guess/guess.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class LocationService {
     constructor(
-        private prisma: PrismaService
+        private prisma: PrismaService,
+        private guessService: GuessService,
+        private userService: UserService
     ) { }
 
     async getPaginate(page = 1, relations = []): Promise<PaginatedResult> {
@@ -68,25 +73,35 @@ export class LocationService {
         }
     }
 
-    async create(userId: number, createLocationDto: CreateLocationDto): Promise<Location> {
-        try {
-            const dto = {
-                ...createLocationDto,
-                userId
-            }
-            const location = await this.prisma.location.create({
-                data: {
-                    ...dto
+    async create(user: User, createLocationDto: CreateLocationDto): Promise<Location> {
+        //transaction: Update User, Create Location
+        return await this.prisma.$transaction(async () => {
+            const userId = user.id
+            //increment guessTokens from user
+            const guessTokens = user.guessTokens + 1
+            user.guessTokens = user.guessTokens + 1
+            await this.userService.update(userId, { guessTokens })
+
+            //create location
+            try {
+                const dto = {
+                    ...createLocationDto,
+                    userId
                 }
-            })
-            return location
-        }
-        catch (error) {
-            Logger.log(error);
-            throw new BadRequestException(
-                'Something went wrong while creating new location!',
-            );
-        }
+                const location = await this.prisma.location.create({
+                    data: {
+                        ...dto
+                    }
+                })
+                return location
+            }
+            catch (error) {
+                Logger.log(error);
+                throw new BadRequestException(
+                    'Something went wrong while creating new location!',
+                );
+            }
+        })
     }
 
     async update(id: number, updateLocationDto: UpdateLocationDto): Promise<Location> {
@@ -135,5 +150,16 @@ export class LocationService {
                 );
             }
         }
+    }
+
+    async guess(locationId: number, user: User, dto: CreateGuessDto): Promise<Guess> {
+        return await this.prisma.$transaction(async () => {
+            //decrement guessTokens from user
+            const guessTokens = user.guessTokens - 1
+            user.guessTokens = user.guessTokens - 1
+            await this.userService.update(user.id, { guessTokens })
+            //create guess
+            return await this.guessService.create(locationId, user.id, dto)
+        })
     }
 }

@@ -1,6 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -57,6 +58,9 @@ export class UpdateUserDto {
   @IsOptional()
   image?: string;
 
-  //guessTokens
+  @IsOptional()
+  @IsNumber()
+  guessTokens?: number
+  
   //role
 }

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, Logger, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
-import { Location } from '@prisma/client';
+import { Guess, Location, User } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt';
 import { CreateLocationDto, UpdateLocationDto } from './dto';
@@ -9,11 +9,12 @@ import { GetLoggedUser } from '../auth/decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveImageToStorage } from 'src/common/helpers/image-storage.helper';
 import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
+import { CreateGuessDto } from '../guess/dto/guess-create.dto';
 
 @ApiTags('location')
 @Controller('location')
 export class LocationController {
-    constructor(private locationService: LocationService) {}
+    constructor(private locationService: LocationService) { }
 
     /*
     GET LOCATIONS (PAGINATED)
@@ -29,7 +30,7 @@ export class LocationController {
     */
     @HttpCode(HttpStatus.OK)
     @Get(':id')
-    async getById(@Param('id', ParseIntPipe) id: number): Promise<Location>{
+    async getById(@Param('id', ParseIntPipe) id: number): Promise<Location> {
         return this.locationService.getById(id)
     }
 
@@ -42,11 +43,11 @@ export class LocationController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
     async create(
-        @GetLoggedUser('id') id: number,
+        @GetLoggedUser('') user: User,
         @Body() dto: CreateLocationDto
     ): Promise<Location> {
         //TODO: add image on creation
-        return this.locationService.create(id,dto)
+        return this.locationService.create(user, dto)
     }
 
     /*
@@ -59,15 +60,15 @@ export class LocationController {
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() dto: UpdateLocationDto
-    ): Promise<Location>{
-        return this.locationService.update(id,dto)
+    ): Promise<Location> {
+        return this.locationService.update(id, dto)
     }
 
     /*
     UPDATE LOCATION IMAGE
     */
     @HttpCode(HttpStatus.OK)
-    @Post('update-image/:id')
+    @Post(':id/update-image')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
     //For Swagger:
@@ -105,7 +106,26 @@ export class LocationController {
     @ApiBearerAuth('access-token')
     async delete(
         @Param('id', ParseIntPipe) id: number
-    ): Promise<{ response: string }>{
+    ): Promise<{ response: string }> {
         return this.locationService.delete(id)
+    }
+
+
+    /*
+    CREATE GUESS ON LOCATION WITH LOGGED USER
+    */
+    @HttpCode(HttpStatus.CREATED)
+    @Post(':id/guess')
+    //restricted route (needs to be logged in)
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
+    async guess(
+        @Param('id', ParseIntPipe) locationId: number,
+        @GetLoggedUser('') user: User,
+        @Body() dto: CreateGuessDto
+    ): Promise<Guess> {
+        if (user.guessTokens <= 0)
+            throw new ForbiddenException(`Invalid number of tokens remaining: ${user.guessTokens}`)
+        return this.locationService.guess(locationId, user, dto)
     }
 }

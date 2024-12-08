@@ -9,6 +9,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { isFileExtensionSafe, removeFile, saveImageToStorage } from 'src/common/helpers/image-storage.helper';
 import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
+import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
+import { take } from 'rxjs';
 
 @ApiTags('user')
 //so Swagger can input Authorization into request
@@ -87,4 +89,25 @@ export class UserController {
         return this.userService.updateImage(id, filename);
     }
 
+    /*
+    GET LOCATIONS MADE BY USER
+    */
+    @HttpCode(HttpStatus.OK)
+    @Get('locations')
+    async getLocations(
+        @GetLoggedUser('id') id: number
+    ): Promise<PaginatedResult> {
+        return this.userService.getLocations(id);
+    }
+
+    /*
+    GET GUESSES MADE BY USER
+    */
+    @HttpCode(HttpStatus.OK)
+    @Get('guesses')
+    async getGuesses(
+        @GetLoggedUser('id') id: number
+    ): Promise<PaginatedResult> {
+        return this.userService.getGuesses(id);
+    }
 }

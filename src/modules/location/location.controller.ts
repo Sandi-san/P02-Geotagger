@@ -128,4 +128,16 @@ export class LocationController {
             throw new ForbiddenException(`Invalid number of tokens remaining: ${user.guessTokens}`)
         return this.locationService.guess(locationId, user, dto)
     }
+
+    /*
+    GET GUESSES FROM LOCATION WITH LOGGED USER
+    */
+    @HttpCode(HttpStatus.CREATED)
+    @Get(':id/guesses')
+    @ApiBearerAuth('access-token')
+    async getGuesses(
+        @Param('id', ParseIntPipe) locationId: number
+    ): Promise<Guess[]> {
+        return this.locationService.getGuesses(locationId)
+    }
 }

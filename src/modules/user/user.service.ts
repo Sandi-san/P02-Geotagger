@@ -1,9 +1,10 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/user-update.dto';
 import { User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcrypt';
+import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
 
 @Injectable()
 export class UserService {
@@ -94,5 +95,69 @@ export class UserService {
     async updateImage(id: number, image: string): Promise<User> {
         //call user update with only avatar string
         return this.update(id, { image });
+    }
+
+
+    async getLocations(userId: number, take = 4, page = 1, relations = []): Promise<PaginatedResult> {
+        try {
+            const locations = await this.prisma.location.findMany({
+                where: { userId },
+                orderBy: {
+                    updatedAt: 'asc',
+                }
+            })
+
+            const total = locations.length
+            const paginatedLocations = locations.slice((page - 1) * take, page * take)
+
+            return {
+                data: paginatedLocations,
+                meta: {
+                    total,
+                    page,
+                    last_page: Math.ceil(total / take)
+                }
+            }
+
+        }
+        catch (error) {
+            throw new InternalServerErrorException(
+                `Something went wrong while searching for locations from user with id '${userId}'`,
+            )
+        }
+    }
+
+    async getGuesses(userId: number, take = 4, page = 1, relations = []): Promise<PaginatedResult> {
+        try {
+            const guesses = await this.prisma.guess.findMany({
+                where: { userId },
+                orderBy: [{
+                    errorDistance: 'asc',
+                },
+                {
+                    createdAt: 'asc',
+                }]
+            })
+
+            console.log("Guesses: ",guesses)
+
+            const total = guesses.length
+            const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
+
+            return {
+                data: paginatedGuesses,
+                meta: {
+                    total,
+                    page,
+                    last_page: Math.ceil(total / take)
+                }
+            }
+
+        }
+        catch (error) {
+            throw new InternalServerErrorException(
+                `Something went wrong while searching for guesses from user with id '${userId}'`,
+            )
+        }
     }
 }

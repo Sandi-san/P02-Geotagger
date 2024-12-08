@@ -62,7 +62,7 @@ export class GuessService {
             );
         }
 
-        return this.haversineFormula(lat1,lon1,location.lat,location.lon)
+        return this.haversineFormula(lat1, lon1, location.lat, location.lon)
     }
 
     async create(locationId: number, userId: number, createGuessDto: CreateGuessDto): Promise<Guess> {
@@ -76,7 +76,7 @@ export class GuessService {
             userId,
         }
 
-        console.log("Guess: ",dto)
+        console.log("Guess: ", dto)
 
         try {
             const guess = await this.prisma.guess.create({
@@ -90,6 +90,38 @@ export class GuessService {
             Logger.log(error);
             throw new BadRequestException(
                 'Something went wrong while creating new guess!',
+            );
+        }
+    }
+
+    async getForLocation(locationId: number): Promise<Guess[]> {
+        try {
+            const bids = await this.prisma.guess.findMany({
+                where: { locationId },
+                include: {
+                    //return User data and certain elements (excluding password)
+                    user: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            image: true,
+                        },
+                    },
+                },
+                orderBy: [{
+                    errorDistance: 'asc'
+                },
+                {
+                    createdAt: 'asc'
+                }],
+            });
+            return bids;
+        } catch (error) {
+            console.error(error);
+            throw new BadRequestException(
+                `Something went wrong while getting guesses for location with id ${locationId}!`,
             );
         }
     }

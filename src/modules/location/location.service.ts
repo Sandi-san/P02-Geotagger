@@ -44,7 +44,7 @@ export class LocationService {
         }
         catch (error) {
             throw new InternalServerErrorException(
-                'Something went wrong while searching for paginated elements',
+                'Something went wrong while searching for paginated locations!',
             )
         }
     }
@@ -78,8 +78,8 @@ export class LocationService {
         return await this.prisma.$transaction(async () => {
             const userId = user.id
             //increment guessTokens from user
-            const guessTokens = user.guessTokens + 1
-            user.guessTokens = user.guessTokens + 1
+            const guessTokens = user.guessTokens + 10
+            user.guessTokens = user.guessTokens + 10
             await this.userService.update(userId, { guessTokens })
 
             //create location
@@ -187,7 +187,7 @@ export class LocationService {
             tokensNeeded = 3
 
         if (user.guessTokens <= tokensNeeded)
-            throw new ForbiddenException(`Invalid number of tokens remaining: ${user.guessTokens}. Number of tokens required for a guess on this location: ${tokensNeeded}`)
+            throw new ForbiddenException(`Invalid number of tokens remaining: ${user.guessTokens} \n Number of tokens required for a guess on this location: ${tokensNeeded}`)
 
         console.log(`Guesses: ${numGuesses} Tokens: ${user.guessTokens} Needed: ${tokensNeeded}`)
 

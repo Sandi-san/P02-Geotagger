@@ -1,16 +1,14 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/index';
 import { UserService } from './user.service';
-import { User } from '@prisma/client';
+import { User, UserAction } from '@prisma/client';
 import { GetLoggedUser } from 'src/modules/auth/decorator/index';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { UpdateUserDto } from './dto/user-update.dto';
+import { UpdateUserDto, CreateUserActionDto } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { join } from 'path';
-import { isFileExtensionSafe, removeFile, saveImageToStorage } from 'src/common/helpers/image-storage.helper';
+import { saveImageToStorage } from 'src/common/helpers/image-storage.helper';
 import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
 import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
-import { take } from 'rxjs';
 
 @ApiTags('user')
 //so Swagger can input Authorization into request
@@ -109,5 +107,30 @@ export class UserController {
         @GetLoggedUser('id') id: number
     ): Promise<PaginatedResult> {
         return this.userService.getGuesses(id);
+    }
+
+
+    /*
+    SAVE USER ACTIONS
+    */
+    @HttpCode(HttpStatus.CREATED)
+    @Post('actions')
+    async saveActions(
+        @GetLoggedUser('id') id: number,
+        @Body() dto: CreateUserActionDto
+    ): Promise<{ response: string }> {
+        return this.userService.saveActions(id,dto)
+    }
+    
+    /*
+    GET LAST 100 ACTIONS FROM DB
+    */
+    @HttpCode(HttpStatus.CREATED)
+    @Get('actions')
+    async getActions(
+        @Query('take') take = 100
+    ): Promise<UserAction[]> {
+        //TODO: check if user is admin?
+        return this.userService.getActions(take)
     }
 }

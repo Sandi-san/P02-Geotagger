@@ -1,10 +1,10 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateUserDto } from './dto/user-update.dto';
-import { User } from '@prisma/client';
+import { User, UserAction } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import * as bcrypt from 'bcrypt';
 import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
+import { CreateUserActionDto, UpdateUserDto } from './dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -139,7 +139,7 @@ export class UserService {
                 }]
             })
 
-            console.log("Guesses: ",guesses)
+            console.log("Guesses: ", guesses)
 
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
@@ -157,6 +157,43 @@ export class UserService {
         catch (error) {
             throw new InternalServerErrorException(
                 `Something went wrong while searching for guesses from user with id '${userId}'`,
+            )
+        }
+    }
+
+    async saveActions(userId: number, dto: CreateUserActionDto): Promise<{ response: string }> {
+        try {
+            //parse each action from an array of actions, add userId
+            const actions = dto.actions.map((action) => ({
+                ...action,
+                userId
+            }))
+
+            //save the actions
+            await this.prisma.userAction.createMany({
+                data: actions
+            })
+            const numActions = actions.length
+            return { response: `Saved ${numActions} actions of user with id: ${userId}.` }
+        }
+        catch (error) {
+            Logger.error(error)
+            return { response: `Something went wrong while saving actions of user with id: ${userId}!` }
+        }
+    }
+
+    async getActions(take: number): Promise<UserAction[]> {
+        try {
+            return await this.prisma.userAction.findMany({
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                take
+            })
+        }
+        catch (error) {
+            throw new InternalServerErrorException(
+                'Something went wrong while fetching user actions!',
             )
         }
     }

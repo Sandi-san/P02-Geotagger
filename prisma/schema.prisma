@@ -22,7 +22,7 @@ model User {
   lastName  String?
 
   email    String @unique
-  password String
+  password String?  //OAuth Users don't have password
 
   image   String?
 

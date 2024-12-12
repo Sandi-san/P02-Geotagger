@@ -25,8 +25,8 @@ export class AuthService {
 
   async register(dto: UserRegisterDto) {
     const { email, firstName, lastName, password } = dto
-    
-    const user = await this.prisma.user.findFirst({ where: { email } });
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
     if (user) {
       throw new BadRequestException(`${email} is already taken!`);
     }
@@ -66,7 +66,6 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string) {
-    
     const user = await this.prisma.user.findFirst(
       {
         where: { email },
@@ -178,4 +177,39 @@ export class AuthService {
     }
     throw new BadRequestException('Please input and confirm new password!');
   }
+
+
+  async googleLogin(user) {
+    const { email, firstName, lastName, image } = user
+
+    console.log("User data: ", user)
+
+    let existingUser = await this.prisma.user.findUnique({ where: { email } });
+    if (!existingUser) {
+      try {
+        Logger.log("OAuth User does not exist in database. Creating new.")
+        
+        existingUser = await this.prisma.user.create(
+          {
+            data: {
+              firstName,
+              lastName,
+              email,
+              image,
+              password: null, // OAuth users won't have password
+            }
+          });
+      }
+      catch (error) {
+        Logger.error(error);
+        throw new BadRequestException(
+          'Something went wrong while creating user with OAuth data!',
+        )
+      }
+    }
+    
+    Logger.log("Logging in OAuth User.")
+    return this.login(existingUser);
+  }
+
 }

@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserLoginDto, UserRegisterDto, UserEmailDto, UserPasswordDto } from './dto/index';
 import { UpdateUserDto } from '../user/dto/user-update.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -59,5 +60,25 @@ export class AuthController {
   async resetPassword(@Body() dto: UpdateUserDto): Promise<{ response: string }> {
     console.log(dto)
     return this.authService.resetPassword(dto);
+  }
+
+  /*
+  ROUTE THAT CALLS THE GOOGLE OAUTH CHOOSE ACCOUNT PAGE
+  */
+  @ApiOperation({ summary: 'Unusable with Swagger' })
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleRedirect() {}
+
+  /*
+  ROUTE THAT GETS CALLED WHEN THE USER SENDS THEIR GOOGLE DATA
+  */
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Unusable with Swagger' })
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin(@Req() req): Promise<{ access_token: string }> {
+    //register/login with OAuth
+    return this.authService.googleLogin(req.user)
   }
 }

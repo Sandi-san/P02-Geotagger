@@ -24,6 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   //validate token - called on AuthGuard('jwt')
   async validate(payload: JwtPayloadDto) {
     return await this.prisma.user.findUniqueOrThrow(
-      {where: {id: payload.sub} });
+      { where: { id: payload.sub } });
   }
 }

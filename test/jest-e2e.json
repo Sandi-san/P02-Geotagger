@@ -1,9 +1,19 @@
 {
+  "setupFilesAfterEnv": ["<rootDir>/setup.pactum.ts"],
   "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1"
+  },
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.ts$": "ts-jest"
+    "^.+\\.ts$": "ts-jest",
+    "^.+\\.mjs$": "esm-jest"
+  },
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "tsconfig.json"
+    }
   }
 }

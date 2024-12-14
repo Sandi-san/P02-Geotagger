@@ -1,6 +1,8 @@
 //DYNAMIC IMPORT (WARNING: configure tsconfig.json to "module": "NodeNext",
 //else Error: require() of ES Module is not supported "file-type")
-const FileType = import('file-type');
+//const FileType = import('file-type');
+
+import { fromBuffer } from 'file-type-cjs';
 
 import { Logger } from '@nestjs/common';
 import fs from 'fs';
@@ -43,6 +45,34 @@ export const saveImageToStorage: Options = {
 export const isFileExtensionSafe = async (
   fullFilePath: string,
 ): Promise<boolean> => {
+  try {
+    // Read the file content into a buffer
+    const fileBuffer = fs.readFileSync(fullFilePath);
+
+    //get file type from buffer
+    const fileExtensionsAndMimeType = await fromBuffer(fileBuffer);
+
+    console.log("Extension: ",fileExtensionsAndMimeType)
+
+    if (!fileExtensionsAndMimeType?.ext || !fileExtensionsAndMimeType?.mime) {
+      return false; // File type couldn't be detected
+    }
+
+    const isFileTypeLegit = validFileExtensions.includes(
+      fileExtensionsAndMimeType.ext as validFileExtensionsType,
+    );
+    const isMimeTypeLegit = validMimeTypes.includes(
+      fileExtensionsAndMimeType.mime as validMimeType,
+    );
+
+    // Both extension and MIME type must be valid
+    return isFileTypeLegit && isMimeTypeLegit;
+  } catch (error) {
+    console.error(`Error validating file type: ${error.message}`);
+    return false; // Treat errors as unsafe
+  }
+
+  /*
   return (await FileType)
     .fileTypeFromFile(fullFilePath)
     .then((fileExtensionsAndMimeType) => {
@@ -57,6 +87,7 @@ export const isFileExtensionSafe = async (
       const isFileLegit = isFileTypeLegit && isMimeTypeLegit;
       return isFileLegit;
     });
+    */
 };
 
 //remove file from files

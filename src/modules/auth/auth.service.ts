@@ -7,12 +7,11 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-import { JwtPayloadDto, UserRegisterDto, UserPayloadDto, UserPasswordDto } from './dto/index';
+import { JwtPayloadDto, UserRegisterDto, UserPayloadDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MailService } from 'src/library/MailService';
 import { UpdateUserDto } from '../user/dto/user-update.dto';
 import { ConfigService } from '@nestjs/config';
-import { EnvVars } from 'src/common/constants/env-vars.contant';
 
 @Injectable()
 export class AuthService {
@@ -179,7 +178,7 @@ export class AuthService {
   }
 
 
-  async googleLogin(user) {
+  async googleLogin(user: UpdateUserDto): Promise<{ access_token: string }> {
     const { email, firstName, lastName, image } = user
 
     console.log("User data: ", user)

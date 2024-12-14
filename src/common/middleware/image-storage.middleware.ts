@@ -11,6 +11,9 @@ export const saveImageLocally = async (
         throw new BadRequestException('File must be of type png, jpg or jpeg!');
     const imagesFolderPath = join(process.cwd(), 'files');
     const fullImagePath = join(imagesFolderPath + '/' + file.filename);
+
+    console.log(`Path: ${fullImagePath}`)
+
     //check if file is valid and then return new filename
     if (await isFileExtensionSafe(fullImagePath)) {
         return filename

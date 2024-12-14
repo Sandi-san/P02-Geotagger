@@ -80,7 +80,7 @@ export class UserController {
         @GetLoggedUser('id') id: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
-        Logger.log(file);
+        //Logger.log(file);
         console.log(file)
         //call method that saves image file in /files folder    
         const filename = await saveImageLocally(file)

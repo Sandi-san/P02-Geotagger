@@ -8,8 +8,7 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.ts$": "ts-jest",
-    "^.+\\.mjs$": "esm-jest"
+    "^.+\\.ts$": "ts-jest"
   },
   "globals": {
     "ts-jest": {

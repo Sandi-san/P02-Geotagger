@@ -11,15 +11,13 @@ import { JwtPayloadDto, UserRegisterDto, UserPayloadDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MailService } from 'src/library/MailService';
 import { UpdateUserDto } from '../user/dto/user-update.dto';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private mailService: MailService,
-    private configService: ConfigService
+    private mailService: MailService
   ) { }
 
   async register(dto: UserRegisterDto) {

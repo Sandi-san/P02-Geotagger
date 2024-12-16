@@ -8,8 +8,9 @@ beforeAll(() => {
 afterAll(async () => {
   // Any global cleanup, if needed
 });
-
+/*
 afterEach(() => {
   // Clear Pactum state after each test
   spec().clean();
 });
+*/

@@ -5,12 +5,12 @@ export class UserRegisterDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName?: string;
   
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName?: string;
   
   @ApiProperty()
   @IsString()

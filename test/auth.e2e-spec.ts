@@ -3,27 +3,96 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/prisma/prisma.service';
 import { spec } from 'pactum';
+import { AuthController } from 'src/modules/auth/auth.controller';
+import { User } from '@prisma/client';
+import { AuthService } from 'src/modules/auth/auth.service';
+import { JwtStrategy } from 'src/modules/auth/jwt';
+import { MailService } from 'src/library/MailService';
+import { GoogleStrategy } from 'src/modules/auth/oauth/google.strategy';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let prisma: PrismaService;
-
-  //TODO: change to prisma
-
-  let userToken;
+  let controller: AuthController;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      controllers: [AuthController],
+      imports: [
+        AppModule,
+      ],
+      providers: [
+        AuthService,
+        {
+          provide: MailService,
+          useValue: {
+            sendPasswordResetRequest: jest.fn() //mock method
+          }
+        },
+        PrismaService,
+        {
+          provide: JwtService,
+          useValue: {
+            signAsync: jest.fn(), //mock signAsync method
+          },
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    prisma = await moduleFixture.get('PrismaService');
+    controller = moduleFixture.get<AuthController>(AuthController)
+    //prisma = await moduleFixture.get('PrismaService');
+
     await app.init();
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  it('should register new user', async () => {
+    const newUser = {
+      email: 'test@user.com',
+      name: 'Test User',
+      password: 'password',
+    };
+
+    const mockLoginResponse = {
+      access_token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyeyey',
+    };
+
+    const mockRegisterResponse: User = {
+      id: 1,
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@user.com',
+      password: 'password',
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      image: null,
+      guessTokens: 10,
+      resetToken: null,
+      resetTokenExpiry: null,
+      role: 'user'
+    };
+
+    // delete password from response
+    delete mockRegisterResponse.password;
+
+    // 💡 See here -> we mock registerUser function from users.controller.ts
+    // to return mockRegisterResponse
+    jest
+      .spyOn(controller, 'register')
+      .mockResolvedValue(mockLoginResponse);
+
+    // 💡 See here -> we call registerUser method from users.controller.ts
+    // with newUser as parameter
+    const result = await controller.register(newUser);
+
+    // 💡 See here -> we expect result to be mockRegisterResponse
+    expect(result).toEqual(mockLoginResponse);
   });
 
   /*

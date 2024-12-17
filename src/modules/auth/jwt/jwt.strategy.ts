@@ -17,7 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       //JWT_SECRET as key from .env
       secretOrKey: configService.get(EnvVars.JWT_SECRET),
-      //secretOrKey: process.env.JWT_SECRET,
     });
   }
 

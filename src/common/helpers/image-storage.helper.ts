@@ -5,7 +5,7 @@
 import { fromBuffer } from 'file-type-cjs';
 
 import { Logger } from '@nestjs/common';
-import fs from 'fs';
+import * as fs from 'fs';
 import { diskStorage, Options } from 'multer';
 import { extname } from 'path';
 

@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
+import { Controller, Get, HttpCode, HttpStatus, Logger } from "@nestjs/common";
 
 @Controller()
 export class AppController {
@@ -8,9 +8,8 @@ export class AppController {
     @HttpCode(HttpStatus.OK)
     @Get('hello-world')
     async getHello(): Promise<string> {
-        console.log("USING NODE: ", process.env.NODE_ENV)
-        console.log("USING DB: ", process.env.DATABASE_URL)
-        console.log("Using DB file: ", process.env.PRISMA_SCHEMA)
+        //console.log("USING NODE: ", process.env.NODE_ENV)
+        Logger.log(`[Testing Logger] USING NODE: ${process.env.NODE_ENV}`)
         return 'It works!'
     }
 }

@@ -14,12 +14,16 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "db:migrate:dev": "dotenv -e ./development.env prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:push:dev": "cross-env NODE_ENV=development dotenv -e ./development.env prisma db push",
+    "db:push:test": "cross-env NODE_ENV=test dotenv -e ./test.env prisma db push",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=development jest --config ./test/jest-e2e.json --forceExit",
-    "test:e2e_original": "cross-env NODE_ENV=development jest --config ./test/jest-e2e.json --forceExit"
+    "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "test:e2e_original": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json --forceExit"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -60,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",

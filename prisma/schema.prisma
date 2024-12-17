@@ -96,6 +96,8 @@ model UserAction {
 
   //indexes: increases return speed for specific queries
   @@index(fields: [createdAt, userId]) 
+
+  @@map("userActions")
 }
 
 //TODO: set up database

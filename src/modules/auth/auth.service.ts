@@ -99,7 +99,7 @@ export class AuthService {
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + 3600000)
 
-    console.log(`Token: ${resetToken} Expiry: ${resetTokenExpiry}`)
+    //console.log(`Token: ${resetToken} Expiry: ${resetTokenExpiry}`)
 
     //save to database
     try {

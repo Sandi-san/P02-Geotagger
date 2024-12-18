@@ -48,7 +48,7 @@ export class AuthController {
   @Post('forgotten-password')
   //TODO: rate-limit to prevent abuse/overuse
   async forgottenPassword(@Body() dto: UserEmailDto): Promise<{ response: string }> {
-    console.log(dto)
+    //console.log(dto)
     return this.authService.forgottenPassword(dto.email);
   }
 

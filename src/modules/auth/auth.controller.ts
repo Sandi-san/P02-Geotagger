@@ -73,8 +73,8 @@ export class AuthController {
   /*
   ROUTE THAT GETS CALLED WHEN THE USER SENDS THEIR GOOGLE DATA
   */
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Unusable with Swagger' })
+  @HttpCode(HttpStatus.OK)
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
   async googleLogin(@Req() req): Promise<{ access_token: string }> {

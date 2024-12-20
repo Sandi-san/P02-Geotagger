@@ -136,9 +136,11 @@ export class AuthService {
 
     const user = await this.prisma.user.findFirst({
       where: { resetToken },
-      select: { id: true, password: true, resetTokenExpiry: true }
+      select: { id: true, email: true, password: true, resetTokenExpiry: true }
     })
-    if (!user || new Date() > user.resetTokenExpiry)
+    if (!user)
+      throw new NotFoundException(`User with email '${user.email}' not found`);
+    if (new Date() > user.resetTokenExpiry)
       throw new BadRequestException('Invalid or expired reset token!');
 
     if (password && confirm_password) {
@@ -179,7 +181,7 @@ export class AuthService {
   async googleLogin(user: UpdateUserDto): Promise<{ access_token: string }> {
     const { email, firstName, lastName, image } = user
 
-    console.log("User data: ", user)
+    //console.log("User data: ", user)
 
     let existingUser = await this.prisma.user.findUnique({ where: { email } });
     if (!existingUser) {

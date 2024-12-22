@@ -1,4 +1,5 @@
 const TestSequencer = require('@jest/test-sequencer').default;
+const path = require('path'); // Use `path` for platform-independent handling of paths
 
 class ExecutionSequencer extends TestSequencer {
     sort(tests) {
@@ -6,18 +7,23 @@ class ExecutionSequencer extends TestSequencer {
             'app.e2e-spec.ts',
             'auth.e2e-spec.ts',
             'user.e2e-spec.ts',
+            'location.e2e-spec.ts',
         ];
 
-        //console.log('Tests before sorting:', tests.map((test) => test.path));
-
+        // Ensure consistent sorting regardless of platform
         const sortedTests = tests.sort((a, b) => {
-            const aIndex = order.indexOf(a.path.split('/').pop());
-            const bIndex = order.indexOf(b.path.split('/').pop());
-            return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
+            const aName = path.basename(a.path); // Extract filename
+            const bName = path.basename(b.path); // Extract filename
+
+            const aIndex = order.indexOf(aName);
+            const bIndex = order.indexOf(bName);
+
+            // Tests not listed in the order will appear at the end
+            return (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) - 
                    (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex);
         });
 
-        console.log('Tests after sorting:', sortedTests.map((test) => test.path));
+        console.log('\nRun test files in order:', sortedTests.map((test) => path.basename(test.path)));
         return sortedTests;
     }
 }

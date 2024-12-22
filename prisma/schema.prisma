@@ -57,7 +57,7 @@ model Location {
   userId Int
   user   User  @relation(fields: [userId], references: [id])
 
-  Guess Guess[]
+  Guess  Guess[]
   
   @@map("locations")
 }
@@ -76,7 +76,7 @@ model Guess {
   userId Int
   user   User  @relation(fields: [userId], references: [id])
   locationId Int
-  location Location  @relation(fields: [locationId], references: [id])
+  location Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
 
   @@map("guesses")
 }

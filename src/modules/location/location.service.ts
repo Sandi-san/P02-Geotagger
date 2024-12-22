@@ -189,7 +189,7 @@ export class LocationService {
         if (user.guessTokens <= tokensNeeded)
             throw new ForbiddenException(`Invalid number of tokens remaining: ${user.guessTokens} \n Number of tokens required for a guess on this location: ${tokensNeeded}`)
 
-        console.log(`Guesses: ${numGuesses} Tokens: ${user.guessTokens} Needed: ${tokensNeeded}`)
+        //console.log(`Guesses: ${numGuesses} Tokens: ${user.guessTokens} Needed: ${tokensNeeded}`)
 
         return await this.prisma.$transaction(async () => {
             //decrement guessTokens from user

@@ -76,7 +76,7 @@ export class GuessService {
             userId,
         }
 
-        console.log("Guess: ", dto)
+        //console.log("Guess: ", dto)
 
         try {
             const guess = await this.prisma.guess.create({

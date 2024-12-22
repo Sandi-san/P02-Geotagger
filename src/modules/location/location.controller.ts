@@ -91,7 +91,7 @@ export class LocationController {
         @UploadedFile() file: Express.Multer.File
     ): Promise<Location> {
         Logger.log(file);
-        console.log(file)
+        //console.log(file)
         //call method that saves image file in /files folder    
         const filename = await saveImageLocally(file)
         return this.locationService.updateImage(id, filename);
@@ -132,7 +132,7 @@ export class LocationController {
     /*
     GET GUESSES FROM LOCATION WITH LOGGED USER
     */
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     @Get(':id/guesses')
     @ApiBearerAuth('access-token')
     async getGuesses(

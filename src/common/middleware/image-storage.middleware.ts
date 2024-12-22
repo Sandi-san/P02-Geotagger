@@ -12,7 +12,7 @@ export const saveImageLocally = async (
     const imagesFolderPath = join(process.cwd(), 'files');
     const fullImagePath = join(imagesFolderPath + '/' + file.filename);
 
-    console.log(`Path: ${fullImagePath}`)
+    //console.log(`Path: ${fullImagePath}`)
 
     //check if file is valid and then return new filename
     if (await isFileExtensionSafe(fullImagePath)) {

@@ -52,7 +52,7 @@ export const isFileExtensionSafe = async (
     //get file type from buffer
     const fileExtensionsAndMimeType = await fromBuffer(fileBuffer);
 
-    console.log("Extension: ",fileExtensionsAndMimeType)
+    //console.log("Extension: ",fileExtensionsAndMimeType)
 
     if (!fileExtensionsAndMimeType?.ext || !fileExtensionsAndMimeType?.mime) {
       return false; // File type couldn't be detected

@@ -139,7 +139,7 @@ export class UserService {
                 }]
             })
 
-            console.log("Guesses: ", guesses)
+            //console.log("Guesses: ", guesses)
 
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)

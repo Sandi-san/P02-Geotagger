@@ -80,8 +80,8 @@ export class UserController {
         @GetLoggedUser('id') id: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
-        //Logger.log(file);
-        console.log(file)
+        Logger.log(file);
+        //console.log(file)
         //call method that saves image file in /files folder    
         const filename = await saveImageLocally(file)
         return this.userService.updateImage(id, filename);
@@ -125,7 +125,7 @@ export class UserController {
     /*
     GET LAST 100 ACTIONS FROM DB
     */
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     @Get('actions')
     async getActions(
         @Query('take') take = 100

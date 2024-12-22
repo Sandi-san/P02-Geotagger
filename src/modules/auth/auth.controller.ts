@@ -58,7 +58,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   async resetPassword(@Body() dto: UpdateUserDto): Promise<{ response: string }> {
-    console.log(dto)
+    //console.log(dto)
     return this.authService.resetPassword(dto);
   }
 

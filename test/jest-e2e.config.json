@@ -1,5 +1,4 @@
 {
-  "setupFilesAfterEnv": ["<rootDir>/setup.pactum.ts"],
   "moduleFileExtensions": ["js", "json", "ts"],
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/../src/$1"
@@ -14,5 +13,6 @@
     "ts-jest": {
       "tsconfig": "tsconfig.json"
     }
-  }
+  },
+  "testSequencer": "<rootDir>/jest.sequencer.ts"
 }

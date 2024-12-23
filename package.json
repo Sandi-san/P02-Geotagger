@@ -22,8 +22,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=test jest --runInBand --config ./test/jest-e2e.config.json",
-    "test:e2e_original": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json --forceExit"
+    "test:e2e": "cross-env NODE_ENV=test jest --runInBand --config ./test/jest-e2e.config.json"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -69,7 +68,6 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
     "jest": "^25.1.0",
-    "pactum": "^3.7.5",
     "prettier": "^1.19.1",
     "prisma": "^5.22.0",
     "supertest": "^4.0.2",

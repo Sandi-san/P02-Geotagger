@@ -32,7 +32,7 @@ describe('UserController (e2e)', () => {
 
       if (fs.existsSync(fullImagePath)) {
         fs.unlinkSync(fullImagePath); // Delete the file
-        console.log(`Deleted test image: ${fullImagePath}`);
+        //console.log(`Deleted test image: ${fullImagePath}`);
       }
     }
     await app.close();
@@ -40,17 +40,19 @@ describe('UserController (e2e)', () => {
 
   it('/user (GET) should respond with user data', async () => {
     //login user and save access_token locally for authentication
-    const user = {
-      email: 'test@gmail.com',
-      password: 'test123!',
-    };
+    const userData = {
+      firstName: "test",
+      lastName: "user",
+      email: "test1@gmail.com",
+      password: "test123"
+    }
 
-    const login = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send(user)
-      .expect(200)
+    const user = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(userData)
+      .expect(201);
 
-    access_token = login.body.access_token
+    access_token = user.body.access_token
 
     const response = await request(app.getHttpServer())
       .get('/user')
@@ -58,7 +60,7 @@ describe('UserController (e2e)', () => {
       .expect(200);
 
     //console.log(response.body)
-    expect(response.body.email).toBe('test@gmail.com');
+    expect(response.body.email).toBe('test1@gmail.com');
   })
 
 
@@ -83,9 +85,28 @@ describe('UserController (e2e)', () => {
     expect(response.body.image).toBe('not applicable');
   })
 
+  it('/user/update (PATCH) should fail because email already exists', async () => {
+    const user = {
+      firstName: 'New name',
+      lastName: 'New last name',
+      email: 'test@gmail.com',
+      image: 'not applicable'
+    };
+
+    const response = await request(app.getHttpServer())
+      .patch('/user/update')
+      .send(user)
+      .set('Authorization', `Bearer ${access_token}`)
+      .expect(403);
+
+    //console.log(response.body)
+    expect(response.body.message).toBe('Email already taken!');
+  })
+
+
   it('/user/update-password (PATCH) should update user password', async () => {
     const user = {
-      old_password: 'test123!',
+      old_password: 'test123',
       password: 'test12345',
       confirm_password: 'test12345'
     };
@@ -98,6 +119,55 @@ describe('UserController (e2e)', () => {
 
     expect(response.body.response).toBe('Password changed successfully!');
   })
+
+  it('/user/update-password (PATCH) should fail because old password is incorrect', async () => {
+    const user = {
+      old_password: 'test123',
+      password: 'test12345',
+      confirm_password: 'test12345'
+    };
+
+    const response = await request(app.getHttpServer())
+      .patch('/user/update-password')
+      .send(user)
+      .set('Authorization', `Bearer ${access_token}`)
+      .expect(400);
+
+    expect(response.body.message).toBe('Old password is incorrect!');
+  })
+
+  it('/user/update-password (PATCH) should fail because passwords do not match', async () => {
+    const user = {
+      old_password: 'test12345',
+      password: 'test111',
+      confirm_password: 'test123'
+    };
+
+    const response = await request(app.getHttpServer())
+      .patch('/user/update-password')
+      .send(user)
+      .set('Authorization', `Bearer ${access_token}`)
+      .expect(400);
+
+    expect(response.body.message).toBe('Password and confirm password do not match!');
+  })
+
+  it('/user/update-password (PATCH) should fail because new password is same as old', async () => {
+    const user = {
+      old_password: 'test12345',
+      password: 'test12345',
+      confirm_password: 'test12345'
+    };
+
+    const response = await request(app.getHttpServer())
+      .patch('/user/update-password')
+      .send(user)
+      .set('Authorization', `Bearer ${access_token}`)
+      .expect(400);
+
+    expect(response.body.message).toBe('New password cannot be same as old password!');
+  })
+
 
   it('/user/update-image (POST) should update user image', async () => {
     const testImagePath = path.resolve(__dirname, 'test-image.jpg')
@@ -165,7 +235,7 @@ describe('UserController (e2e)', () => {
       .expect(201);
 
     expect(response.body).toHaveProperty('response')
-    expect(response.body.response).toEqual('Saved 2 actions of user with id: 1.')
+    expect(response.body.response).toContain(`Saved 2 actions of user with id:`)
   })
 
 
@@ -187,6 +257,4 @@ describe('UserController (e2e)', () => {
       url: expect.any(String),
     })
   })
-
-  //TODO: failed routes
 });

@@ -77,14 +77,14 @@ export class UserController {
     //'image' must have same name as 'id' in frontend
     @UseInterceptors(FileInterceptor('image', saveImageToStorage))
     async updateImage(
-        @GetLoggedUser('id') id: number,
+        @GetLoggedUser('') user: User,
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
         Logger.log(file);
         //console.log(file)
         //call method that saves image file in /files folder    
-        const filename = await saveImageLocally(file)
-        return this.userService.updateImage(id, filename);
+        const filename = await saveImageLocally(file,user.image)
+        return this.userService.updateImage(user.id, filename);
     }
 
     /*

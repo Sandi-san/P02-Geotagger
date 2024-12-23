@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt/index';
 import { MailService } from 'src/library/MailService';
 import { GoogleStrategy } from './oauth/google.strategy';
+import { RateLimiterService } from 'src/library/RateLimiter';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { GoogleStrategy } from './oauth/google.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, MailService, GoogleStrategy],
+  providers: [AuthService, JwtStrategy, MailService, GoogleStrategy, RateLimiterService],
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -34,25 +34,27 @@ describe('LocationController (e2e)', () => {
 
       if (fs.existsSync(fullImagePath)) {
         fs.unlinkSync(fullImagePath); // Delete the file
-        console.log(`Deleted test image: ${fullImagePath}`);
+        //console.log(`Deleted test image: ${fullImagePath}`);
       }
     }
     await app.close();
   });
 
   it('/location (POST) should create location under user', async () => {
-    //login user and save access_token locally for authentication
-    const user = {
-      email: 'tset@gmail.com',
-      password: 'test12345',
-    };
+    //register user and save access_token locally for authentication
+    const userData = {
+      firstName: "test",
+      lastName: "location",
+      email: "test2@gmail.com",
+      password: "test123"
+    }
 
-    const login = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send(user)
-      .expect(200)
+    const user = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(userData)
+      .expect(201);
 
-    access_token = login.body.access_token
+    access_token = user.body.access_token
 
     const location = {
       image: "none",
@@ -90,6 +92,15 @@ describe('LocationController (e2e)', () => {
     expect(response.body).toHaveProperty('id')
   })
 
+  it('/location/:id (GET) should throw error because location doesn\'t exist', async () => {
+    const response = await request(app.getHttpServer())
+      .get(`/location/0`)
+      .expect(404);
+
+    expect(response.body.message).toEqual('Location of id: 0 was not found!')
+  })
+
+
   it('/location (GET) should respond array of at least one location', async () => {
     const response = await request(app.getHttpServer())
       .get(`/location`)
@@ -107,6 +118,7 @@ describe('LocationController (e2e)', () => {
     expect(response.body.meta).toHaveProperty('page')
     expect(response.body.meta.page).toEqual(1)
   })
+
 
   it('/location/:id (PATCH) should update location data', async () => {
     const location = {
@@ -129,6 +141,7 @@ describe('LocationController (e2e)', () => {
     expect(response.body.address).toEqual('testUpdate')
   })
 
+
   it('/location/:id/update-image (POST) should update location image', async () => {
     const testImagePath = path.resolve(__dirname, 'test-image.jpg')
 
@@ -143,6 +156,7 @@ describe('LocationController (e2e)', () => {
     expect(response.body.image).not.toBe('none');
     filename = response.body.image
   })
+
 
   it('/location/:id/guess (POST) create a guess under location with id', async () => {
     const guess = {
@@ -180,6 +194,7 @@ describe('LocationController (e2e)', () => {
     })
   })
 
+
   it('/location/:id (DELETE) should delete location with id', async () => {
     const response = await request(app.getHttpServer())
       .del(`/location/${locationId}`)
@@ -190,6 +205,12 @@ describe('LocationController (e2e)', () => {
     expect(response.body.response).toEqual('Location deleted successfully')
   })
 
-  //TODO: failed routes
-  //TODO: create new user in each test (register)
+  it('/location/:id (DELETE) should fail because location doesn\'t exist', async () => {
+    const response = await request(app.getHttpServer())
+      .del(`/location/${locationId}`)
+      .set('Authorization', `Bearer ${access_token}`)
+      .expect(400);
+
+    expect(response.body.message).toEqual(`Id ${locationId} is invalid!`)
+  })
 });

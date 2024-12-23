@@ -55,7 +55,7 @@ export const isFileExtensionSafe = async (
     //console.log("Extension: ",fileExtensionsAndMimeType)
 
     if (!fileExtensionsAndMimeType?.ext || !fileExtensionsAndMimeType?.mime) {
-      return false; // File type couldn't be detected
+      return false; //file type couldn't be detected
     }
 
     const isFileTypeLegit = validFileExtensions.includes(
@@ -65,33 +65,15 @@ export const isFileExtensionSafe = async (
       fileExtensionsAndMimeType.mime as validMimeType,
     );
 
-    // Both extension and MIME type must be valid
+    //both extension and MIME type must be valid
     return isFileTypeLegit && isMimeTypeLegit;
   } catch (error) {
     console.error(`Error validating file type: ${error.message}`);
-    return false; // Treat errors as unsafe
+    return false; //treat errors as unsafe
   }
-
-  /*
-  return (await FileType)
-    .fileTypeFromFile(fullFilePath)
-    .then((fileExtensionsAndMimeType) => {
-      if (!fileExtensionsAndMimeType?.ext) return false;
-      const isFileTypeLegit = validFileExtensions.includes(
-        fileExtensionsAndMimeType.ext as validFileExtensionsType,
-      );
-      const isMimeTypeLegit = validMimeTypes.includes(
-        fileExtensionsAndMimeType.mime as validMimeType,
-      );
-      //image type (extension) & mime type have to be valid
-      const isFileLegit = isFileTypeLegit && isMimeTypeLegit;
-      return isFileLegit;
-    });
-    */
 };
 
 //remove file from files
-//TODO: delete old file
 export const removeFile = (fullFilePath: string): void => {
   try {
     fs.unlinkSync(fullFilePath);

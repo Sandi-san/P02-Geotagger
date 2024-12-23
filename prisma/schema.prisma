@@ -99,5 +99,3 @@ model UserAction {
 
   @@map("userActions")
 }
-
-//TODO: set up database

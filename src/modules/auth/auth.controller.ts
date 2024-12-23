@@ -1,14 +1,18 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserLoginDto, UserRegisterDto, UserEmailDto, UserPasswordDto } from './dto/index';
 import { UpdateUserDto } from '../user/dto/user-update.dto';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { RateLimiterService } from 'src/library/RateLimiter';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private rateLimiterService: RateLimiterService,
+  ) { }
 
   /*
   LOGIN AS USER
@@ -46,9 +50,13 @@ export class AuthController {
   */
   @HttpCode(HttpStatus.OK)
   @Post('forgotten-password')
-  //TODO: rate-limit to prevent abuse/overuse
   async forgottenPassword(@Body() dto: UserEmailDto): Promise<{ response: string }> {
     //console.log(dto)
+    if (!this.rateLimiterService.isAllowed(dto.email)) {
+      throw new BadRequestException(
+        'Too many requests. Please wait a while before trying again.',
+      )
+    }
     return this.authService.forgottenPassword(dto.email);
   }
 

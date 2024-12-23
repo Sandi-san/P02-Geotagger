@@ -12,8 +12,7 @@ export class MailService {
     });
 
     async sendPasswordResetRequest(email: string, token: string){
-        //TODO: USE URL OF REMOTE FRONTEND DURING RELEASE
-        const resetUrl = `http://localhost:3000/auth/reset-password?token=${token}`;
+        const resetUrl = `${process.env.FRONTEND_DOMAIN}/auth/reset-password?token=${token}`;
     
         await this.transporter.sendMail({
             from: '"Guess Location App" <no-reply@geotagger.com>',

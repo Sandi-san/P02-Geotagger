@@ -1,15 +1,13 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
-import { Button } from '@mui/material';
+import Routes from './routes/Routes';
 
+//Main App page, prepare theme, run routes
 const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
-        <img src="./logo.svg" className="App-logo" alt="logo" />
-        <p>Some text</p>
-        <Button color='primary' variant='outlined'>Some button</Button>
-        <Button color='secondary' variant='contained'>Some button</Button>
+      <Routes/>
     </ThemeProvider>
   );
 }

@@ -27,6 +27,9 @@ const theme = createTheme({
         typography: {
           fontFamily: 'Roboto, Arial, sans-serif', // Customize fonts
         },
+        background:{
+            default: '#FFFFFF'
+        }
     }
 })
 

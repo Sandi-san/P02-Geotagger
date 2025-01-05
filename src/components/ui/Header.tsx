@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { FC } from "react";
 import theme from "../../theme";
 
@@ -19,14 +19,12 @@ const Header: FC = () => {
                 {/* Far-right items */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* Sign in button */}
-                    <Button
-                        variant="text"
-                        color='primary'
-                        sx={{ textTransform: 'none', fontWeight: 'bold' }}
+                    <Link variant="body1" color='primary.dark'
+                        sx={{ textDecoration: 'none', fontWeight: 'bold', marginRight: 1 }}
                         href="/login"
                     >
                         Sign in
-                    </Button>
+                    </Link>
                     <Typography variant="body1" sx={{ marginRight: 1, color: theme.palette.text.primary }}>
                         or
                     </Typography>

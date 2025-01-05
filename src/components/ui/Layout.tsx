@@ -5,7 +5,7 @@ interface Props {
     children: ReactNode | ReactNode[];
 }
 
-//Layout as interface for Header and page (children) element
+//Layout as interface for Header and page elements (children)
 const Layout: FC<Props> = ({ children }) => {
     return (
         <>

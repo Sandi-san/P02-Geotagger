@@ -4,7 +4,11 @@ import theme from "../../theme";
 
 const Header: FC = () => {
     return (
-        <AppBar position="static" sx={{ backgroundColor: theme.palette.background.default, boxShadow: 'none', padding: '0 16px' }}>
+        <AppBar position="static" sx={{
+            backgroundColor: theme.palette.background.default,
+            boxShadow: 'none',
+            padding: 2,
+            }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Far-left items */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>

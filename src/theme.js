@@ -30,7 +30,7 @@ const theme = createTheme({
           fontFamily: 'Roboto, Arial, sans-serif',
         },
         background:{
-            default: '#FFFFFF'
+            default: '#FFFFFF',
         }
     },
     //define typography

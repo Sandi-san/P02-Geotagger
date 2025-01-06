@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import Layout from '../components/ui/Layout';
+import GuessCard from '../components/ui/GuessCard';
 
 //MAIN PAGE
 const Home: FC = () => {
+    //TODO: load GuessCard images from DB
+
     return (
         <>
             <Layout>
@@ -18,15 +21,17 @@ const Home: FC = () => {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'flex-start',
+                            justifyContent: 'center',
                             position: 'relative',
-                            zIndex: 2, // Ensure text is above the image
-                            padding: 4,
+                            paddingLeft: 10,
+                            maxWidth: '20%',
+                            zIndex: 2, //text overlaps the image
                         }}
                     >
                         <Typography variant="h3" color='primary' sx={{ fontWeight: 'bold', marginBottom: 2 }}>
                             Explore the world with Geotagger!
                         </Typography>
-                        <Typography variant="body2" color='primary.dark'>
+                        <Typography variant="body1" color='primary.dark' sx={{ marginY: 2 }}>
                             Geotagger allows you to post pictures and tag them on the map. Other users then try to find it via Google Maps!
                         </Typography>
                         {/* Sign up button */}
@@ -42,10 +47,10 @@ const Home: FC = () => {
                     {/* Right section: image */}
                     <Box
                         sx={{
-                            flex: 2,
+                            flex: 3,
                             position: 'relative',
                             marginLeft: -10, //overlapping with the text
-                            zIndex: 1, // Image is in the background
+                            zIndex: 1, //image is in the background
                         }}
                     >
                         <Box
@@ -60,8 +65,8 @@ const Home: FC = () => {
                     </Box>
                 </Box>
                 {/* {Second section} */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingTop: 10, marginX: '40vh', alignItems: 'center', }}>
-                    <Typography variant="h5" color='primary'
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingTop: 10, marginX: '60vh', alignItems: 'center', }}>
+                    <Typography variant="h4" color='primary'
                         sx={{
                             marginBottom: 2,
                             flex: 1,
@@ -69,53 +74,35 @@ const Home: FC = () => {
                         }}>
                         Try yourself at Geotagger!
                     </Typography>
-                    <Typography variant="body2" color='primary.dark'>
+                    <Typography variant="body1" color='primary.dark'>
                         Try to guess the location of an image by selecting a position on the map. The result will be determined by the error distance.
                     </Typography>
                 </Box>
                 {/* Third section */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 16, }}>
                     {/* Location card widgets */}
-                    {/* TODO */}
                     <Box
                         sx={{
                             flex: 1,
                             display: 'flex',
                             flexDirection: 'row',
                             position: 'relative',
-                            padding: 4,
+                            padding: 2,
+                            gap: 2, //padding between child elements
                         }}
                     >
-                        <Box
-                            sx={{
-                                flex: 1,
-                                display: 'flex',
-                                position: 'relative',
-                                padding: 4,
-                            }}
-                        >
-                            1
-                        </Box>
-                        <Box
-                            sx={{
-                                flex: 2,
-                                display: 'flex',
-                                position: 'relative',
-                                padding: 4,
-                            }}
-                        >
-                            2
-                        </Box>
-                        <Box
-                            sx={{
-                                flex: 3,
-                                display: 'flex',
-                                position: 'relative',
-                                padding: 4,
-                            }}
-                        >
-                            3
-                        </Box>
+                        <GuessCard
+                            imageUrl='placeholder1.jpg'
+                            isLocked={true}
+                        />
+                        <GuessCard
+                            imageUrl='placeholder2.jpg'
+                            isLocked={true}
+                        />
+                        <GuessCard
+                            imageUrl='placeholder3.jpg'
+                            isLocked={true}
+                        />
                     </Box>
                     {/* Sign up button */}
                     <Button

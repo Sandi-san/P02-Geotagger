@@ -4,22 +4,22 @@ import theme from "../../theme";
 
 const Footer: FC = () => {
     return (
-        <AppBar position="static" sx={{ 
-            backgroundColor: theme.palette.primary.main, 
-            boxShadow: 'none', 
+        <AppBar position="static" sx={{
+            backgroundColor: theme.palette.primary.main,
+            boxShadow: 'none',
             padding: '0 16px',
-             }}>
+        }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Far-left items */}
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h5" component="span" sx={{ display: 'flex', alignItems: 'center' }}>
-                        <span style={{ color: theme.palette.primary.contrastText }}>Geotagger</span>
+                <Box>
+                    <Typography variant="h5" color='primary.contrastText'>
+                        Geotagger
                     </Typography>
                 </Box>
                 {/* Far-right items */}
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="body1" sx={{ marginRight: 1, color: theme.palette.primary.contrastText  }}>
-                        All Rights Reserved | skillupmentor.com 
+                <Box>
+                    <Typography variant="body1" color='primary.contrastText'>
+                        All Rights Reserved | skillupmentor.com
                     </Typography>
                 </Box>
             </Toolbar>

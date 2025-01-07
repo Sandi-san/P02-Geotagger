@@ -5,7 +5,7 @@ import theme from "../../theme";
 const Header: FC = () => {
     return (
         <AppBar position="static" sx={{
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: 'background.default',
             boxShadow: 'none',
             padding: 2,
             }}>
@@ -13,7 +13,10 @@ const Header: FC = () => {
                 {/* Far-left items */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* Logo */}
+                    {/* <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} /> */}
+                    <Link href="/">
                     <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
+                    </Link>
                     {/* Text */}
                     <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'center' }}>
                         <span style={{ color: theme.palette.primary.main }}>Geo</span>
@@ -29,7 +32,7 @@ const Header: FC = () => {
                     >
                         Sign in
                     </Link>
-                    <Typography variant="body1" sx={{ marginRight: 1, color: theme.palette.text.primary }}>
+                    <Typography variant="body1" color='primary.main' sx={{ marginRight: 1 }}>
                         or
                     </Typography>
                     {/* Sign up button */}

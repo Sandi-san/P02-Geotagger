@@ -7,7 +7,7 @@ const Footer: FC = () => {
         <AppBar position="static" sx={{
             backgroundColor: theme.palette.primary.main,
             boxShadow: 'none',
-            padding: '0 16px',
+            paddingX: 4,
         }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Far-left items */}

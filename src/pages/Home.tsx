@@ -89,6 +89,7 @@ const Home: FC = () => {
                             flex: 1,
                             display: 'flex',
                             flexDirection: 'row',
+                            flexWrap: 'wrap', //if child elements exceed width, wrap into next line
                             position: 'relative',
                             padding: 2,
                             gap: 2, //padding between child elements

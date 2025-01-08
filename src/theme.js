@@ -17,14 +17,24 @@ const theme = createTheme({
     //global color pallete
     palette:{
         primary:{
-            main: '#619B8A',
-            contrastText: '#FFFFFF',
-            dark: '#233D4D',
+            main: '#619B8A', //primary green
+            contrastText: '#FFFFFF', //white
+            dark: '#233D4D', //dark
+            light: '#A1C181', //gradient green
         },
         secondary:{
-            main: '#659E89',
-            contrastText: '#A1C181',
-            light: '#FE7F2D'
+            main: '#FE7F2D', //primary orange
+            contrastText: '#233D4D', //dark
+            dark: '#233D4D', //gradient orange
+            light: '#FFFFFF', //white
+        },
+        gradientGreen: {
+            primary: '#659E89',
+            secondary: '#A1C181'
+        },
+        gradientOrange: {
+            primary: '#FE7F2D',
+            secondary: '#FCCA46'
         },
         typography: {
           fontFamily: 'Roboto, Arial, sans-serif',

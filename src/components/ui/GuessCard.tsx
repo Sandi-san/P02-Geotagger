@@ -21,7 +21,7 @@ const GuessCard: FC<GuessCardProps> = ({ imageUrl, isLocked = false }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden', //content (image) stays within bounds
-                borderRadius: '8px', //rounded corners
+                borderRadius: 3, //rounded corners
                 //   boxShadow: 3, //drop shadow
                 bgcolor: 'background.paper', //background color of the card
             }}

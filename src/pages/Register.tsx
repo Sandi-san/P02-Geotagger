@@ -1,6 +1,7 @@
-import { Avatar, Box, Button, FormControl, Link, TextField, Toolbar, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControl, Link, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import theme from '../theme';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 type FormData = {
     email: string,
@@ -12,6 +13,9 @@ type FormData = {
 }
 
 const Register: FC = () => {
+    //mediaQuery for Responsive Web Design
+    const { isMobile } = useMediaQuery(768)
+
     //data to be used in the sign up form
     const [formData, setFormData] = useState<FormData>({
         email: '',
@@ -30,17 +34,17 @@ const Register: FC = () => {
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-          const file = e.target.files[0];
-          const reader = new FileReader();
-          reader.onload = () => {
-            setFormData((prev) => ({
-              ...prev,
-              image: reader.result as string, //Base64 data URL for display with type assertion
-            }));
-          };
-          reader.readAsDataURL(file);
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                setFormData((prev) => ({
+                    ...prev,
+                    image: reader.result as string, //Base64 data URL for display with type assertion
+                }));
+            };
+            reader.readAsDataURL(file);
         }
-      };
+    };
 
     const handleSubmit = () => {
         console.log('Form Data:', formData);
@@ -65,10 +69,11 @@ const Register: FC = () => {
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
+                        //change style based on width of the visible page (mediaQuery)
+                        justifyContent: isMobile ? 'flex-start' : 'center',
                         alignItems: 'center',
                         bgcolor: 'background.paper',
-                        paddingX: 8,
+                        paddingX: isMobile ? 0 : 8,
                         minHeight: 0,
                         overflow: 'auto',
                     }}

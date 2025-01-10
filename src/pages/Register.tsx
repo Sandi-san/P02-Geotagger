@@ -2,6 +2,9 @@ import { Avatar, Box, Button, FormControl, Link, TextField, Typography } from '@
 import { FC, useState } from 'react';
 import theme from '../theme';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../stores/configure.store';
+import { resetForm, updateField, updateImage } from '../slices/forms/userRegisterForm.slice';
 
 type FormData = {
     email: string,
@@ -16,20 +19,14 @@ const Register: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(768)
 
+    const dispatch = useDispatch<AppDispatch>()
     //data to be used in the sign up form
-    const [formData, setFormData] = useState<FormData>({
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        repeatPassword: '',
-        image: null, //avatar image for user
-    });
+    const formData = useSelector((state: RootState) => state.registerForm)
 
     //when changing values of input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        dispatch(updateField({ name, value }))
     };
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,10 +34,7 @@ const Register: FC = () => {
             const file = e.target.files[0];
             const reader = new FileReader();
             reader.onload = () => {
-                setFormData((prev) => ({
-                    ...prev,
-                    image: reader.result as string, //Base64 data URL for display with type assertion
-                }));
+                dispatch(updateImage(reader.result as string))
             };
             reader.readAsDataURL(file);
         }
@@ -51,6 +45,10 @@ const Register: FC = () => {
         // Add form submission logic here
     };
 
+    const handleReset = () => {
+        dispatch(resetForm())
+    }
+
     return (
         <>
             <Box sx={{
@@ -60,8 +58,8 @@ const Register: FC = () => {
                 width: '100%',
                 flexDirection: 'row',
                 textAlign: 'center',
-                alignItems: 'stretch', // Stretch children
-                overflow: 'hidden', // Prevent accidental overflow
+                alignItems: 'stretch',
+                overflow: 'hidden', //prevent accidental overflow
             }}>
                 <Box
                     sx={{

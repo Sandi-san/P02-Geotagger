@@ -53,7 +53,7 @@ export const register = async (data: RegisterUserFields) => {
   try {
     const response = await apiRequest<RegisterUserFields, void>(
       'post',
-      apiRoutes.SIGNUP,
+      apiRoutes.REGISTER,
       data,
     );
     return response;
@@ -64,8 +64,8 @@ export const register = async (data: RegisterUserFields) => {
 };
 
 //POST Signout User
-export const signout = async () =>
-  apiRequest<undefined, void>('post', apiRoutes.SIGNOUT);
+// export const signout = async () =>
+//   apiRequest<undefined, void>('post', apiRoutes.SIGNOUT);
 
 //PATCH Update User (firstname, lastname, email)
 export const updateUser = async (data: UpdateUserFields) => {

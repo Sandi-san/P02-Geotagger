@@ -1,5 +1,7 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 
+//TODO: delete this api folder & Axios
+
 //API Requests with Axios.
 //Functions that call the backend API use this method
 export async function apiRequest<D = Record<string, unknown>, R = unknown>(

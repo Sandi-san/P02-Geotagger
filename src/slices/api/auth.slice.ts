@@ -4,12 +4,12 @@ import { RegisterUserFields } from '../../hooks/react-hook-form/useRegister';
 //api for /user route in backend
 export const authSlice = createApi({
   reducerPath: 'auth', //identifier for this slice
-  baseQuery: fetchBaseQuery({ baseUrl: '/auth' }), //base URL (matches backend)
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080/auth' }), //base URL (matches backend)
   endpoints: (builder) => ({
     //define enpoints as functions
     registerUser: builder.mutation({
       query: (user: RegisterUserFields) => ({
-        url: '/auth/register',
+        url: '/register',
         method: 'POST',
         body: user,
       }),

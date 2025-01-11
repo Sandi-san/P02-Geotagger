@@ -10,12 +10,12 @@ export const store = configureStore({
     reducer: {
         registerForm: registerReducer,
         loginForm: loginReducer,
-        [userSlice.reducerPath]: userSlice.reducer,
         [authSlice.reducerPath]: authSlice.reducer,
+        [userSlice.reducerPath]: userSlice.reducer,
     },
-    //add middleware for caching and invalidation of apis
+    //add middleware for caching and invalidation of apis (required)
     middleware: (getDefaultMiddelware) =>
-        getDefaultMiddelware().concat(userSlice.middleware)
+        getDefaultMiddelware().concat(authSlice.middleware, userSlice.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

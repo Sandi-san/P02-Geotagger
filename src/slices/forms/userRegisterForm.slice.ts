@@ -7,8 +7,8 @@ interface UserRegisterFormData {
   firstName: string;
   lastName: string;
   password: string;
-  repeatPassword: string;
-  image: string | null; //base64 string for the avatar image
+  confirm_password: string;
+  image: File | null;
 }
 
 //default values
@@ -17,7 +17,7 @@ const initialState: UserRegisterFormData = {
   firstName: '',
   lastName: '',
   password: '',
-  repeatPassword: '',
+  confirm_password: '',
   image: null,
 };
 
@@ -30,7 +30,7 @@ const userRegisterFormSlice = createSlice({
       const { name, value } = action.payload;
       (state as any)[name] = value; //dynamic property update
     },
-    updateImage: (state, action: PayloadAction<string | null>) => {
+    updateImage: (state, action: PayloadAction<File | null>) => {
       state.image = action.payload;
     },
     resetForm: () => initialState, //reset input to initial state

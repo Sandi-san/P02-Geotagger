@@ -4,50 +4,59 @@ import theme from '../theme';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../stores/configure.store';
-import { resetForm, updateField, updateImage } from '../slices/forms/userRegisterForm.slice';
-
-type FormData = {
-    email: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    repeatPassword: string,
-    image: string | null,
-}
+import { updateField, updateImage } from '../slices/forms/userRegisterForm.slice';
+import { useRegisterUserMutation } from '../slices/api/auth.slice';
+import { RegisterUserFields, useRegisterForm } from '../hooks/react-hook-form/useRegister';
+import { Controller } from 'react-hook-form';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(768)
 
-    const dispatch = useDispatch<AppDispatch>()
+    //form validation for user registration (custom hook)
+    const { handleSubmit, errors, control } = useRegisterForm();
+    //initialize mutation hook for registering User (backend api calls)
+    const [registerUser] = useRegisterUserMutation();
+    //set state for image file (separate from useRegisterForm, which uses Yup)
+    const [imageFile, setImageFile] = useState<File | null>(null)
+
     //data to be used in the sign up form
     const formData = useSelector((state: RootState) => state.registerForm)
 
-    //when changing values of input fields
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        dispatch(updateField({ name, value }))
-    };
-
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("Changing avatar")
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                dispatch(updateImage(reader.result as string))
-            };
-            reader.readAsDataURL(file);
+            setImageFile(file)
         }
     };
 
-    const handleSubmit = () => {
+    //handle submit with Yup form validation
+    const onSubmit = async (formData: RegisterUserFields) => {
         console.log('Form Data:', formData);
-        // Add form submission logic here
+        try {
+            //call RTK Query mutation with valid formData (register user)
+            const registerResponse = await registerUser(formData).unwrap();
+            console.log('User registered successfully:', registerResponse);
+
+            /*
+            //if image is also passed, call uploadFile route
+            if (imageFile) {
+                const formDataImage = new FormData()
+                formDataImage.append('image', imageFile)
+                //call api
+                //TODO: add user api hooks (upload Image (note: needs authentication, from registerResponse))
+                const imageUploadResponse = await uploadImage(formDataImage);
+                console.log('Image uploaded successfully:', imageUploadResponse);
+            }
+                */
+
+        } catch (err) {
+            console.error('Error during registration:', err);
+        }
     };
 
-    const handleReset = () => {
-        dispatch(resetForm())
-    }
+    //TODO: SHOW/HIDE PASSWORD ICONS
 
     return (
         <>
@@ -79,101 +88,139 @@ const Register: FC = () => {
                     <Typography variant="h3" gutterBottom>
                         Sign up
                     </Typography>
-                    <FormControl fullWidth>
-                        <Box sx={{
-                            position: 'relative',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            textAlign: 'center',
-                            alignItems: 'center',
-                        }}>
-                            <Typography variant="body1" color='primary.dark' sx={{ flex: 1 }}>
-                                Your name will appear on posts and your public profile.
-                            </Typography>
-                            {/* Avatar field inside label*/}
-                            <label htmlFor='image-upload'>
-                                <input
-                                    id='image-upload'
-                                    type='file'
-                                    accept='image/png, image/jpg, image/jpeg'
-                                    style={{ display: 'none' }}
-                                    onChange={handleAvatarChange}
-                                />
-                                <Avatar
-                                    src={formData.image || undefined}
-                                    sx={{
-                                        width: '10vh',
-                                        height: '10vh',
-                                        cursor: 'pointer',
-                                        marginY: 2,
-                                    }}
-                                />
-                            </label>
-                        </Box>
-                        <TextField
-                            label="Email"
-                            name='email'
-                            value={formData.email}
-                            onChange={handleChange}
-                            variant="outlined"
-                            fullWidth
-                            sx={{ marginBottom: 2 }}
-                        />
-                        <Box
-                            sx={{
+
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <FormControl fullWidth>
+                            <Box sx={{
+                                position: 'relative',
                                 display: 'flex',
-                                gap: 2,
-                            }}
-                        >
-                            <TextField
-                                label="First name"
-                                variant="outlined"
-                                name='firstName'
-                                value={formData.firstName}
-                                onChange={handleChange}
+                                flexDirection: 'column',
+                                textAlign: 'center',
+                                alignItems: 'center',
+                            }}>
+                                <Typography variant="body1" color='primary.dark' sx={{ flex: 1 }}>
+                                    Your name will appear on posts and your public profile.
+                                </Typography>
+                                {/* Avatar field inside label*/}
+                                <label htmlFor='image-upload'>
+                                    <input
+                                        id='image-upload'
+                                        type='file'
+                                        accept='image/png, image/jpg, image/jpeg'
+                                        style={{ display: 'none' }}
+                                        onChange={handleAvatarChange}
+                                    />
+                                    <Avatar
+                                        src={imageFile ? URL.createObjectURL(imageFile) : ''}
+                                        sx={{
+                                            width: '10vh',
+                                            height: '10vh',
+                                            cursor: 'pointer',
+                                            marginY: 2,
+                                        }}
+                                    />
+                                </label>
+                            </Box>
+                            {/* Email */}
+                            <Controller
+                                name="email"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Email"
+                                        error={!!errors.email}
+                                        helperText={errors.email?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginBottom: 2 }}
+                                    />
+                                )}
+                            />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    gap: 2,
+                                }}
+                            >
+                                {/* First Name */}
+                                <Controller
+                                    name="firstName"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            label="First Name"
+                                            error={!!errors.firstName}
+                                            helperText={errors.firstName?.message}
+                                            variant="outlined"
+                                            fullWidth
+                                            sx={{ marginBottom: 2 }}
+                                        />
+                                    )}
+                                />
+                                {/* Last Name */}
+                                <Controller
+                                    name="lastName"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Last Name"
+                                            error={!!errors.lastName}
+                                            helperText={errors.lastName?.message}
+                                            variant="outlined"
+                                            fullWidth
+                                            sx={{ marginBottom: 2 }}
+                                        />
+                                    )}
+                                />
+                            </Box>
+                            {/* Password */}
+                            <Controller
+                                name="password"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        type="password"
+                                        label="Password"
+                                        error={!!errors.password}
+                                        helperText={errors.password?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginBottom: 2 }}
+                                    />
+                                )}
+                            />
+                            {/* Confirm Password */}
+                            <Controller
+                                name="confirm_password"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        type="password"
+                                        label="Confirm Password"
+                                        error={!!errors.confirm_password}
+                                        helperText={errors.confirm_password?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginBottom: 2 }}
+                                    />
+                                )}
+                            />
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
                                 fullWidth
                                 sx={{ marginBottom: 2 }}
-                            />
-                            <TextField
-                                label="Last name"
-                                variant="outlined"
-                                name='lastName'
-                                value={formData.lastName}
-                                onChange={handleChange}
-                                fullWidth
-                                sx={{ marginBottom: 2 }}
-                            />
-                        </Box>
-                        <TextField
-                            label="Password"
-                            type="password"
-                            variant="outlined"
-                            name='password'
-                            value={formData.password}
-                            onChange={handleChange}
-                            fullWidth
-                            sx={{ marginBottom: 2 }}
-                        />
-                        <TextField
-                            label="Repeat password"
-                            type="password"
-                            variant="outlined"
-                            name='repeatPassword'
-                            value={formData.repeatPassword}
-                            onChange={handleChange}
-                            fullWidth
-                            sx={{ marginBottom: 2 }}
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            sx={{ marginBottom: 2 }}
-                            onClick={handleSubmit}
-                        >
-                            Sign up
-                        </Button>
-                    </FormControl>
+                            >
+                                Sign up
+                            </Button>
+                        </FormControl>
+                    </form>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                         <Box sx={{ alignItems: 'flex-start' }}>
                             <Typography variant="body1" color='primary.dark'>
@@ -188,6 +235,14 @@ const Register: FC = () => {
                                 Sign in
                             </Link>
                         </Box>
+                    </Box>
+                    {/* {isLoading && (
+                        <Typography color='info'>Registering...</Typography>
+                    )}
+                    {error && (
+                        <Typography color='error'>Registeration failed: {'message' in error ? error.message : ''}</Typography>
+                    )} */}
+                    <Box>
                     </Box>
                 </Box>
                 <Box
@@ -233,7 +288,7 @@ const Register: FC = () => {
                         <Box component="img" src="/logo-outline.svg" alt="Lock" sx={{ height: 200, position: 'relative' }} />
                     </Box>
                 </Box>
-            </Box>
+            </Box >
         </>
     );
 };

@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import { UserType } from '../models/user';
 import { userStorage } from '../utils/localStorage';
 
-//Save User object to local storage
+//Fetch and save User object (saves latest user data)
 export interface AuthContextType {
   user?: UserType | null;
   login: () => void;
@@ -15,9 +15,9 @@ class AuthStore {
   constructor() {
     makeAutoObservable(this);
   }
-  //login user, saves access_token
+  //save user
   login(user: UserType) {
-    userStorage.setUser(user);
+    // userStorage.setUser(user);
     this.user = user;
   }
 

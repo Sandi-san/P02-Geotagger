@@ -1,62 +1,90 @@
-import { Avatar, Box, Button, FormControl, Link, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import theme from '../theme';
 import useMediaQuery from '../hooks/useMediaQuery';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../stores/configure.store';
-import { updateField, updateImage } from '../slices/forms/userRegisterForm.slice';
 import { useRegisterUserMutation } from '../slices/api/auth.slice';
 import { RegisterUserFields, useRegisterForm } from '../hooks/react-hook-form/useRegister';
 import { Controller } from 'react-hook-form';
+import authStore from '../stores/auth.store';
+import isApiError from '../utils/apiErrorChecker';
+import ErrorDisplay from '../components/ui/ErrorDisplay';
+import { useUploadImageMutation } from '../slices/api/user.slice';
+import { userStorage } from '../utils/localStorage';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
-    const { isMobile } = useMediaQuery(768)
+    const { isMobile } = useMediaQuery(720)
 
     //form validation for user registration (custom hook)
     const { handleSubmit, errors, control } = useRegisterForm();
-    //initialize mutation hook for registering User (backend api calls)
-    const [registerUser] = useRegisterUserMutation();
+    //initialize mutation hook for registering User (register user api call)
+    const [registerUser] = useRegisterUserMutation()
+
     //set state for image file (separate from useRegisterForm, which uses Yup)
     const [imageFile, setImageFile] = useState<File | null>(null)
+    //initialize mutation hook for uploading image for User (after registration)
+    const [uploadImage] = useUploadImageMutation()
 
-    //data to be used in the sign up form
-    const formData = useSelector((state: RootState) => state.registerForm)
+    //toggle buttons for showing values inside password and confirm_password forms
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+    //value of error returned by api
+    const [apiError, setApiError] = useState('')
+    //state if error has occured
+    const [showError, setShowError] = useState(false)
+
+    //method for changing Avatar image
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("Changing avatar")
+        // console.log("Changing avatar")
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setImageFile(file)
         }
     };
 
-    //handle submit with Yup form validation
+    //handle submit method: registration (with Yup form validation) & upload image
     const onSubmit = async (formData: RegisterUserFields) => {
         console.log('Form Data:', formData);
+
         try {
             //call RTK Query mutation with valid formData (register user)
             const registerResponse = await registerUser(formData).unwrap();
             console.log('User registered successfully:', registerResponse);
 
-            /*
+            //save the returned access_token into local storage
+            userStorage.setUser(registerResponse.access_token)
+            console.log('Local user:', userStorage.getUser());
+
             //if image is also passed, call uploadFile route
             if (imageFile) {
                 const formDataImage = new FormData()
                 formDataImage.append('image', imageFile)
                 //call api
-                //TODO: add user api hooks (upload Image (note: needs authentication, from registerResponse))
                 const imageUploadResponse = await uploadImage(formDataImage);
                 console.log('Image uploaded successfully:', imageUploadResponse);
+                //check if response successful and save the User locally
+                if (typeof (imageUploadResponse as any).data === 'object' &&
+                    imageUploadResponse.data !== undefined)
+                    authStore.login(imageUploadResponse.data)
             }
-                */
-
-        } catch (err) {
-            console.error('Error during registration:', err);
+        }
+        catch (err) {
+            console.error("Error during registration: ", err)
+            if (isApiError(err)) {
+                setApiError(err.data.message);
+                setShowError(true);
+            }
+            else {
+                setApiError("An unexpected error has occured.");
+                setShowError(true);
+            }
         }
     };
 
-    //TODO: SHOW/HIDE PASSWORD ICONS
+    //Show/hide password visibility
+    const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+    const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
 
     return (
         <>
@@ -81,6 +109,8 @@ const Register: FC = () => {
                         alignItems: 'center',
                         bgcolor: 'background.paper',
                         paddingX: isMobile ? 0 : 8,
+                        // width: '100%',
+                        // maxWidth: '100vh',
                         minHeight: 0,
                         overflow: 'auto',
                     }}
@@ -183,13 +213,28 @@ const Register: FC = () => {
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         label="Password"
                                         error={!!errors.password}
                                         helperText={errors.password?.message}
                                         variant="outlined"
                                         fullWidth
                                         sx={{ marginBottom: 2 }}
+                                        // Eye icon for toggling visiblity
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={togglePasswordVisibility}
+                                                            edge="end"
+                                                        >
+                                                            <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
                                     />
                                 )}
                             />
@@ -200,13 +245,28 @@ const Register: FC = () => {
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        type="password"
+                                        type={showConfirmPassword ? 'text' : 'password'}
                                         label="Confirm Password"
                                         error={!!errors.confirm_password}
                                         helperText={errors.confirm_password?.message}
                                         variant="outlined"
                                         fullWidth
                                         sx={{ marginBottom: 2 }}
+                                        // Eye icon for toggling visiblity
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={toggleConfirmPasswordVisibility}
+                                                            edge="end"
+                                                        >
+                                                            <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
                                     />
                                 )}
                             />
@@ -221,13 +281,21 @@ const Register: FC = () => {
                             </Button>
                         </FormControl>
                     </form>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <Box sx={{
+                        width: '100%',
+                        position: 'relative',
+                        display: 'flex',
+                        textAlign: 'center',
+                        justifyContent: 'space-between',
+                        // minHeight: 0,
+                        maxWidth: '60vh',
+                    }}>
                         <Box sx={{ alignItems: 'flex-start' }}>
                             <Typography variant="body1" color='primary.dark'>
                                 Already have an account?
                             </Typography>
                         </Box>
-                        <Box>
+                        <Box sx={{alignContent: 'flex-end'}} >
                             <Link variant="body1" color='primary.main'
                                 sx={{ textDecoration: 'none' }}
                                 href="/login"
@@ -236,14 +304,13 @@ const Register: FC = () => {
                             </Link>
                         </Box>
                     </Box>
+                    {/* If api error occurs, show error widget  */}
+                    {showError && (
+                        <ErrorDisplay message={apiError} />
+                    )}
                     {/* {isLoading && (
                         <Typography color='info'>Registering...</Typography>
-                    )}
-                    {error && (
-                        <Typography color='error'>Registeration failed: {'message' in error ? error.message : ''}</Typography>
-                    )} */}
-                    <Box>
-                    </Box>
+                    )}*/}
                 </Box>
                 <Box
                     sx={{

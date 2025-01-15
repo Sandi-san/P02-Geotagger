@@ -1,44 +1,82 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { UserType } from '../../models/user';
+import { RootState } from '../../stores/configure.store';
+import { userStorage } from '../../utils/localStorage';
 
 //api for /user route in backend 
 export const userSlice = createApi({
   reducerPath: 'user', //identifier for this slice
-  baseQuery: fetchBaseQuery({ baseUrl: '/user' }), //base URL (matches backend)
+  baseQuery: fetchBaseQuery({
+    //base URL (matches backend) (TODO: use .env)
+    baseUrl: 'http://localhost:8080/user',
+    prepareHeaders: (headers) => {
+      //retrieve user access_token from local storage 
+      const token = userStorage.getUser()
+      if (token)
+        headers.set('Authorization', `Bearer ${token}`)
+      return headers
+    }
+  }),
   endpoints: (builder) => ({
-    //define enpoints as functions (TODO)
-    getUsers: builder.query({
-      query: () => '/users', //endpoint to fetch users
+    getUser: builder.query<UserType, void>({
+      query: () => ({
+        url: '',
+        method: 'GET',
+      })
     }),
-    getUserById: builder.query({
-      query: (id: string) => `/users/${id}`, // Endpoint to fetch a user by ID
-    }),
-    createUser: builder.mutation({
-      query: (user) => ({
-        url: '/users',
+    uploadImage: builder.mutation<UserType, FormData>({
+      query: (formData) => ({
+        url: '/update-image',
         method: 'POST',
-        body: user,
+        body: formData,
       }),
+      //map the response of the API to a specific defined class
+      transformResponse: (response: any): UserType => {
+        return {
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          image: response.image,
+        }
+      }
     }),
-    updateUser: builder.mutation({
-      query: ({ id, ...user }) => ({
-        url: `/users/${id}`,
-        method: 'PUT',
-        body: user,
-      }),
-    }),
-    deleteUser: builder.mutation({
-      query: (id) => ({
-        url: `/users/${id}`,
-        method: 'DELETE',
-      }),
-    }),
+    //define enpoints as functions (TODO)
+    // getUsers: builder.query({
+    //   query: () => '/users', //endpoint to fetch users
+    // }),
+    // getUserById: builder.query({
+    //   query: (id: string) => `/users/${id}`, // Endpoint to fetch a user by ID
+    // }),
+    // createUser: builder.mutation({
+    //   query: (user) => ({
+    //     url: '/users',
+    //     method: 'POST',
+    //     body: user,
+    //   }),
+    // }),
+    // updateUser: builder.mutation({
+    //   query: ({ id, ...user }) => ({
+    //     url: `/users/${id}`,
+    //     method: 'PUT',
+    //     body: user,
+    //   }),
+    // }),
+    // deleteUser: builder.mutation({
+    //   query: (id) => ({
+    //     url: `/users/${id}`,
+    //     method: 'DELETE',
+    //   }),
+    // }),
   }),
 });
 
 export const {
-  useGetUsersQuery,
-  useGetUserByIdQuery,
-  useCreateUserMutation,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
+  useGetUserQuery,
+  useUploadImageMutation,
+  // useGetUsersQuery,
+  // useGetUserByIdQuery,
+  // useCreateUserMutation,
+  // useUpdateUserMutation,
+  // useDeleteUserMutation,
 } = userSlice;

@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
 
-//TODO:
-/*
-USE: Register.tsx
-*/
-
 const useMediaQuery = (breakpoint: number) => {
   const [isMobile, toggle] = useState(false);
   const checkWidth = () => {

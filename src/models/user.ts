@@ -5,6 +5,7 @@ export type UserType = {
   lastName?: string;
   email: string;
   image?: string;
+  guessTokens: number;
 };
 //Structure for passing User for update
 export type UpdateUserType = {

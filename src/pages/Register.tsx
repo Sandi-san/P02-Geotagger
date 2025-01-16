@@ -288,7 +288,7 @@ const Register: FC = () => {
                         textAlign: 'center',
                         justifyContent: 'space-between',
                         // minHeight: 0,
-                        maxWidth: '60vh',
+                        maxWidth: isMobile ? '100vh' : '60vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start' }}>
                             <Typography variant="body1" color='primary.dark'>

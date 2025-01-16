@@ -10,7 +10,7 @@ const theme = createTheme({
                     textTransform: 'none', //remove fully capitalized text
                     minWidth: 100,
                     height: 30,
-                }
+                },
             }
         }
     },

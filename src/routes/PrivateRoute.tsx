@@ -1,4 +1,4 @@
-import authStore from '../stores/auth.store';
+import userStore from '../stores/user.store';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Navigate, RouteProps, useLocation } from 'react-router-dom';
@@ -8,7 +8,7 @@ const PrivateRoute: FC<RouteProps> = ({ children }: RouteProps) => {
   const location = useLocation();
 
   //if user is not logged, redirect to login page
-  if (!authStore.user) {
+  if (!userStore.user) {
     return (
       <Navigate
         to={`/login?redirect=${encodeURIComponent(location.pathname)}`}

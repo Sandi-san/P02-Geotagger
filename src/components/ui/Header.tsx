@@ -1,8 +1,8 @@
 import { AppBar, Avatar, Box, Button, IconButton, Link, Toolbar, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import theme from "../../theme";
-import authStore from "../../stores/auth.store";
-import { userStorage } from "../../utils/localStorage";
+import userStore from "../../stores/user.store";
+import { tokenStorage } from "../../utils/tokenStorage";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
 const Header: FC = () => {
@@ -11,6 +11,13 @@ const Header: FC = () => {
     //TODO: add userStorage checker if access_token has existed
     //for X amount of time (backend) aka was last updated
     //if time has passed and token is invalid, delete local user
+
+    useEffect(() => {
+        if(!tokenStorage.isTokenValid()){
+            userStore.signout()
+        }
+    }, [])
+
 
     return (
         <AppBar position="static" sx={{
@@ -34,7 +41,7 @@ const Header: FC = () => {
                 </Box>
                 {/* Far-right items */}
                 {/* User is not logged in (no access_token) */}
-                {!userStorage.getUser() ? (
+                {!tokenStorage.getToken() ? (
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {/* Sign in button */}
                         <Link variant="body2" color='primary.dark'
@@ -122,15 +129,15 @@ const Header: FC = () => {
                                 }}
                             >
                                 <img
-                                    src={authStore.user?.image || '/placeholder-avatar.png'}
+                                    src={userStore.user?.image || '/placeholder-avatar.png'}
                                     alt="User Avatar"
                                     style={{
                                         //if user does not have an image, display placeholder with different styling
-                                        width: authStore.user?.image ? '100%' : '80%',
-                                        height: authStore.user?.image ? '100%' : '80%',
+                                        width: userStore.user?.image ? '100%' : '80%',
+                                        height: userStore.user?.image ? '100%' : '80%',
                                         objectFit: 'cover',
                                         boxSizing: 'border-box', //ensures padding is accounted inside the box
-                                        borderRadius: authStore.user?.image ? '100%' : '50%', //ensures the placeholder image remains circular
+                                        borderRadius: userStore.user?.image ? '100%' : '50%', //ensures the placeholder image remains circular
                                     }}
                                 />
                             </Box>
@@ -145,7 +152,7 @@ const Header: FC = () => {
                                     flexGrow: 1,
                                 }}
                             >
-                                {authStore.user?.guessTokens || '0'}
+                                {userStore.user?.guessTokens || '0'}
                             </Typography>
                         </Box>
                         <Box>

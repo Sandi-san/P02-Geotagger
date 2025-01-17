@@ -5,15 +5,16 @@ import useMediaQuery from '../hooks/useMediaQuery';
 import { useRegisterUserMutation } from '../slices/api/auth.slice';
 import { RegisterUserFields, useRegisterForm } from '../hooks/react-hook-form/useRegister';
 import { Controller } from 'react-hook-form';
-import authStore from '../stores/auth.store';
+import userStore from '../stores/user.store';
 import isApiError from '../utils/apiErrorChecker';
 import ErrorDisplay from '../components/ui/ErrorDisplay';
 import { useUploadImageMutation } from '../slices/api/user.slice';
-import { userStorage } from '../utils/localStorage';
+import { tokenStorage } from '../utils/tokenStorage';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
+    //TODO: remove right section display when set as isMobile
 
     //form validation for user registration (custom hook)
     const { handleSubmit, errors, control } = useRegisterForm();
@@ -53,8 +54,8 @@ const Register: FC = () => {
             console.log('User registered successfully:', registerResponse);
 
             //save the returned access_token into local storage
-            userStorage.setUser(registerResponse.access_token)
-            console.log('Local user:', userStorage.getUser());
+            tokenStorage.setToken(registerResponse.access_token)
+            console.log('Local user:', tokenStorage.getToken());
 
             //if image is also passed, call uploadFile route
             if (imageFile) {
@@ -66,7 +67,7 @@ const Register: FC = () => {
                 //check if response successful and save the User locally
                 if (typeof (imageUploadResponse as any).data === 'object' &&
                     imageUploadResponse.data !== undefined)
-                    authStore.login(imageUploadResponse.data)
+                    userStore.login(imageUploadResponse.data)
             }
         }
         catch (err) {

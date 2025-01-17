@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { UserType } from '../../models/user';
 import { RootState } from '../../stores/configure.store';
-import { userStorage } from '../../utils/localStorage';
+import { tokenStorage } from '../../utils/tokenStorage';
 
 //api for /user route in backend 
 export const userSlice = createApi({
@@ -11,7 +11,7 @@ export const userSlice = createApi({
     baseUrl: 'http://localhost:8080/user',
     prepareHeaders: (headers) => {
       //retrieve user access_token from local storage 
-      const token = userStorage.getUser()
+      const token = tokenStorage.getToken()
       if (token)
         headers.set('Authorization', `Bearer ${token}`)
       return headers

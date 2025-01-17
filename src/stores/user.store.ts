@@ -1,16 +1,16 @@
 import { makeAutoObservable } from 'mobx';
 import { UserType } from '../models/user';
-import { userStorage } from '../utils/localStorage';
+import { tokenStorage } from '../utils/tokenStorage';
 
 //Fetch and save User object (saves latest user data)
-export interface AuthContextType {
+export interface UserContextType {
   user?: UserType | null;
   login: () => void;
   signout: () => void;
 }
 
-class AuthStore {
-  user?: UserType | null = userStorage.getUser() || null;
+class UserStore {
+  user?: UserType | null;
 
   constructor() {
     makeAutoObservable(this);
@@ -23,10 +23,10 @@ class AuthStore {
 
   //logout user, deletes access_token
   signout() {
-    userStorage.clearUser();
+    tokenStorage.clearToken();
     this.user = undefined;
   }
 }
 
-const authStore = new AuthStore();
-export default authStore;
+const userStore = new UserStore();
+export default userStore;

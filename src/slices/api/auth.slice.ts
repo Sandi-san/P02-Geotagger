@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RegisterUserFields } from '../../hooks/react-hook-form/useRegister';
+import { LoginUserFields } from '../../hooks/react-hook-form/useLogin';
 
 //api for /user route in backend
 export const authSlice = createApi({
@@ -14,17 +15,11 @@ export const authSlice = createApi({
         body: user,
       }),
     }),
-    updateUser: builder.mutation({
-      query: ({ id, ...user }) => ({
-        url: `/users/${id}`,
-        method: 'PUT',
+    loginUser: builder.mutation({
+      query: (user: LoginUserFields) => ({
+        url: '/login',
+        method: 'POST',
         body: user,
-      }),
-    }),
-    deleteUser: builder.mutation({
-      query: (id) => ({
-        url: `/users/${id}`,
-        method: 'DELETE',
       }),
     }),
   }),
@@ -32,6 +27,5 @@ export const authSlice = createApi({
 
 export const {
   useRegisterUserMutation,
-  useUpdateUserMutation,
-  useDeleteUserMutation,
+  useLoginUserMutation,
 } = authSlice;

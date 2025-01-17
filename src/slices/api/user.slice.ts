@@ -22,7 +22,18 @@ export const userSlice = createApi({
       query: () => ({
         url: '',
         method: 'GET',
-      })
+      }),
+      //map the response of the API to a specific defined class
+      transformResponse: (response: any): UserType => {
+        return {
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          image: response.image,
+          guessTokens: response.guessTokens,
+        }
+      }
     }),
     uploadImage: builder.mutation<UserType, FormData>({
       query: (formData) => ({
@@ -30,7 +41,6 @@ export const userSlice = createApi({
         method: 'POST',
         body: formData,
       }),
-      //map the response of the API to a specific defined class
       transformResponse: (response: any): UserType => {
         return {
           id: response.id,

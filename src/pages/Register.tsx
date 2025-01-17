@@ -10,11 +10,16 @@ import isApiError from '../utils/apiErrorChecker';
 import ErrorDisplay from '../components/ui/ErrorDisplay';
 import { useUploadImageMutation } from '../slices/api/user.slice';
 import { tokenStorage } from '../utils/tokenStorage';
+import fetchUser from '../utils/fetchLocalUser';
+import { UserType } from '../models/user';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
     //TODO: remove right section display when set as isMobile
+
+    //mediaQuery for top-left logo on zoom-in
+    const unstickLogo = useMediaQuery(950)
 
     //form validation for user registration (custom hook)
     const { handleSubmit, errors, control } = useRegisterForm();
@@ -46,7 +51,7 @@ const Register: FC = () => {
 
     //handle submit method: registration (with Yup form validation) & upload image
     const onSubmit = async (formData: RegisterUserFields) => {
-        console.log('Form Data:', formData);
+        // console.log('Form Data:', formData);
 
         try {
             //call RTK Query mutation with valid formData (register user)
@@ -68,6 +73,15 @@ const Register: FC = () => {
                 if (typeof (imageUploadResponse as any).data === 'object' &&
                     imageUploadResponse.data !== undefined)
                     userStore.login(imageUploadResponse.data)
+            }
+            //image was not uploaded or User data was not returned 
+            if (!userStore.user) {
+                //fetch newly created User from DB (with access token) and login
+                const fetchUserResponse = await fetchUser();
+                console.log('Returned user:', fetchUserResponse);
+                if (typeof (fetchUserResponse as UserType) === 'object' &&
+                    fetchUserResponse !== undefined && fetchUserResponse !== null)
+                    userStore.login(fetchUserResponse)
             }
         }
         catch (err) {
@@ -116,10 +130,34 @@ const Register: FC = () => {
                         overflow: 'auto',
                     }}
                 >
+                    {/* Top left logo with functionality and RWD */}
+                    <Box
+                        sx={{
+                            position: unstickLogo.isMobile ? 'static' : 'absolute',
+                            top: isMobile ? 'auto' : '2vh',
+                            left: isMobile ? 'auto' : '4vh',
+                            display: 'flex',
+                            alignItems: 'center',
+                            // width: '100%',
+                            margin: isMobile ? 2 : 0,
+                            justifyContent: isMobile ? 'center' : 'flex-start',
+                            gap: 1,
+                        }}
+                    >
+                        {/* Logo */}
+                        <Link href="/">
+                            <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
+                        </Link>
+                        {/* Text */}
+                        <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
+                            <span style={{ color: theme.palette.primary.main }}>Geo</span>
+                            <span style={{ color: theme.palette.primary.dark }}>tagger</span>
+                        </Typography>
+                    </Box>
+
                     <Typography variant="h3" gutterBottom>
                         Sign up
                     </Typography>
-
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FormControl fullWidth>
                             <Box sx={{
@@ -144,10 +182,10 @@ const Register: FC = () => {
                                     <Avatar
                                         src={imageFile ? URL.createObjectURL(imageFile) : ''}
                                         sx={{
-                                            width: '10vh',
-                                            height: '10vh',
+                                            width: '8vh',
+                                            height: '8vh',
                                             cursor: 'pointer',
-                                            marginY: 2,
+                                            marginY: 1,
                                         }}
                                     />
                                 </label>
@@ -291,12 +329,12 @@ const Register: FC = () => {
                         // minHeight: 0,
                         maxWidth: isMobile ? '100vh' : '60vh',
                     }}>
-                        <Box sx={{ alignItems: 'flex-start' }}>
+                        <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
                             <Typography variant="body1" color='primary.dark'>
                                 Already have an account?
                             </Typography>
                         </Box>
-                        <Box sx={{alignContent: 'flex-end'}} >
+                        <Box sx={{ alignContent: 'flex-end', textAlign: 'end' }} >
                             <Link variant="body1" color='primary.main'
                                 sx={{ textDecoration: 'none' }}
                                 href="/login"

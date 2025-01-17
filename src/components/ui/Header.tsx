@@ -7,11 +7,7 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
-
-    //TODO: add userStorage checker if access_token has existed
-    //for X amount of time (backend) aka was last updated
-    //if time has passed and token is invalid, delete local user
-
+    
     useEffect(() => {
         if(!tokenStorage.isTokenValid()){
             userStore.signout()

@@ -28,6 +28,7 @@ const Home = lazy(() => import('../pages/Home'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const Password = lazy(() => import('../pages/Password'));
+const OAuthCallback = lazy(() => import('../pages/OAuth'));
 
 // Error routes
 const Page404 = lazy(() => import('../pages/Page404'));
@@ -50,6 +51,12 @@ export const AppRoutes: AppRoute[] = [
     type: RouteType.RESTRICTED,
     path: '/forgot_password',
     children: <Password />,
+  },
+  //route for parsing OAuth User data
+  {
+    type: RouteType.RESTRICTED,
+    path: '/oauth/callback',
+    children: <OAuthCallback />,
   },
 
   // Private Routes

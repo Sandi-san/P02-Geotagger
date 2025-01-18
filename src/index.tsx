@@ -11,12 +11,12 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    {/* Use store from React-Redux */}
+  // <React.StrictMode>
+    // {/* Use store from React-Redux */}
     <Provider store={store}>
       <Router>
         <App />
       </Router>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

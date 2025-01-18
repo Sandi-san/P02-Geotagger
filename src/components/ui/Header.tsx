@@ -7,10 +7,15 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
-    
+
     useEffect(() => {
-        if(!tokenStorage.isTokenValid()){
+        if (!tokenStorage.isTokenValid()) {
             userStore.signout()
+        }
+        else {
+            //TODO: local token is set, but check if user object is set
+            //if not, fetch user from DB
+            console.log("User data is set: ",userStore.user ? 'true' : 'false')
         }
     }, [])
 
@@ -74,8 +79,8 @@ const Header: FC = () => {
                         </Link>
                         {/* Open User Settings popup */}
                         <Link variant="body1" color='primary.dark'
-                            sx={{ 
-                                textDecoration: 'none', 
+                            sx={{
+                                textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
                             }}
                             href="/profile"
@@ -84,8 +89,8 @@ const Header: FC = () => {
                         </Link>
                         {/* Open User logout popup */}
                         <Link variant="body1" color='primary.dark'
-                            sx={{ 
-                                textDecoration: 'none', 
+                            sx={{
+                                textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
                             }}
                             href="/logout"

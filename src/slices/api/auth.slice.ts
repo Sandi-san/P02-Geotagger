@@ -22,10 +22,26 @@ export const authSlice = createApi({
         body: user,
       }),
     }),
+    redirectOAuthUser: builder.mutation({
+      query: () => ({
+        url: '/google',
+        method: 'GET',
+        credentials: 'include', // Include cookies if needed
+      }),
+    }),
+    loginOAuthUser: builder.mutation<{ access_token: string }, void>({
+      query: () => ({
+        url: '/google/redirect',
+        method: 'GET',
+        // credentials: 'include', // Include cookies if needed
+      }),
+    }),
   }),
 });
 
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
+  useRedirectOAuthUserMutation,
+  useLoginOAuthUserMutation,
 } = authSlice;

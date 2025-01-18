@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import ErrorDisplay from '../components/ui/ErrorDisplay';
 import theme from '../theme';
 import { LoginUserFields, useLoginForm } from '../hooks/react-hook-form/useLogin';
-import { useLoginUserMutation } from '../slices/api/auth.slice';
+import { useLoginOAuthUserMutation, useRedirectOAuthUserMutation, useLoginUserMutation } from '../slices/api/auth.slice';
 import { tokenStorage } from '../utils/tokenStorage';
 import userStore from '../stores/user.store';
 import fetchUser from '../utils/fetchLocalUser';
@@ -22,8 +22,13 @@ const Login: FC = () => {
 
   //form validation for user registration (custom hook)
   const { handleSubmit, errors, control } = useLoginForm();
-  //initialize mutation hook for registering User (register user api call)
+  //initialize mutation hook for login User (register user api call)
   const [loginUser] = useLoginUserMutation()
+
+  //initialize mutation hook to redirect to Google OAuth page
+  const [redirectOAuthUser] = useRedirectOAuthUserMutation()
+  //initialize mutation hook for login User with OAuth
+  const [loginOAuthUser] = useLoginOAuthUserMutation()
 
   //toggle buttons for showing values inside password form
   const [showPassword, setShowPassword] = useState(false);
@@ -65,6 +70,32 @@ const Login: FC = () => {
         setApiError("An unexpected error has occured.");
         setShowError(true);
       }
+    }
+  }
+
+  
+  const handleOAuthLogin = async () => {
+    try {
+      // await redirectOAuthUser(undefined)
+      // const popup = window.open('http://localhost:8080/auth/google', '_blank', 'width=500,height=600');
+      window.location.href = 'http://localhost:8080/auth/google';
+  
+      // // Poll the popup to detect when it closes
+      // const checkPopupClosed = setInterval(async () => {
+      //   if (popup && popup.closed) {
+      //     clearInterval(checkPopupClosed);
+
+      //     // Call the mutation to fetch user data after the popup closes
+      //     const response = await loginOAuthUser().unwrap();
+      //     console.log('User logged in with OAuth:', response);
+
+      //     // Save the access token and user data locally
+      //     tokenStorage.setToken(response.access_token);
+      //     userStore.login(response.user);
+      //   }
+      // }, 500);
+    } catch (error) {
+      console.error('Error during Google OAuth login:', error);
     }
   };
 
@@ -188,24 +219,23 @@ const Login: FC = () => {
               >
                 Sign in
               </Button>
-
+              <Button
+                onClick={handleOAuthLogin}
+                variant="contained"
+                fullWidth
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: 'white',
+                  color: 'primary.dark',
+                  border: 1,
+                  borderColor: 'darkgray',
+                }}
+              >
+                <Box component="img" src="/social-google.svg" alt="" sx={{ height: 16, marginRight: 1 }} />
+                Sign in with Google
+              </Button>
             </FormControl>
           </form>
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{
-              marginBottom: 2,
-              backgroundColor: 'white',
-              color: 'primary.dark',
-              border: 1,
-              borderColor: 'darkgray',
-            }}
-          >
-            <Box component="img" src="/social-google.svg" alt="" sx={{ height: 16, marginRight: 1 }} />
-            Sign in with Google
-          </Button>
           {/* Unsupported */}
           {/* <Button
                 type="submit"

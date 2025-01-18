@@ -1,10 +1,12 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserLoginDto, UserRegisterDto, UserEmailDto, UserPasswordDto } from './dto/index';
 import { UpdateUserDto } from '../user/dto/user-update.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RateLimiterService } from 'src/library/RateLimiter';
+import { EnvVars } from 'src/common/constants/env-vars.contant';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -12,6 +14,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private rateLimiterService: RateLimiterService,
+    private configService: ConfigService
   ) { }
 
   /*
@@ -76,7 +79,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Unusable with Swagger' })
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleRedirect() {}
+  async googleRedirect() { }
 
   /*
   ROUTE THAT GETS CALLED WHEN THE USER SENDS THEIR GOOGLE DATA
@@ -85,8 +88,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  async googleLogin(@Req() req): Promise<{ access_token: string }> {
+  async googleLogin(@Req() req, @Res() res): Promise<void> {
     //register/login with OAuth
-    return this.authService.googleLogin(req.user)
+    const { access_token } = await this.authService.googleLogin(req.user)
+    //get access_token and then redirect user back to the frontend app
+    res.redirect(`${this.configService.get(EnvVars.FRONTEND_DOMAIN)}/oauth/callback?access_token=${access_token}`)
   }
 }

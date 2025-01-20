@@ -1,6 +1,10 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { tokenStorage } from "../../utils/tokenStorage";
+import userStore from "../../stores/user.store";
+import fetchUser from "../../utils/fetchLocalUser";
+import { UserType } from "../../models/user";
 
 interface Props {
     children: ReactNode | ReactNode[];

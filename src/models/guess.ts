@@ -6,3 +6,11 @@ export type GuessType = {
   locationId: number;
   userId: number;
 };
+//Structure for receiving Guess
+export type FetchGuessType = {
+  id: number;
+  errorDistance: number,
+  locationImage: string,
+  locationId: number;
+  userId: number;
+};

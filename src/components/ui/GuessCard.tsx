@@ -4,10 +4,18 @@ import theme from "../../theme"
 
 interface GuessCardProps {
     imageUrl: string
-    isLocked?: boolean
+    isLocked?: boolean //display lock icon on card?
+    errorDistance?: number //display error distance on card?
+    width?: number, height?: number //override width/height
 }
 
-const GuessCard: FC<GuessCardProps> = ({ imageUrl, isLocked = false }) => {
+const GuessCard: FC<GuessCardProps> = ({ 
+    imageUrl, 
+    isLocked = false, 
+    errorDistance = -1,
+    width = 300,
+    height = 200,
+ }) => {
     //called if image from imageUrl cannot be loaded
     const [imageError, setImageError] = useState(false);
 
@@ -15,8 +23,8 @@ const GuessCard: FC<GuessCardProps> = ({ imageUrl, isLocked = false }) => {
         <Box
             sx={{
                 position: 'relative', //contain the Locked overlays
-                width: 300,
-                height: 200,
+                width: {width},
+                height: {height},
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -82,6 +90,26 @@ const GuessCard: FC<GuessCardProps> = ({ imageUrl, isLocked = false }) => {
                 >
                     {/* Lock logo */}
                     <Box component="img" src="/lock.svg" alt="Lock" sx={{ height: 40 }} />
+                </Box>
+            )}
+            {/* ErrorDistance green overlay */}
+            {errorDistance!=-1 && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        bgcolor: `${theme.palette.primary.main}80`, //color from custom theme with alpha channel (50% = 80 in hex color code)
+                        borderRadius: 'inherit',
+                        zIndex: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                 <Typography color="primary.contrastText" variant="body2" sx={{
+                    fontSize: '3vh'
+                 }} >{errorDistance} m</Typography>
                 </Box>
             )}
         </Box>

@@ -4,21 +4,11 @@ import theme from "../../theme";
 import userStore from "../../stores/user.store";
 import { tokenStorage } from "../../utils/tokenStorage";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { UserType } from "../../models/user";
+import fetchUser from "../../utils/fetchLocalUser";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
-
-    useEffect(() => {
-        if (!tokenStorage.isTokenValid()) {
-            userStore.signout()
-        }
-        else {
-            //TODO: local token is set, but check if user object is set
-            //if not, fetch user from DB
-            console.log("User data is set: ",userStore.user ? 'true' : 'false')
-        }
-    }, [])
-
 
     return (
         <AppBar position="static" sx={{
@@ -130,7 +120,9 @@ const Header: FC = () => {
                                 }}
                             >
                                 <img
-                                    src={userStore.user?.image || '/placeholder-avatar.png'}
+                                    src={userStore.user?.image ?
+                                        (userStore.user?.image) :
+                                        ('/placeholder-avatar.png')}
                                     alt="User Avatar"
                                     style={{
                                         //if user does not have an image, display placeholder with different styling
@@ -153,7 +145,9 @@ const Header: FC = () => {
                                     flexGrow: 1,
                                 }}
                             >
-                                {userStore.user?.guessTokens || '0'}
+                                {userStore.user?.guessTokens ?
+                                    (userStore.user?.guessTokens)
+                                    : ('0')}
                             </Typography>
                         </Box>
                         <Box>

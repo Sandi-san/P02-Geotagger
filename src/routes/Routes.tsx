@@ -47,6 +47,7 @@ export const AppRoutes: AppRoute[] = [
     path: '/register',
     children: <Register />,
   },
+  //TODO
   {
     type: RouteType.RESTRICTED,
     path: '/forgot_password',

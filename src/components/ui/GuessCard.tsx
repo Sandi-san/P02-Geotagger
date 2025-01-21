@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material"
 import { FC, useState } from "react"
 import theme from "../../theme"
+import useMediaQuery from "../../hooks/useMediaQuery"
 
 interface GuessCardProps {
     imageUrl: string

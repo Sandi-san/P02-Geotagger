@@ -1,14 +1,24 @@
-import { AppBar, Avatar, Box, Button, IconButton, Link, Toolbar, Typography } from "@mui/material";
-import { FC, useEffect } from "react";
+import { AppBar, Avatar, Box, Button, IconButton, Link, Modal, Toolbar, Typography } from "@mui/material";
+import { FC, useEffect, useState } from "react";
 import theme from "../../theme";
 import userStore from "../../stores/user.store";
 import { tokenStorage } from "../../utils/tokenStorage";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import { UserType } from "../../models/user";
 import fetchUser from "../../utils/fetchLocalUser";
+import Loading from "./Loading";
+import UserProfileSettings from "./UserProfileSettings";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
+
+    //open/close states for User Settings popup
+    const [open, setOpen] = useState(false);
+    //open the modal
+    const handleOpen = () => setOpen(true);
+    //close the modal
+    const handleClose = () => setOpen(false);
+
 
     return (
         <AppBar position="static" sx={{
@@ -63,7 +73,7 @@ const Header: FC = () => {
                                 textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
                             }}
-                            href="/home"
+                            href="/"
                         >
                             Home
                         </Link>
@@ -72,11 +82,25 @@ const Header: FC = () => {
                             sx={{
                                 textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
+                                '&:hover': {
+                                    cursor: 'pointer'
+                                }
                             }}
-                            href="/profile"
+                            onClick={handleOpen}
                         >
                             Profile settings
                         </Link>
+                        {/* Modal is MUI popup handler. Child is design of popup widget.  */}
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="profile-settings-title"
+                            aria-describedby="profile-settings-description"
+                        >
+                            <UserProfileSettings
+                                handleClose={handleClose}
+                            />
+                        </Modal>
                         {/* Open User logout popup */}
                         <Link variant="body1" color='primary.dark'
                             sx={{

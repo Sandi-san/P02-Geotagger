@@ -3,8 +3,11 @@ import { Box, Button, Typography } from '@mui/material';
 import GuessCard from '../components/ui/GuessCard';
 import { FetchGuessType } from '../models/guess';
 import { LocationType } from '../models/location';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 const HomeLogged: FC = () => {
+    const { isMobile } = useMediaQuery(720)
+
     //TODO: load GuessCard images from DB
 
 
@@ -140,19 +143,23 @@ const HomeLogged: FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 16, }}>
                 <Box
                     sx={{
-                        display: 'grid', //use grid to render elements
-                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', //maximum of 3 GuessCard widgets in one row
-                        gap: 2, //padding between child elements
-                        justifyContent: 'center'
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap', //wrap child elements into the next line
+                        position: 'relative',
+                        padding: 2,
+                        gap: 2, //space between child elements
+                        justifyContent: 'center',
                     }}
                 >
                     {/* Render GuessCards dynamically */}
                     {guesses.map((guess, index) => (
-                        <GuessCard key={index} 
-                        imageUrl={guess.locationImage} 
-                        errorDistance={guess.errorDistance}
-                        width={450}
-                        height={300}
+                        <GuessCard key={index}
+                            imageUrl={guess.locationImage}
+                            errorDistance={guess.errorDistance}
+                            width={450}
+                            height={300}
                         />
                     ))}
                 </Box>
@@ -186,18 +193,22 @@ const HomeLogged: FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 16, }}>
                 <Box
                     sx={{
-                        display: 'grid', //use grid to render elements
-                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', //maximum of 3 GuessCard widgets in one row
-                        gap: 2, //padding between child elements
-                        justifyContent: 'center'
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        position: 'relative',
+                        padding: 2,
+                        gap: 2,
+                        justifyContent: 'center',
                     }}
                 >
                     {/* Render GuessCards dynamically */}
                     {locations.map((location, index) => (
-                        <GuessCard key={index} 
-                        imageUrl={location.image || ''} 
-                        width={450}
-                        height={300}
+                        <GuessCard key={index}
+                            imageUrl={location.image || ''}
+                            width={450}
+                            height={300}
                         />
                     ))}
                 </Box>

@@ -22,7 +22,10 @@ const App: FC = () => {
     //async function that executes first then loads the page
     const initLocalUser = async () => {
       if (!tokenStorage.isTokenValid()) {
-        userStore.signout();
+        if (tokenStorage.getToken() != null) {
+          console.log(`Token '${tokenStorage.getToken()}' is invalid. Signing out.`)
+          userStore.signout();
+        }
       }
       else {
         console.log("User data is set: ", userStore.user ? 'true' : 'false')
@@ -48,7 +51,7 @@ const App: FC = () => {
 
   if (loading) {
     //Show loading widget
-    return <Loading/>;
+    return <Loading />;
   }
 
   return (

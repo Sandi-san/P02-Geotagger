@@ -3,13 +3,12 @@ import { UpdateUserType } from '../../models/user';
 import { Resolver, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-type UserFormFields = CreateUserFields | UpdateUserFields;
-
 //Structure for Create User form
 export interface CreateUserFields {
   firstName?: string | undefined;
   lastName?: string | undefined;
   email: string;
+  old_password?: undefined; //required otherwise can't access old_password in UpdateUserFields
   password: string;
   confirm_password: string;
 }
@@ -37,6 +36,7 @@ export const useCreateUpdateUserForm = ({ defaultValues }: Props) => {
     firstName: Yup.string().notRequired().nonNullable(),
     lastName: Yup.string().notRequired().nonNullable(),
     email: Yup.string().email().required('Please enter a valid email'),
+    // old_password: Yup.string().notRequired().nonNullable(),
     password: Yup.string()
       .matches(
         /^(?=.*\d)[A-Za-z.\s_-]+[\w~@#$%^&*+=`|{}:;!.?"()[\]-]{6,}/,

@@ -7,6 +7,7 @@ interface ErrorDisplayProps {
 
 const ErrorDisplay: FC<ErrorDisplayProps> = ({ message }) => {
     return (
+        //TODO: display as widget
         <Box sx={{ marginTop: 2, width: '100%' }}>
             <Alert severity="error">
                 <Typography variant="body1">{message}</Typography>

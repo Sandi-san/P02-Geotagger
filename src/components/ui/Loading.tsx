@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-//TODO: REMAKE FOR MUI
+//TODO: REMAKE FOR MUI, display as widget
 //CUSTOM STYLE PAGE KO SE ELEMENTI IZ BACKEND SE NALAGAJO
 const Loading: FC = () => {
   return (

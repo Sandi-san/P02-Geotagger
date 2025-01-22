@@ -23,7 +23,7 @@ const App: FC = () => {
     const initLocalUser = async () => {
       if (!tokenStorage.isTokenValid()) {
         if (tokenStorage.getToken() != null) {
-          console.log(`Token '${tokenStorage.getToken()}' is invalid. Signing out.`)
+          console.error(`Token '${tokenStorage.getToken()}' is invalid. Signing out.`)
           userStore.signout();
         }
       }

@@ -90,7 +90,7 @@ const Header: FC = () => {
                         >
                             Profile settings
                         </Link>
-                        {/* Modal is MUI popup handler. Child is design of popup widget.  */}
+                        {/* Modal is MUI popup handler. Child is content of popup widget.  */}
                         <Modal
                             open={open}
                             onClose={handleClose}

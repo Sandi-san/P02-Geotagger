@@ -2,12 +2,13 @@ import { Avatar, Box, Button, FormControl, IconButton, InputAdornment, Link, Tex
 import { forwardRef, useState } from "react"
 import { Controller } from "react-hook-form"
 import { UpdateUserFields, useCreateUpdateUserForm } from "../../hooks/react-hook-form/useCreateUpdateUser";
-import { UpdateUserType } from "../../models/user";
+import { UpdateUserType, UserType } from "../../models/user";
 import userStore from "../../stores/user.store";
 import isApiError from "../../utils/apiErrorChecker";
 import ErrorDisplay from "./ErrorDisplay";
 import theme from "../../theme";
-import { useUploadImageMutation } from "../../slices/api/user.slice";
+import { useUpdateUserMutation, useUpdateUserPasswordMutation, useUploadImageMutation } from "../../slices/api/user.slice";
+import fetchUser from "../../utils/fetchLocalUser";
 
 //use forwardRef to recieve a functional component (handleClose function), required by Modal
 const UserProfileSettings = forwardRef((
@@ -59,11 +60,13 @@ const UserProfileSettings = forwardRef((
     const toggleOldPasswordVisibility = () => setShowOldPassword((prev) => !prev);
     const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
 
-
-    //set state for image file (separate from useRegisterForm, which uses Yup)
+    //prepare mutations for calling api endpoints
+    const [updateUser] = useUpdateUserMutation()
+    const [updateUserPassword] = useUpdateUserPasswordMutation()
+    //set state for image file
     const [imageFile, setImageFile] = useState<File | null>(null)
     const [uploadImage] = useUploadImageMutation()
-    
+
     //method for changing Avatar image
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // console.log("Changing avatar")
@@ -87,12 +90,39 @@ const UserProfileSettings = forwardRef((
     //handle submit method: registration (with Yup form validation) & upload image
     const onSubmit = async (formData: UpdateUserFields) => {
         console.log('Form Data:', formData);
+        console.log('Image:', imageFile);
         console.log(`Submit: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
 
         try {
-            // const registerResponse = await registerUser(formData).unwrap();
-            // console.log('User registered successfully:', registerResponse);
-            // handleClose()
+            //update basic User data
+            if (!showPasswordForm && !showAvatarForm) {
+                const updateResponse = await updateUser(formData).unwrap();
+                console.log('User updated successfully:', updateResponse);
+            }
+            //update password
+            else if (showPasswordForm && !showAvatarForm) {
+                const updateResponse = await updateUserPassword(formData).unwrap();
+                console.log('Response:', updateResponse.response);
+
+            }
+            //update image
+            else {
+                if (imageFile) {
+                    const formDataImage = new FormData()
+                    formDataImage.append('image', imageFile)
+                    //call api
+                    const imageUploadResponse = await uploadImage(formDataImage);
+                    console.log('Image uploaded successfully:', imageUploadResponse);
+                    //check if response successful and save the User locally
+                    if (typeof (imageUploadResponse as any).data === 'object' &&
+                        imageUploadResponse.data !== undefined) {
+                        userStore.login(imageUploadResponse.data)
+
+                    }
+                }
+            }
+
+            //TODO: modal popup: information successfully changed
         }
         catch (err) {
             console.error("Error during update: ", err)

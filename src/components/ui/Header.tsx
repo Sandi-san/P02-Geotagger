@@ -17,8 +17,24 @@ const Header: FC = () => {
     //open the modal
     const handleOpen = () => setOpen(true);
     //close the modal
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        //TODO: refetch user here
+        setOpen(false);
+    }
 
+    //get valid path of User avatar image file
+    //NOTE: if registration is done with OAuth, the image path is copied from Google servers
+    //sometimes the file may become inaccessible and the user must manually change their profile image  
+    const getValidImagePath = (imageName: string): string | undefined => {
+        //check if User image path name contains full path, if yes, return
+        const isFullPath = imageName.startsWith('http://') || imageName.startsWith('https://');
+        if (isFullPath)
+            return imageName
+
+        //if image is not full path (usually local file), append folder name and return 
+        const baseFileFolder = `${process.env.REACT_APP_BACKEND_DOMAIN}/files`
+        return `${baseFileFolder}/${imageName}`
+    }
 
     return (
         <AppBar position="static" sx={{
@@ -145,7 +161,7 @@ const Header: FC = () => {
                             >
                                 <img
                                     src={userStore.user?.image ?
-                                        (userStore.user?.image) :
+                                        (getValidImagePath(userStore.user?.image)) :
                                         ('/placeholder-avatar.png')}
                                     alt="User Avatar"
                                     style={{

@@ -5,7 +5,9 @@ import { LoginUserFields } from '../../hooks/react-hook-form/useLogin';
 //api for /user route in backend
 export const authSlice = createApi({
   reducerPath: 'auth', //identifier for this slice
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080/auth' }), //base URL (matches backend)
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: `${process.env.REACT_APP_BACKEND_DOMAIN}/auth`  
+  }), //base URL (matches backend)
   endpoints: (builder) => ({
     //define enpoints as functions
     registerUser: builder.mutation({

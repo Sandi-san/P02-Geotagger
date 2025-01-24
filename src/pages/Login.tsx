@@ -73,13 +73,13 @@ const Login: FC = () => {
     }
   }
 
-  
+
   const handleOAuthLogin = async () => {
     try {
       // await redirectOAuthUser(undefined)
       // const popup = window.open('http://localhost:8080/auth/google', '_blank', 'width=500,height=600');
-      window.location.href = 'http://localhost:8080/auth/google';
-  
+      window.location.href = `${process.env.REACT_APP_BACKEND_DOMAIN}/auth/google`
+
       // // Poll the popup to detect when it closes
       // const checkPopupClosed = setInterval(async () => {
       //   if (popup && popup.closed) {

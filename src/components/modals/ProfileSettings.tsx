@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from "@mui/material"
 import { forwardRef, useState } from "react"
 import { Controller } from "react-hook-form"
 import { UpdateUserFields, useCreateUpdateUserForm } from "../../hooks/react-hook-form/useCreateUpdateUser";
@@ -9,9 +9,10 @@ import ErrorDisplay from "./ErrorDisplay";
 import theme from "../../theme";
 import { useUpdateUserMutation, useUpdateUserPasswordMutation, useUploadImageMutation } from "../../slices/api/user.slice";
 import fetchUser from "../../utils/fetchLocalUser";
+import SettingsSavedConformation from "./SettingsSavedConformation";
 
 //use forwardRef to recieve a functional component (handleClose function), required by Modal
-const UserProfileSettings = forwardRef((
+const ProfileSettings = forwardRef((
     { handleClose }: { handleClose: () => void },
     ref) => {
     const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -84,8 +85,13 @@ const UserProfileSettings = forwardRef((
         }
     };
 
+    //states for opening Error Modal
     const [apiError, setApiError] = useState('')
+    const [apiStatus, setApiStatus] = useState('')
     const [showError, setShowError] = useState(false)
+
+    //state for opening Successful Change Modal
+    const [showSuccess, setShowSuccess] = useState(false)
 
     //handle submit method: registration (with Yup form validation) & upload image
     const onSubmit = async (formData: UpdateUserFields) => {
@@ -103,7 +109,6 @@ const UserProfileSettings = forwardRef((
             else if (showPasswordForm && !showAvatarForm) {
                 const updateResponse = await updateUserPassword(formData).unwrap();
                 console.log('Response:', updateResponse.response);
-
             }
             //update image
             else {
@@ -113,21 +118,22 @@ const UserProfileSettings = forwardRef((
                     //call api
                     const imageUploadResponse = await uploadImage(formDataImage);
                     console.log('Image uploaded successfully:', imageUploadResponse);
-                    //check if response successful and save the User locally
+
+                    //check if response successful and update local User
                     if (typeof (imageUploadResponse as any).data === 'object' &&
                         imageUploadResponse.data !== undefined) {
                         userStore.login(imageUploadResponse.data)
-
                     }
                 }
             }
-
-            //TODO: modal popup: information successfully changed
+            //show success popup. if error occurs, catch is called instead 
+            setShowSuccess(true)
         }
         catch (err) {
             console.error("Error during update: ", err)
             if (isApiError(err)) {
                 setApiError(err.data.message);
+                setApiStatus(err.status.toString());
                 setShowError(true);
             }
             else {
@@ -440,7 +446,28 @@ const UserProfileSettings = forwardRef((
             )}
             {/* If api error occurs, show error widget  */}
             {showError && (
-                <ErrorDisplay message={apiError} />
+                <Modal
+                    open={showError} // Modal visibility tied to the showError state
+                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    aria-labelledby="error-modal-title"
+                    aria-describedby="error-modal-description"
+                >
+                    <DialogContent>
+                        <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                    </DialogContent>
+                </Modal>
+            )}
+            {showSuccess && (
+                <Modal
+                    open={showSuccess}
+                    onClose={() => setShowSuccess(false)}
+                    aria-labelledby="success-modal-title"
+                    aria-describedby="success-modal-description"
+                >
+                    <DialogContent>
+                        <SettingsSavedConformation handleClose={() => setShowSuccess(false)} />
+                    </DialogContent>
+                </Modal>
             )}
             {/* {isLoading && (
                         <Typography color='info'>Registering...</Typography>
@@ -448,4 +475,4 @@ const UserProfileSettings = forwardRef((
         </Box>
     )
 })
-export default UserProfileSettings
+export default ProfileSettings

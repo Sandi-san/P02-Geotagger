@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
 import isApiError from '../utils/apiErrorChecker';
 import useMediaQuery from '../hooks/useMediaQuery';
-import { Box, Button, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from '@mui/material';
 import { Controller } from 'react-hook-form';
-import ErrorDisplay from '../components/ui/ErrorDisplay';
+import ErrorDisplay from '../components/modals/ErrorDisplay';
 import theme from '../theme';
 import { LoginUserFields, useLoginForm } from '../hooks/react-hook-form/useLogin';
 import { useLoginOAuthUserMutation, useRedirectOAuthUserMutation, useLoginUserMutation } from '../slices/api/auth.slice';
@@ -26,15 +26,17 @@ const Login: FC = () => {
   const [loginUser] = useLoginUserMutation()
 
   //initialize mutation hook to redirect to Google OAuth page
-  const [redirectOAuthUser] = useRedirectOAuthUserMutation()
+  // const [redirectOAuthUser] = useRedirectOAuthUserMutation()
   //initialize mutation hook for login User with OAuth
-  const [loginOAuthUser] = useLoginOAuthUserMutation()
+  // const [loginOAuthUser] = useLoginOAuthUserMutation()
 
   //toggle buttons for showing values inside password form
   const [showPassword, setShowPassword] = useState(false);
 
   //value of error returned by api
   const [apiError, setApiError] = useState('')
+  //status code returned by api
+  const [apiStatus, setApiStatus] = useState('')
   //state if error has occured
   const [showError, setShowError] = useState(false)
 
@@ -61,41 +63,33 @@ const Login: FC = () => {
       }
     }
     catch (err) {
-      console.error("Error during registration: ", err)
+      console.error("Error during login: ", err)
       if (isApiError(err)) {
         setApiError(err.data.message);
+        setApiStatus(err.status.toString());
         setShowError(true);
       }
       else {
-        setApiError("An unexpected error has occured.");
+        //check if thrown error is a FETCH_ERROR
+        if (typeof err === 'object' && (err !== undefined || null)
+          && 'status' in (err as any) && 'error' in (err as any)) {
+          setApiStatus((err as any).status);
+          setApiError((err as any).error);
+        }
+        else
+          setApiError("An unexpected error has occured.");
         setShowError(true);
       }
     }
   }
 
-
   const handleOAuthLogin = async () => {
     try {
-      // await redirectOAuthUser(undefined)
-      // const popup = window.open('http://localhost:8080/auth/google', '_blank', 'width=500,height=600');
       window.location.href = `${process.env.REACT_APP_BACKEND_DOMAIN}/auth/google`
-
-      // // Poll the popup to detect when it closes
-      // const checkPopupClosed = setInterval(async () => {
-      //   if (popup && popup.closed) {
-      //     clearInterval(checkPopupClosed);
-
-      //     // Call the mutation to fetch user data after the popup closes
-      //     const response = await loginOAuthUser().unwrap();
-      //     console.log('User logged in with OAuth:', response);
-
-      //     // Save the access token and user data locally
-      //     tokenStorage.setToken(response.access_token);
-      //     userStore.login(response.user);
-      //   }
-      // }, 500);
     } catch (error) {
       console.error('Error during Google OAuth login:', error);
+      setApiError("Error during Google OAuth login.");
+      setShowError(true);
     }
   };
 
@@ -270,8 +264,20 @@ const Login: FC = () => {
             </Box>
           </Box>
           {/* If api error occurs, show error widget  */}
-          {showError && (
+          {/* {showError && (
             <ErrorDisplay message={apiError} />
+          )} */}
+          {showError && (
+            <Modal
+              open={showError} // Modal visibility tied to the showError state
+              onClose={() => setShowError(false)} // Close the modal on backdrop click
+              aria-labelledby="error-modal-title"
+              aria-describedby="error-modal-description"
+            >
+              <DialogContent>
+                <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+              </DialogContent>
+            </Modal>
           )}
           {/* {isLoading && (
                         <Typography color='info'>Registering...</Typography>

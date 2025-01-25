@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import theme from '../theme';
 import useMediaQuery from '../hooks/useMediaQuery';
@@ -7,7 +7,7 @@ import { RegisterUserFields, useRegisterForm } from '../hooks/react-hook-form/us
 import { Controller } from 'react-hook-form';
 import userStore from '../stores/user.store';
 import isApiError from '../utils/apiErrorChecker';
-import ErrorDisplay from '../components/ui/ErrorDisplay';
+import ErrorDisplay from '../components/modals/ErrorDisplay';
 import { useUploadImageMutation } from '../slices/api/user.slice';
 import { tokenStorage } from '../utils/tokenStorage';
 import fetchUser from '../utils/fetchLocalUser';
@@ -37,6 +37,8 @@ const Register: FC = () => {
 
     //value of error returned by api
     const [apiError, setApiError] = useState('')
+    //status code returned by api
+    const [apiStatus, setApiStatus] = useState('')
     //state if error has occured
     const [showError, setShowError] = useState(false)
 
@@ -88,6 +90,7 @@ const Register: FC = () => {
             console.error("Error during registration: ", err)
             if (isApiError(err)) {
                 setApiError(err.data.message);
+                setApiStatus(err.status.toString());
                 setShowError(true);
             }
             else {
@@ -345,7 +348,16 @@ const Register: FC = () => {
                     </Box>
                     {/* If api error occurs, show error widget  */}
                     {showError && (
-                        <ErrorDisplay message={apiError} />
+                        <Modal
+                            open={showError} // Modal visibility tied to the showError state
+                            onClose={() => setShowError(false)} // Close the modal on backdrop click
+                            aria-labelledby="error-modal-title"
+                            aria-describedby="error-modal-description"
+                        >
+                            <DialogContent>
+                                <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                            </DialogContent>
+                        </Modal>
                     )}
                     {/* {isLoading && (
                         <Typography color='info'>Registering...</Typography>

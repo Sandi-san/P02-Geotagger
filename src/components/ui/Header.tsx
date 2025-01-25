@@ -7,7 +7,7 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 import { UserType } from "../../models/user";
 import fetchUser from "../../utils/fetchLocalUser";
 import Loading from "./Loading";
-import UserProfileSettings from "./UserProfileSettings";
+import ProfileSettings from "../modals/ProfileSettings";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -113,7 +113,7 @@ const Header: FC = () => {
                             aria-labelledby="profile-settings-title"
                             aria-describedby="profile-settings-description"
                         >
-                            <UserProfileSettings
+                            <ProfileSettings
                                 handleClose={handleClose}
                             />
                         </Modal>

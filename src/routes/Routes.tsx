@@ -22,7 +22,7 @@ const Home = lazy(() => import('../pages/Home'));
 
 // Private routes
 //TODO: ADD PAGES (EG. PROFILE)
-// const ProfileIndex = lazy(() => import('../pages/Profile/ProfileIndex'));
+const Profile = lazy(() => import('../pages/Profile'));
 
 // Restricted routes
 const Login = lazy(() => import('../pages/Login'));
@@ -61,6 +61,11 @@ export const AppRoutes: AppRoute[] = [
   },
 
   // Private Routes
+  {
+    type: RouteType.PRIVATE,
+    path: '/profile',
+    children: <Profile />,
+  },
 
   // Public Routes
   {

@@ -1,5 +1,5 @@
 import React, { FC, forwardRef } from 'react';
-import { Box, Typography, Alert, Button } from '@mui/material';
+import { Box, Typography, Button, Alert } from '@mui/material';
 
 interface ErrorDisplayProps {
     message: string; //message to display
@@ -12,7 +12,7 @@ const ErrorDisplay = forwardRef<HTMLDivElement, ErrorDisplayProps>(
 
         //check if the string contains only numbers using a regular expression
         const isCodeNumber = (status: string | undefined): boolean => {
-            if(status==undefined) return false
+            if (status == undefined) return false
             return /^\d+$/.test(status);
         }
 
@@ -31,10 +31,13 @@ const ErrorDisplay = forwardRef<HTMLDivElement, ErrorDisplayProps>(
                     borderRadius: 2,
                 }}
             >
+                <Alert severity="error">
+                    text
+                </Alert>
                 <Typography variant="h6" component="h2" gutterBottom>
                     Oops! Error
-                    {isCodeNumber(errorStatus) ? (` code ${errorStatus}`) : 
-                    (errorStatus!==undefined && (` ${errorStatus}`))}
+                    {isCodeNumber(errorStatus) ? (` code ${errorStatus}`) :
+                        (errorStatus !== undefined && (` ${errorStatus}`))}
                 </Typography>
                 <Typography variant="body1" sx={{ marginBottom: 2 }}>
                     {message}

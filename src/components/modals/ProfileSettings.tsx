@@ -104,11 +104,13 @@ const ProfileSettings = forwardRef((
             if (!showPasswordForm && !showAvatarForm) {
                 const updateResponse = await updateUser(formData).unwrap();
                 console.log('User updated successfully:', updateResponse);
+                setShowSuccess(true)
             }
             //update password
             else if (showPasswordForm && !showAvatarForm) {
                 const updateResponse = await updateUserPassword(formData).unwrap();
                 console.log('Response:', updateResponse.response);
+                setShowSuccess(true)
             }
             //update image
             else {
@@ -117,17 +119,31 @@ const ProfileSettings = forwardRef((
                     formDataImage.append('image', imageFile)
                     //call api
                     const imageUploadResponse = await uploadImage(formDataImage);
-                    console.log('Image uploaded successfully:', imageUploadResponse);
 
                     //check if response successful and update local User
                     if (typeof (imageUploadResponse as any).data === 'object' &&
                         imageUploadResponse.data !== undefined) {
+                        console.log('Image uploaded successfully:', imageUploadResponse);
                         userStore.login(imageUploadResponse.data)
+                        setShowSuccess(true)
+                    }
+                    //check if error was returned instead
+                    else if (typeof (imageUploadResponse as any).error === 'object' &&
+                        imageUploadResponse.error !== undefined) {
+                        const err = imageUploadResponse.error
+                        console.error("Error during update: ", err)
+                        if (isApiError(err)) {
+                            setApiError(err.data.message);
+                            setApiStatus(err.status.toString());
+                            setShowError(true);
+                        }
+                        else {
+                            setApiError("An unexpected error has occured.");
+                            setShowError(true);
+                        }
                     }
                 }
             }
-            //show success popup. if error occurs, catch is called instead 
-            setShowSuccess(true)
         }
         catch (err) {
             console.error("Error during update: ", err)

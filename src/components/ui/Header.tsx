@@ -8,6 +8,7 @@ import { UserType } from "../../models/user";
 import fetchUser from "../../utils/fetchLocalUser";
 import Loading from "./Loading";
 import ProfileSettings from "../modals/ProfileSettings";
+import getValidImagePath from "../../utils/validImagePath";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -20,20 +21,6 @@ const Header: FC = () => {
     const handleClose = () => {
         //TODO: refetch user here
         setOpen(false);
-    }
-
-    //get valid path of User avatar image file
-    //NOTE: if registration is done with OAuth, the image path is copied from Google servers
-    //sometimes the file may become inaccessible and the user must manually change their profile image  
-    const getValidImagePath = (imageName: string): string | undefined => {
-        //check if User image path name contains full path, if yes, return
-        const isFullPath = imageName.startsWith('http://') || imageName.startsWith('https://');
-        if (isFullPath)
-            return imageName
-
-        //if image is not full path (usually local file), append folder name and return 
-        const baseFileFolder = `${process.env.REACT_APP_BACKEND_DOMAIN}/files`
-        return `${baseFileFolder}/${imageName}`
     }
 
     return (
@@ -128,68 +115,70 @@ const Header: FC = () => {
                             Logout
                         </Link>
                         {/* Avatar and Tokens Box */}
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                borderRadius: 4,
-                                border: 2,
-                                borderColor: 'primary.main',
-                                bgcolor: 'background.paper',
-                                maxWidth: 200,
-                                minWidth: '12vh',
-                                height: '4vh',
-                                '&:hover': {
-                                    cursor: 'pointer'
-                                }
-                            }}
-                            onClick={() => console.log('Open User Profile page!')}
-                        >
-                            {/* Avatar */}
+                        <Link href="/profile" sx={{textDecoration: 'none'}}>
                             <Box
                                 sx={{
-                                    width: '33%',
-                                    height: '100%',
-                                    borderRadius: '50%',
-                                    overflow: 'hidden',
-                                    marginRight: 1,
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center',
-                                    bgcolor: 'grey.400',
+                                    borderRadius: 4,
+                                    border: 2,
+                                    borderColor: 'primary.main',
+                                    bgcolor: 'background.paper',
+                                    maxWidth: 200,
+                                    minWidth: '12vh',
+                                    height: '4vh',
+                                    '&:hover': {
+                                        cursor: 'pointer'
+                                    }
                                 }}
+                                // onClick={() => console.log('Open User Profile page!')}
                             >
-                                <img
-                                    src={userStore.user?.image ?
-                                        (getValidImagePath(userStore.user?.image)) :
-                                        ('/placeholder-avatar.png')}
-                                    alt="User Avatar"
-                                    style={{
-                                        //if user does not have an image, display placeholder with different styling
-                                        width: userStore.user?.image ? '100%' : '80%',
-                                        height: userStore.user?.image ? '100%' : '80%',
-                                        objectFit: 'cover',
-                                        boxSizing: 'border-box', //ensures padding is accounted inside the box
-                                        borderRadius: userStore.user?.image ? '100%' : '50%', //ensures the placeholder image remains circular
+                                {/* Avatar */}
+                                <Box
+                                    sx={{
+                                        width: '33%',
+                                        height: '100%',
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        marginRight: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        bgcolor: 'grey.400',
                                     }}
-                                />
+                                >
+                                    <img
+                                        src={userStore.user?.image ?
+                                            (getValidImagePath(userStore.user?.image)) :
+                                            ('/placeholder-avatar.png')}
+                                        alt="User Avatar"
+                                        style={{
+                                            //if user does not have an image, display placeholder with different styling
+                                            width: userStore.user?.image ? '100%' : '80%',
+                                            height: userStore.user?.image ? '100%' : '80%',
+                                            objectFit: 'cover',
+                                            boxSizing: 'border-box', //ensures padding is accounted inside the box
+                                            borderRadius: userStore.user?.image ? '100%' : '50%', //ensures the placeholder image remains circular
+                                        }}
+                                    />
+                                </Box>
+                                {/* Token display */}
+                                <Typography
+                                    variant="body2"
+                                    color="primary.dark"
+                                    sx={{
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        flexGrow: 1,
+                                    }}
+                                >
+                                    {userStore.user?.guessTokens ?
+                                        (userStore.user?.guessTokens)
+                                        : ('0')}
+                                </Typography>
                             </Box>
-                            {/* Token display */}
-                            <Typography
-                                variant="body2"
-                                color="primary.dark"
-                                sx={{
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                    flexGrow: 1,
-                                }}
-                            >
-                                {userStore.user?.guessTokens ?
-                                    (userStore.user?.guessTokens)
-                                    : ('0')}
-                            </Typography>
-                        </Box>
+                        </Link>
                         <Box>
                             {/* Add Location Button */}
                             <IconButton

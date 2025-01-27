@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import { Avatar, Box, Button, Typography } from '@mui/material';
-import GuessCard from '../components/ui/GuessCard';
-import { FetchGuessType } from '../models/guess';
-import { LocationType } from '../models/location';
-import useMediaQuery from '../hooks/useMediaQuery';
-import userStore from '../stores/user.store';
-import { UserType } from '../models/user';
-import Layout from '../components/ui/Layout';
-import getValidImagePath from '../utils/validImagePath';
+import GuessCard from '../../components/ui/GuessCard';
+import { FetchGuessType } from '../../models/guess';
+import { LocationType } from '../../models/location';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import userStore from '../../stores/user.store';
+import { UserType } from '../../models/user';
+import Layout from '../../components/ui/Layout';
+import getValidImagePath from '../../utils/validImagePath';
 
 const Profile: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -130,6 +130,17 @@ const Profile: FC = () => {
 
     const { image, firstName, lastName } = userStore.user as UserType
 
+    //check if User avatar image can be displayed 
+    const [validImage, setValidImage] = useState(false);
+    const userImage = getValidImagePath(image)
+
+    useEffect(() => {
+        if (userImage !== undefined)
+            setValidImage(true)
+        else
+            setValidImage(false)
+    }, []);
+
     return (
         <Layout>
             {/* First section */}
@@ -139,16 +150,13 @@ const Profile: FC = () => {
                     flexDirection: 'row',
                     alignItems: 'center', //vertical center
                     textAlign: 'left',
-                    paddingTop: '4vh',
-                    marginLeft: '4vh',
+                    paddingY: '3vh',
+                    marginLeft: '3vh',
                 }}
             >
                 <Avatar
-                    src={
-                        image
-                            ? getValidImagePath(image)
-                            : '/placeholder-avatar.png'
-                    }
+                    src={userImage ? (userImage) :
+                        ('/placeholder-avatar.png')}
                     sx={{
                         width: '12vh',
                         height: '12vh',

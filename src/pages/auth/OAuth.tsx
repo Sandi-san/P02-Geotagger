@@ -1,10 +1,10 @@
 //middlware page for fetching the User's access_token during OAuth login
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { tokenStorage } from '../utils/tokenStorage';
-import userStore from '../stores/user.store';
-import fetchUser from '../utils/fetchLocalUser';
-import { UserType } from '../models/user';
+import { tokenStorage } from '../../utils/tokenStorage';
+import userStore from '../../stores/user.store';
+import fetchUser from '../../utils/fetchLocalUser';
+import { UserType } from '../../models/user';
 
 const OAuthCallback = () => {
   //TODO: DISPLAY ERROR PAGE IF LOGIN FAILED

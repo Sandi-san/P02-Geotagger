@@ -10,6 +10,7 @@ import theme from "../../theme";
 import { useUpdateUserMutation, useUpdateUserPasswordMutation, useUploadImageMutation } from "../../slices/api/user.slice";
 import fetchUser from "../../utils/fetchLocalUser";
 import SettingsSavedConformation from "./SettingsSavedConformation";
+import getValidImagePath from "../../utils/validImagePath";
 
 //use forwardRef to recieve a functional component (handleClose function), required by Modal
 const ProfileSettings = forwardRef((
@@ -35,6 +36,7 @@ const ProfileSettings = forwardRef((
     };
 
     const handleCloseAvatar = () => {
+        setImageFile(null) //clear chosen file
         setShowAvatarForm(false);
     };
 
@@ -431,7 +433,8 @@ const ProfileSettings = forwardRef((
                                         onChange={handleAvatarChange}
                                     />
                                     <Avatar
-                                        src={imageFile ? URL.createObjectURL(imageFile) : ''}
+                                        src={imageFile ? URL.createObjectURL(imageFile) : 
+                                            (getValidImagePath(userStore.user?.image))}
                                         sx={{
                                             width: '8vh',
                                             height: '8vh',

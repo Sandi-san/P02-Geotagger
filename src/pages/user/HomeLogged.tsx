@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import GuessCard from '../components/ui/GuessCard';
-import { FetchGuessType } from '../models/guess';
-import { LocationType } from '../models/location';
-import useMediaQuery from '../hooks/useMediaQuery';
+import GuessCard from '../../components/ui/GuessCard';
+import { FetchGuessType } from '../../models/guess';
+import { LocationType } from '../../models/location';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 const HomeLogged: FC = () => {
     const { isMobile } = useMediaQuery(720)

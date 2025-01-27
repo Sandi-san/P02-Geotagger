@@ -23,6 +23,17 @@ const Header: FC = () => {
         setOpen(false);
     }
 
+    //check if User avatar image can be displayed 
+    const [validImage, setValidImage] = useState(false);
+    const userImage = getValidImagePath(userStore.user?.image)
+
+    useEffect(() => {
+        if (userImage !== undefined)
+            setValidImage(true)
+        else
+            setValidImage(false)
+    }, []);
+
     return (
         <AppBar position="static" sx={{
             backgroundColor: 'background.default',
@@ -115,7 +126,7 @@ const Header: FC = () => {
                             Logout
                         </Link>
                         {/* Avatar and Tokens Box */}
-                        <Link href="/profile" sx={{textDecoration: 'none'}}>
+                        <Link href="/profile" sx={{ textDecoration: 'none' }}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -131,7 +142,6 @@ const Header: FC = () => {
                                         cursor: 'pointer'
                                     }
                                 }}
-                                // onClick={() => console.log('Open User Profile page!')}
                             >
                                 {/* Avatar */}
                                 <Box
@@ -148,17 +158,20 @@ const Header: FC = () => {
                                     }}
                                 >
                                     <img
-                                        src={userStore.user?.image ?
-                                            (getValidImagePath(userStore.user?.image)) :
+                                        src={userImage ? (userImage) :
                                             ('/placeholder-avatar.png')}
                                         alt="User Avatar"
                                         style={{
                                             //if user does not have an image, display placeholder with different styling
-                                            width: userStore.user?.image ? '100%' : '80%',
-                                            height: userStore.user?.image ? '100%' : '80%',
+                                            width: validImage ? '100%' : '80%',
+                                            height: validImage ? '100%' : '80%',
                                             objectFit: 'cover',
                                             boxSizing: 'border-box', //ensures padding is accounted inside the box
-                                            borderRadius: userStore.user?.image ? '100%' : '50%', //ensures the placeholder image remains circular
+                                            borderRadius: validImage ? '100%' : '50%', //ensures the placeholder image remains circular
+                                        }}
+                                        onError={(e) => {
+                                            setValidImage(false);
+                                            (e.target as HTMLImageElement).src = '/placeholder-avatar.png';
                                         }}
                                     />
                                 </Box>
@@ -179,33 +192,35 @@ const Header: FC = () => {
                                 </Typography>
                             </Box>
                         </Link>
-                        <Box>
-                            {/* Add Location Button */}
-                            <IconButton
-                                color="primary"
-                                size="small"
-                                sx={{
-                                    marginLeft: 1,
-                                    bgcolor: 'primary.main',
-                                    '&:hover': {
-                                        bgcolor: 'primary.light',
-                                    },
-                                    minWidth: '4vh',
-                                }}
-                                onClick={() => console.log('Open Add Location form!')}
-                            >
-                                <Typography
-                                    variant="h6"
+                        <Link href="/location/add" sx={{ textDecoration: 'none' }}>
+                            <Box>
+                                {/* Add Location Button */}
+                                <IconButton
+                                    color="primary"
+                                    size="small"
                                     sx={{
-                                        fontWeight: 'bold',
-                                        lineHeight: 1,
-                                        color: 'primary.contrastText'
+                                        marginLeft: 1,
+                                        bgcolor: 'primary.main',
+                                        '&:hover': {
+                                            bgcolor: 'primary.light',
+                                        },
+                                        minWidth: '4vh',
                                     }}
+                                // onClick={() => console.log('Open Add Location form!')}
                                 >
-                                    +
-                                </Typography>
-                            </IconButton>
-                        </Box>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            lineHeight: 1,
+                                            color: 'primary.contrastText'
+                                        }}
+                                    >
+                                        +
+                                    </Typography>
+                                </IconButton>
+                            </Box>
+                        </Link>
                     </Box>
                 )}
             </Toolbar>

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Layout from '../components/ui/Layout';
 import userStore from '../stores/user.store';
-import HomeLogged from './HomeLogged';
+import HomeLogged from './user/HomeLogged';
 import HomeUnlogged from './HomeUnlogged';
 
 //MAIN PAGE, Home Index

@@ -1,17 +1,17 @@
 import { Avatar, Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
-import theme from '../theme';
-import useMediaQuery from '../hooks/useMediaQuery';
-import { useRegisterUserMutation } from '../slices/api/auth.slice';
-import { RegisterUserFields, useRegisterForm } from '../hooks/react-hook-form/useRegister';
+import theme from '../../theme';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import { useRegisterUserMutation } from '../../slices/api/auth.slice';
+import { RegisterUserFields, useRegisterForm } from '../../hooks/react-hook-form/useRegister';
 import { Controller } from 'react-hook-form';
-import userStore from '../stores/user.store';
-import isApiError from '../utils/apiErrorChecker';
-import ErrorDisplay from '../components/modals/ErrorDisplay';
-import { useUploadImageMutation } from '../slices/api/user.slice';
-import { tokenStorage } from '../utils/tokenStorage';
-import fetchUser from '../utils/fetchLocalUser';
-import { UserType } from '../models/user';
+import userStore from '../../stores/user.store';
+import isApiError from '../../utils/apiErrorChecker';
+import ErrorDisplay from '../../components/modals/ErrorDisplay';
+import { useUploadImageMutation } from '../../slices/api/user.slice';
+import { tokenStorage } from '../../utils/tokenStorage';
+import fetchUser from '../../utils/fetchLocalUser';
+import { UserType } from '../../models/user';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design

@@ -22,13 +22,14 @@ const Home = lazy(() => import('../pages/Home'));
 
 // Private routes
 //TODO: ADD PAGES (EG. PROFILE)
-const Profile = lazy(() => import('../pages/Profile'));
+const Profile = lazy(() => import('../pages/user/Profile'));
+const LocationAdd = lazy(() => import('../pages/location/LocationAdd'));
 
 // Restricted routes
-const Login = lazy(() => import('../pages/Login'));
-const Register = lazy(() => import('../pages/Register'));
-const Password = lazy(() => import('../pages/Password'));
-const OAuthCallback = lazy(() => import('../pages/OAuth'));
+const Login = lazy(() => import('../pages/auth/Login'));
+const Register = lazy(() => import('../pages/auth/Register'));
+const Password = lazy(() => import('../pages/auth/Password'));
+const OAuthCallback = lazy(() => import('../pages/auth/OAuth'));
 
 // Error routes
 const Page404 = lazy(() => import('../pages/Page404'));
@@ -65,6 +66,11 @@ export const AppRoutes: AppRoute[] = [
     type: RouteType.PRIVATE,
     path: '/profile',
     children: <Profile />,
+  },
+  {
+    type: RouteType.PRIVATE,
+    path: '/location/add',
+    children: <LocationAdd />,
   },
 
   // Public Routes

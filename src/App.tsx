@@ -38,12 +38,17 @@ const App: FC = () => {
             if (typeof (fetchUserResponse as UserType) === 'object' &&
               fetchUserResponse !== undefined && fetchUserResponse !== null)
               userStore.login(fetchUserResponse)
+            else if (fetchUserResponse === null) {
+              console.error('Error fetching user. User data is null.');
+              userStore.signout()
+            }
           } catch (error) {
             console.error('Error fetching user:', error);
+            userStore.signout()
           }
         }
       }
-      setLoading(false); // Mark data as loaded
+      setLoading(false); //mark data as loaded
     };
 
     initLocalUser();

@@ -31,17 +31,16 @@ const ErrorDisplay = forwardRef<HTMLDivElement, ErrorDisplayProps>(
                     borderRadius: 2,
                 }}
             >
-                <Alert severity="error">
-                    text
-                </Alert>
-                <Typography variant="h6" component="h2" gutterBottom>
+                {/* <Alert severity="error" sx={{}}> */}
+                <Typography variant="h6" component="h2" color='error' gutterBottom>
                     Oops! Error
                     {isCodeNumber(errorStatus) ? (` code ${errorStatus}`) :
                         (errorStatus !== undefined && (` ${errorStatus}`))}
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: 2 }}>
+                <Typography variant="body1" color='error' sx={{ marginBottom: 0 }}>
                     {message}
                 </Typography>
+                {/* </Alert> */}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                     <Button variant="contained" color="primary"
                         onClick={handleClose}>

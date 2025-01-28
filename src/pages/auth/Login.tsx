@@ -247,7 +247,7 @@ const Login: FC = () => {
             textAlign: 'center',
             justifyContent: 'space-between',
             // minHeight: 0,
-            maxWidth: isMobile ? '100vh' : '60vh',
+            maxWidth: isMobile ? '100vh' : '55vh',
           }}>
             <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
               <Typography variant="body1" color='primary.dark'>

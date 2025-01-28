@@ -23,6 +23,12 @@ const Header: FC = () => {
         setOpen(false);
     }
 
+    //logout user and refresh page
+    const handleLogout = () => {
+        userStore.signout()
+        window.location.reload()
+    }
+
     //check if User avatar image can be displayed 
     const [validImage, setValidImage] = useState(false);
     const userImage = getValidImagePath(userStore.user?.image)
@@ -121,7 +127,7 @@ const Header: FC = () => {
                                 textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
                             }}
-                            href="/logout"
+                            onClick={handleLogout}
                         >
                             Logout
                         </Link>

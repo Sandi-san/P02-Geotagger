@@ -306,7 +306,7 @@ const Profile: FC = () => {
                     <Button
                         variant="contained"
                         color='primary'
-                        onClick={() => console.log("Open add location")}
+                        href='/location/add'
                         sx={{ marginTop: 2, flex: 2 }}
                     >
                         Add location

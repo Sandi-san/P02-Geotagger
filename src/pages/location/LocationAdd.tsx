@@ -1,13 +1,11 @@
-import { FC, useEffect, useState } from 'react';
-import { Avatar, Box, Button, FormControl, TextField, Typography } from '@mui/material';
-import GuessCard from '../../components/ui/GuessCard';
-import { FetchGuessType } from '../../models/guess';
-import { LocationType } from '../../models/location';
+import { FC, useState } from 'react';
+import { Box, Button, FormControl, TextField, Typography } from '@mui/material';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Layout from '../../components/ui/Layout';
 import theme from '../../theme';
 import { Controller } from 'react-hook-form';
-import { CreateLocationFields, useCreateUpdateLocationForm } from '../../hooks/react-hook-form/useCreateUpdateLocation';
+import { useCreateUpdateLocationForm } from '../../hooks/react-hook-form/useCreateUpdateLocation';
+import WorldMap from '../../components/ui/Map';
 
 const LocationAdd: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -123,9 +121,9 @@ const LocationAdd: FC = () => {
                 }}>
                     {/* Add map here */}
                     <Box
-                        component="img"
-                        src='/placeholder-image.png'
-                        alt="Selected preview"
+                        // component="img"
+                        // src='/placeholder-image.png'
+                        // alt="Selected preview"
                         sx={{
                             width: '66%',
                             height: '30vh',
@@ -133,8 +131,9 @@ const LocationAdd: FC = () => {
                             // border: '2px solid #ccc', // Optional border for styling
                             backgroundColor: '#f0f0f0', // Fallback color if no image
                         }}
-                    />
-
+                    >
+                    <WorldMap />
+                    </Box>
                     <FormControl fullWidth
                         sx={{ width: '66%' }}
                     >

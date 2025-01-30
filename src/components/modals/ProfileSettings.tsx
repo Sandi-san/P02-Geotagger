@@ -8,9 +8,8 @@ import isApiError from "../../utils/apiErrorChecker";
 import ErrorDisplay from "./ErrorDisplay";
 import theme from "../../theme";
 import { useUpdateUserMutation, useUpdateUserPasswordMutation, useUploadImageMutation } from "../../slices/api/user.slice";
-import fetchUser from "../../utils/fetchLocalUser";
-import SettingsSavedConformation from "./SettingsSavedConformation";
 import getValidImagePath from "../../utils/validImagePath";
+import SuccessConformation from "./SuccessConformation";
 
 //use forwardRef to recieve a functional component (handleClose function), required by Modal
 const ProfileSettings = forwardRef((
@@ -484,7 +483,10 @@ const ProfileSettings = forwardRef((
                     aria-describedby="success-modal-description"
                 >
                     <DialogContent>
-                        <SettingsSavedConformation handleClose={() => setShowSuccess(false)} />
+                        <SuccessConformation 
+                        handleClose={() => setShowSuccess(false)} 
+                        title={"Information changed"} 
+                        message={"Your settings are saved."} />
                     </DialogContent>
                 </Modal>
             )}

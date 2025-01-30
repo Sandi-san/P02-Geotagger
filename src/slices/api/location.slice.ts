@@ -1,0 +1,92 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { UserType } from '../../models/user';
+import { RootState } from '../../stores/configure.store';
+import { tokenStorage } from '../../utils/tokenStorage';
+import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
+import { LocationType } from '../../models/location';
+import { CreateLocationFields } from '../../hooks/react-hook-form/useCreateLocation';
+
+//api for /location route in backend 
+export const locationSlice = createApi({
+  reducerPath: 'location', //identifier for this slice
+  baseQuery: fetchBaseQuery({
+    //base URL (matches backend)
+    baseUrl: `${process.env.REACT_APP_BACKEND_DOMAIN}/location`,
+    prepareHeaders: (headers) => {
+      //retrieve user access_token from local storage 
+      const token = tokenStorage.getToken()
+      if (token)
+        headers.set('Authorization', `Bearer ${token}`)
+      return headers
+    }
+  }),
+  endpoints: (builder) => ({
+    getLocation: builder.query<LocationType, void>({
+      query: () => ({
+        url: '',
+        method: 'GET',
+      }),
+
+    }),
+    createLocation: builder.mutation<LocationType, CreateLocationFields>({
+      query: (formData: CreateLocationFields) => ({
+        url: '',
+        method: 'POST',
+        body: formData,
+      }),
+      transformResponse: (response: any): LocationType => {
+        return {
+          id: response.id,
+          address: response.address,
+          image: response.image,
+          lat: response.lat,
+          lon: response.lon,
+          userId: response.userId,
+        }
+      }
+    }),
+    updateUser: builder.mutation<UserType, UpdateUserFields>({
+      query: (formData: UpdateUserFields) => ({
+        url: '/update',
+        method: 'PATCH',
+        body: formData,
+      }),
+      transformResponse: (response: any): UserType => {
+        return {
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          image: response.image,
+          guessTokens: response.guessTokens,
+        }
+      }
+    }),
+    //get FormData and Id as arguments, return Location
+    uploadImage: builder.mutation<LocationType, { id: number, formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `${id}/update-image`,
+        method: 'POST',
+        body: formData,
+      }),
+      transformResponse: (response: any): LocationType => {
+        return {
+          id: response.id,
+          address: response.address,
+          image: response.image,
+          lat: response.lat,
+          lon: response.lon,
+          userId: response.userId,
+        }
+      }
+    }),
+  }),
+});
+
+export const {
+  useGetLocationQuery,
+  useCreateLocationMutation,
+  useUploadImageMutation,
+  // useUpdateUserMutation,
+  // useUploadImageMutation,
+} = locationSlice;

@@ -1,9 +1,14 @@
 import { forwardRef } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 
-const SettingsSavedConformation = forwardRef((
-    { handleClose }: { handleClose: () => void },
-    ref) => {
+interface SuccessConformationProps {
+    title: string,
+    message: string,
+    handleClose: () => void,
+}
+
+const SuccessConformation = forwardRef<HTMLDivElement, SuccessConformationProps>(
+    ({ title, message, handleClose }, ref) => {
         return (
             <Box
                 ref={ref}
@@ -19,11 +24,11 @@ const SettingsSavedConformation = forwardRef((
                     borderRadius: 2,
                 }}
             >
-                <Typography variant="h6" component="h2" gutterBottom>
-                    Information changed
+                <Typography variant="h6" component="h2" color='success' gutterBottom>
+                    {title}
                 </Typography>
-                <Typography variant="body1" sx={{ marginBottom: 2 }}>
-                    Your settings are saved.
+                <Typography variant="body1" color='success' sx={{ marginBottom: 2 }}>
+                    {message}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                     <Button variant="contained" color="primary"
@@ -36,4 +41,4 @@ const SettingsSavedConformation = forwardRef((
     }
 );
 
-export default SettingsSavedConformation;
+export default SuccessConformation;

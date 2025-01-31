@@ -96,7 +96,7 @@ export class GuessService {
 
     async getForLocation(locationId: number): Promise<Guess[]> {
         try {
-            const bids = await this.prisma.guess.findMany({
+            const guesses = await this.prisma.guess.findMany({
                 where: { locationId },
                 include: {
                     //return User data and certain elements (excluding password)
@@ -109,6 +109,14 @@ export class GuessService {
                             image: true,
                         },
                     },
+                    //return Location data
+                    location: {
+                        select: {
+                            id: true,
+                            image: true,
+                            address: true,
+                        }
+                    }
                 },
                 orderBy: [{
                     errorDistance: 'asc'
@@ -117,7 +125,7 @@ export class GuessService {
                     createdAt: 'asc'
                 }],
             });
-            return bids;
+            return guesses;
         } catch (error) {
             console.error(error);
             throw new BadRequestException(

@@ -1,132 +1,19 @@
 import { FC, useEffect, useState } from 'react';
 import { Avatar, Box, Button, Typography } from '@mui/material';
 import GuessCard from '../../components/ui/GuessCard';
-import { FetchGuessType } from '../../models/guess';
-import { LocationType } from '../../models/location';
+import { FetchGuessType, FetchPaginatedGuessType } from '../../models/guess';
+import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import userStore from '../../stores/user.store';
 import { UserType } from '../../models/user';
 import Layout from '../../components/ui/Layout';
 import getValidImagePath from '../../utils/validImagePath';
+import { useGetGuessesQuery, useGetLocationsQuery } from '../../slices/api/user.slice';
+import { computeHeadingLevel } from '@testing-library/react';
+import Loading from '../../components/ui/Loading';
 
 const Profile: FC = () => {
     const { isMobile } = useMediaQuery(720)
-
-    //TODO: load GuessCard images from DB
-
-
-    //TODO: backend paginated fetch Guesses: take 3
-
-    //states for Guesses
-    const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
-    const [pageGuess, setPageGuess] = useState(1); //current page for fetching guesses
-    const [loadingGuess, setLoadingGuess] = useState(false); //loading state for button
-
-    //states for Locations
-    const [locations, setLocations] = useState<LocationType[]>([]); //array to hold fetched locations
-    const [pageLocation, setPageLocation] = useState(1)
-    const [loadingLocation, setLoadingLocation] = useState(false)
-
-
-    //fetch guesses from backend
-    const fetchGuesses = async (page: number) => {
-        setLoadingGuess(true); //set loading while fetching
-        try {
-            //TODO: call actual route
-            const response = await fetch(`/api/guesses?page=${page}&limit=3`); // Replace with your actual API endpoint
-            const data = await response.json();
-            setGuesses((prev) => [...prev, ...data]); //append new guesses to the existing array
-        } catch (error) {
-            console.error('Error fetching guesses:', error);
-        } finally {
-            setLoadingGuess(false); //stop loading after fetch
-        }
-    };
-
-    //fetch locations from backend
-    const fetchLocations = async (page: number) => {
-        console.log("TODO")
-    };
-
-    useEffect(() => {
-        const placeholderGuesses: FetchGuessType[] = [
-            {
-                id: 1,
-                errorDistance: 100,
-                locationImage: '/placeholder1.jpg',
-                locationId: 1,
-                userId: 1
-            },
-            {
-                id: 2,
-                errorDistance: 200,
-                locationImage: '/placeholder2.jpg',
-                locationId: 2,
-                userId: 1
-            },
-            {
-                id: 3,
-                errorDistance: 300,
-                locationImage: '/placeholder1.jpg',
-                locationId: 3,
-                userId: 1
-            },
-            {
-                id: 4,
-                errorDistance: 400,
-                locationImage: '/placeholder2.jpg',
-                locationId: 4,
-                userId: 1
-            },
-            {
-                id: 5,
-                locationImage: '/placeholder1.jpg',
-                errorDistance: 500,
-                locationId: 5,
-                userId: 1
-            },
-        ]
-        const placeholderLocations: LocationType[] = [
-            {
-                id: 1,
-                image: '/placeholder1.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-            {
-                id: 2,
-                image: '/placeholder2.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-            {
-                id: 3,
-                image: '/placeholder1.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-        ]
-        // setGuesses(placeholderGuesses)
-        // setLocations(placeholderLocations)
-        // fetchGuesses(1); // Load the first set of guesses
-    }, []);
-
-
-    const handleLoadMoreGuesses = () => {
-        setPageGuess((prev) => prev + 1); // Increment the page number
-        fetchGuesses(pageGuess + 1); // Fetch the next page
-    };
-
-    const handleLoadMoreLocations = () => {
-        setPageLocation((prev) => prev + 1); // Increment the page number
-        fetchLocations(pageLocation + 1); // Fetch the next page
-    };
-
-    //TODO: open Location when clicking on Card
-
 
     const { image, firstName, lastName } = userStore.user as UserType
 
@@ -140,6 +27,64 @@ const Profile: FC = () => {
         else
             setValidImage(false)
     }, []);
+
+    //TODO: load GuessCard images from DB
+
+
+    //TODO: backend paginated fetch Guesses: take 3
+
+    //states for Guesses
+    const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
+    const [pageGuess, setPageGuess] = useState(1); //current page for fetching guesses
+    const [pageGuessTotal, setPageGuessTotal] = useState(1); //total pages for fetching guesses
+    // const [loadingGuess, setLoadingGuess] = useState(false); //loading state for button
+
+    //states for Locations
+    const [locations, setLocations] = useState<LocationType[]>([]); //array to hold fetched locations
+    const [pageLocation, setPageLocation] = useState(1)
+    const [pageLocationTotal, setPageLocationTotal] = useState(1); //total pages for fetching locations
+    // const [loadingLocation, setLoadingLocation] = useState(false)
+
+    //methods of API calls from user.slice
+    const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageGuess });
+    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageLocation });
+
+
+    //update when data changes
+    useEffect(() => {
+        if (dataLocations && dataLocations.data) {
+            setLocations(dataLocations.data)
+            setPageLocationTotal(dataLocations.meta.last_page)
+        }
+        console.log("Locations page: ", pageLocation)
+        console.log("Locations: ", locations)
+    }, [dataLocations])
+    useEffect(() => {
+        if (dataGuesses && dataGuesses.data) {
+            setGuesses(dataGuesses.data)
+            setPageGuessTotal(dataGuesses.meta.last_page)
+        }
+        console.log("Guesses page: ", pageLocation)
+        console.log("Guesses: ", guesses)
+    }, [dataGuesses])
+
+    //TODO: fetch more and show on button press
+
+    const handleLoadMoreGuesses = () => {
+        if (pageGuess < pageGuessTotal)
+            setPageGuess((prev) => prev + 1); // Increment the page number
+    };
+
+    const handleLoadMoreLocations = () => {
+        if (pageLocation < pageLocationTotal)
+            setPageLocation((prev) => prev + 1); // Increment the page number
+    };
+
+    //TODO: open Location when clicking on Card
+
+    if (isLoadingGuess || isLoadingLocation) {
+        return <Loading />
+    }
 
     return (
         <Layout>
@@ -186,7 +131,7 @@ const Profile: FC = () => {
                 </Typography>
             </Box>
             {/* Guess Card widgets */}
-            {guesses.length > 0 ? (
+            {guesses && guesses.length > 0 ? (
                 <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', marginBottom: 2, }}>
                     <Box
                         sx={{
@@ -203,7 +148,7 @@ const Profile: FC = () => {
                         {/* Render GuessCards dynamically */}
                         {guesses.map((guess, index) => (
                             <GuessCard key={index}
-                                imageUrl={guess.locationImage}
+                                imageUrl={(guess.location.image ? guess.location.image : '')}
                                 errorDistance={guess.errorDistance}
                             />
                         ))}
@@ -212,10 +157,10 @@ const Profile: FC = () => {
                         variant="outlined"
                         color='primary'
                         onClick={handleLoadMoreGuesses}
-                        disabled={loadingGuess} //disable while loading
+                        disabled={isLoadingGuess} //disable while loading
                         sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
                     >
-                        {loadingGuess ? 'Loading...' : 'Load more'}
+                        {isLoadingGuess ? 'Loading...' : 'Load more'}
                     </Button>
 
                 </Box>
@@ -256,7 +201,7 @@ const Profile: FC = () => {
                 </Typography>
             </Box>
             {/* Location cards */}
-            {locations.length > 0 ? (
+            {locations && locations.length > 0 ? (
                 <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 16, }}>
                     <Box
                         sx={{
@@ -282,10 +227,10 @@ const Profile: FC = () => {
                         variant="outlined"
                         color='primary'
                         onClick={handleLoadMoreLocations}
-                        disabled={loadingLocation}
+                        disabled={isLoadingLocation}
                         sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
                     >
-                        {loadingLocation ? 'Loading...' : 'Load more'}
+                        {isLoadingLocation ? 'Loading...' : 'Load more'}
                     </Button>
                 </Box>
             ) : (

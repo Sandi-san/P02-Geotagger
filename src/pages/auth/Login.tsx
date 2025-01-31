@@ -51,7 +51,7 @@ const Login: FC = () => {
 
       //save the returned access_token into local storage
       tokenStorage.setToken(loginResponse.access_token)
-      console.log('Local user:', tokenStorage.getToken());
+      // console.log('Local user:', tokenStorage.getToken());
 
       //if User is not locally saved yet, fetch the User from DB and login
       if (!userStore.user) {

@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material"
 import { FC, useState } from "react"
 import theme from "../../theme"
 import useMediaQuery from "../../hooks/useMediaQuery"
+import getValidImagePath from "../../utils/validImagePath"
 
 interface GuessCardProps {
     imageUrl: string
@@ -39,7 +40,7 @@ const GuessCard: FC<GuessCardProps> = ({
             {!imageError ? (
                 <Box
                     component="img"
-                    src={imageUrl}
+                    src={getValidImagePath(imageUrl)}
                     alt="No image"
                     sx={{
                         width: '100%',

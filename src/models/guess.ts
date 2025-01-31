@@ -1,3 +1,6 @@
+import { LocationType } from "./location";
+import { UserType } from "./user";
+
 //Structure for passing Guess
 export type GuessType = {
   id: number;
@@ -10,7 +13,20 @@ export type GuessType = {
 export type FetchGuessType = {
   id: number;
   errorDistance: number,
-  locationImage: string,
-  locationId: number;
-  userId: number;
+  location: LocationType,
+  user: UserType,
+};
+//Structure for receiving Guess array
+export type FetchPaginatedGuessType = {
+  data: {
+    id: number;
+    errorDistance: number,
+    location: LocationType,
+    user: UserType,
+  }[],
+  meta: {
+    last_page: number,
+    total: number,
+    page: number,
+  }
 };

@@ -62,7 +62,7 @@ const Register: FC = () => {
 
             //save the returned access_token into local storage
             tokenStorage.setToken(registerResponse.access_token)
-            console.log('Local user:', tokenStorage.getToken());
+            // console.log('Local user:', tokenStorage.getToken());
 
             //if image is also passed, call uploadFile route
             if (imageFile) {

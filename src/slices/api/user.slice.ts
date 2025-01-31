@@ -3,6 +3,8 @@ import { UserType } from '../../models/user';
 import { RootState } from '../../stores/configure.store';
 import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
+import { FetchPaginatedLocationType, LocationType } from '../../models/location';
+import { FetchGuessType, FetchPaginatedGuessType, GuessType } from '../../models/guess';
 
 //api for /user route in backend 
 export const userSlice = createApi({
@@ -53,7 +55,7 @@ export const userSlice = createApi({
         }
       }
     }),
-    updateUserPassword: builder.mutation<{response: string}, UpdateUserFields>({
+    updateUserPassword: builder.mutation<{ response: string }, UpdateUserFields>({
       query: (formData: UpdateUserFields) => ({
         url: '/update-password',
         method: 'PATCH',
@@ -77,33 +79,18 @@ export const userSlice = createApi({
         }
       }
     }),
-    //define enpoints as functions (TODO)
-    // getUsers: builder.query({
-    //   query: () => '/users', //endpoint to fetch users
-    // }),
-    // getUserById: builder.query({
-    //   query: (id: string) => `/users/${id}`, // Endpoint to fetch a user by ID
-    // }),
-    // createUser: builder.mutation({
-    //   query: (user) => ({
-    //     url: '/users',
-    //     method: 'POST',
-    //     body: user,
-    //   }),
-    // }),
-    // updateUser: builder.mutation({
-    //   query: ({ id, ...user }) => ({
-    //     url: `/users/${id}`,
-    //     method: 'PUT',
-    //     body: user,
-    //   }),
-    // }),
-    // deleteUser: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/users/${id}`,
-    //     method: 'DELETE',
-    //   }),
-    // }),
+    getLocations: builder.query<FetchPaginatedLocationType, { page: number }>({
+      query: ({ page }) => ({
+        url: `/locations?page=${page}`,
+        method: 'GET',
+      }),
+    }),
+    getGuesses: builder.query<FetchPaginatedGuessType, { page: number }>({
+      query: ({ page }) => ({
+        url: `/guesses?page=${page}`,
+        method: 'GET',
+      }),
+    })
   }),
 });
 
@@ -112,9 +99,6 @@ export const {
   useUpdateUserMutation,
   useUpdateUserPasswordMutation,
   useUploadImageMutation,
-  // useGetUsersQuery,
-  // useGetUserByIdQuery,
-  // useCreateUserMutation,
-  // useUpdateUserMutation,
-  // useDeleteUserMutation,
+  useGetLocationsQuery,
+  useGetGuessesQuery,
 } = userSlice;

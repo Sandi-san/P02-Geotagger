@@ -45,68 +45,68 @@ const HomeLogged: FC = () => {
     };
 
     useEffect(() => {
-        const placeholderGuesses: FetchGuessType[] = [
-            {
-                id: 1,
-                errorDistance: 100,
-                locationImage: '/placeholder1.jpg',
-                locationId: 1,
-                userId: 1
-            },
-            {
-                id: 2,
-                errorDistance: 200,
-                locationImage: '/placeholder2.jpg',
-                locationId: 2,
-                userId: 1
-            },
-            {
-                id: 3,
-                errorDistance: 300,
-                locationImage: '/placeholder1.jpg',
-                locationId: 3,
-                userId: 1
-            },
-            {
-                id: 4,
-                errorDistance: 400,
-                locationImage: '/placeholder2.jpg',
-                locationId: 4,
-                userId: 1
-            },
-            {
-                id: 5,
-                locationImage: '/placeholder1.jpg',
-                errorDistance: 500,
-                locationId: 5,
-                userId: 1
-            },
-        ]
-        const placeholderLocations: LocationType[] = [
-            {
-                id: 1,
-                image: '/placeholder1.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-            {
-                id: 2,
-                image: '/placeholder2.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-            {
-                id: 3,
-                image: '/placeholder1.jpg',
-                userId: 1,
-                lat: 0,
-                lon: 0
-            },
-        ]
-        setGuesses(placeholderGuesses)
-        setLocations(placeholderLocations)
+        // const placeholderGuesses: FetchGuessType[] = [
+        //     {
+        //         id: 1,
+        //         errorDistance: 100,
+        //         location: '/placeholder1.jpg',
+        //         locationId: 1,
+        //         userId: 1
+        //     },
+        //     {
+        //         id: 2,
+        //         errorDistance: 200,
+        //         locationImage: '/placeholder2.jpg',
+        //         locationId: 2,
+        //         userId: 1
+        //     },
+        //     {
+        //         id: 3,
+        //         errorDistance: 300,
+        //         locationImage: '/placeholder1.jpg',
+        //         locationId: 3,
+        //         userId: 1
+        //     },
+        //     {
+        //         id: 4,
+        //         errorDistance: 400,
+        //         locationImage: '/placeholder2.jpg',
+        //         locationId: 4,
+        //         userId: 1
+        //     },
+        //     {
+        //         id: 5,
+        //         locationImage: '/placeholder1.jpg',
+        //         errorDistance: 500,
+        //         locationId: 5,
+        //         userId: 1
+        //     },
+        // ]
+        // const placeholderLocations: LocationType[] = [
+        //     {
+        //         id: 1,
+        //         image: '/placeholder1.jpg',
+        //         userId: 1,
+        //         lat: 0,
+        //         lon: 0
+        //     },
+        //     {
+        //         id: 2,
+        //         image: '/placeholder2.jpg',
+        //         userId: 1,
+        //         lat: 0,
+        //         lon: 0
+        //     },
+        //     {
+        //         id: 3,
+        //         image: '/placeholder1.jpg',
+        //         userId: 1,
+        //         lat: 0,
+        //         lon: 0
+        //     },
+        // ]
+        // setGuesses(placeholderGuesses)
+        // setLocations(placeholderLocations)
         // fetchGuesses(1); // Load the first set of guesses
     }, []);
 
@@ -156,7 +156,7 @@ const HomeLogged: FC = () => {
                     {/* Render GuessCards dynamically */}
                     {guesses.map((guess, index) => (
                         <GuessCard key={index}
-                            imageUrl={guess.locationImage}
+                            imageUrl={(guess.location.image ? guess.location.image : '')}
                             errorDistance={guess.errorDistance}
                             width={450}
                             height={300}

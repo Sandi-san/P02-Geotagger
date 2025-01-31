@@ -93,9 +93,10 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @Get('locations')
     async getLocations(
-        @GetLoggedUser('id') id: number
+        @GetLoggedUser('id') id: number,
+        @Query('page') page: number,
     ): Promise<PaginatedResult> {
-        return this.userService.getLocations(id);
+        return this.userService.getLocations(id, page);
     }
 
     /*
@@ -104,9 +105,10 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @Get('guesses')
     async getGuesses(
-        @GetLoggedUser('id') id: number
+        @GetLoggedUser('id') id: number,
+        @Query('page') page: number,
     ): Promise<PaginatedResult> {
-        return this.userService.getGuesses(id);
+        return this.userService.getGuesses(id, page);
     }
 
 

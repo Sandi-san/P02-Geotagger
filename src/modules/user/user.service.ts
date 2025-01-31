@@ -98,7 +98,7 @@ export class UserService {
     }
 
 
-    async getLocations(userId: number, take = 4, page = 1, relations = []): Promise<PaginatedResult> {
+    async getLocations(userId: number, page = 1, take = 4, relations = []): Promise<PaginatedResult> {
         try {
             const locations = await this.prisma.location.findMany({
                 where: { userId },
@@ -107,8 +107,12 @@ export class UserService {
                 }
             })
 
+            // console.log("Locations: ",locations)
+
             const total = locations.length
             const paginatedLocations = locations.slice((page - 1) * take, page * take)
+
+            console.log("Returned locations: ",paginatedLocations)
 
             return {
                 data: paginatedLocations,
@@ -127,7 +131,7 @@ export class UserService {
         }
     }
 
-    async getGuesses(userId: number, take = 4, page = 1, relations = []): Promise<PaginatedResult> {
+    async getGuesses(userId: number, page = 1, take = 4, relations = []): Promise<PaginatedResult> {
         try {
             const guesses = await this.prisma.guess.findMany({
                 where: { userId },
@@ -139,10 +143,10 @@ export class UserService {
                 }]
             })
 
-            //console.log("Guesses: ", guesses)
-
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
+
+            console.log("Returned guesses: ",paginatedGuesses)
 
             return {
                 data: paginatedGuesses,

@@ -28,59 +28,49 @@ const Profile: FC = () => {
             setValidImage(false)
     }, []);
 
-    //TODO: load GuessCard images from DB
-
-
-    //TODO: backend paginated fetch Guesses: take 3
-
     //states for Guesses
     const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
     const [pageGuess, setPageGuess] = useState(1); //current page for fetching guesses
     const [pageGuessTotal, setPageGuessTotal] = useState(1); //total pages for fetching guesses
-    // const [loadingGuess, setLoadingGuess] = useState(false); //loading state for button
-
+    
     //states for Locations
     const [locations, setLocations] = useState<LocationType[]>([]); //array to hold fetched locations
     const [pageLocation, setPageLocation] = useState(1)
     const [pageLocationTotal, setPageLocationTotal] = useState(1); //total pages for fetching locations
-    // const [loadingLocation, setLoadingLocation] = useState(false)
-
+    
     //methods of API calls from user.slice
-    const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageGuess });
-    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageLocation });
-
+    const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageLocation });
+    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageGuess });
 
     //update when data changes
     useEffect(() => {
         if (dataLocations && dataLocations.data) {
-            setLocations(dataLocations.data)
+            // console.log("Fetched: ", dataLocations)
+            //append new locations to array
+            setLocations((prevLocations) => [...prevLocations, ...dataLocations.data])
             setPageLocationTotal(dataLocations.meta.last_page)
         }
-        console.log("Locations page: ", pageLocation)
-        console.log("Locations: ", locations)
     }, [dataLocations])
     useEffect(() => {
         if (dataGuesses && dataGuesses.data) {
             setGuesses(dataGuesses.data)
             setPageGuessTotal(dataGuesses.meta.last_page)
         }
-        console.log("Guesses page: ", pageLocation)
-        console.log("Guesses: ", guesses)
     }, [dataGuesses])
 
-    //TODO: fetch more and show on button press
+    const handleLoadMoreLocations = () => {
+        //increment page number (if possible) and fetch next paginated locations
+        if (pageLocation < pageLocationTotal)
+            setPageLocation((prev) => prev + 1)
+    }
 
     const handleLoadMoreGuesses = () => {
+        //increment page number (if possible) and fetch next paginated guesses
         if (pageGuess < pageGuessTotal)
-            setPageGuess((prev) => prev + 1); // Increment the page number
-    };
+            setPageGuess((prev) => prev + 1)
+    }
 
-    const handleLoadMoreLocations = () => {
-        if (pageLocation < pageLocationTotal)
-            setPageLocation((prev) => prev + 1); // Increment the page number
-    };
-
-    //TODO: open Location when clicking on Card
+    //TODO: open Location when clicking on Card (check same user in GuessCard)
 
     if (isLoadingGuess || isLoadingLocation) {
         return <Loading />
@@ -153,6 +143,7 @@ const Profile: FC = () => {
                             />
                         ))}
                     </Box>
+                    {pageGuess < pageGuessTotal && (
                     <Button
                         variant="outlined"
                         color='primary'
@@ -162,7 +153,7 @@ const Profile: FC = () => {
                     >
                         {isLoadingGuess ? 'Loading...' : 'Load more'}
                     </Button>
-
+                    )}
                 </Box>
             ) : (
                 <Box sx={{
@@ -182,7 +173,8 @@ const Profile: FC = () => {
                     <Button
                         variant="contained"
                         color='primary'
-                        onClick={() => console.log("Open locations")}
+                        href='/'
+                        // onClick={() => console.log("Open locations")}
                         sx={{ marginTop: 2, flex: 2 }}
                     >
                         Go to locations
@@ -219,19 +211,23 @@ const Profile: FC = () => {
                         {locations.map((location, index) => (
                             <GuessCard key={index}
                                 imageUrl={location.image || ''}
+                                isUser={true}
+                                id={location.id}
                             />
                         ))}
                     </Box>
                     {/* Load more button */}
-                    <Button
-                        variant="outlined"
-                        color='primary'
-                        onClick={handleLoadMoreLocations}
-                        disabled={isLoadingLocation}
-                        sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
-                    >
-                        {isLoadingLocation ? 'Loading...' : 'Load more'}
-                    </Button>
+                    {pageLocation < pageLocationTotal && (
+                        <Button
+                            variant="outlined"
+                            color='primary'
+                            onClick={handleLoadMoreLocations}
+                            disabled={isLoadingLocation}
+                            sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
+                        >
+                            {isLoadingLocation ? 'Loading...' : 'Load more'}
+                        </Button>
+                    )}
                 </Box>
             ) : (
                 <Box sx={{

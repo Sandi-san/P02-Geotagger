@@ -195,7 +195,7 @@ const Login: FC = () => {
                               onClick={togglePasswordVisibility}
                               edge="end"
                             >
-                              <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                              <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
                             </IconButton>
                           </InputAdornment>
                         ),

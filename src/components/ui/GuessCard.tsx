@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Button, IconButton, Typography } from "@mui/material"
 import { FC, useState } from "react"
 import theme from "../../theme"
 import useMediaQuery from "../../hooks/useMediaQuery"
@@ -8,16 +8,20 @@ interface GuessCardProps {
     imageUrl: string
     isLocked?: boolean //display lock icon on card?
     errorDistance?: number //display error distance on card?
-    width?: number, height?: number //override width/height
+    width?: number, height?: number //override width/height?
+    isUser?: boolean, //display delete/edit options?
+    id?: number, //id of location (for edit/delete)
 }
 
-const GuessCard: FC<GuessCardProps> = ({ 
-    imageUrl, 
-    isLocked = false, 
+const GuessCard: FC<GuessCardProps> = ({
+    imageUrl,
+    isLocked = false,
     errorDistance = -1,
     width = 300,
     height = 200,
- }) => {
+    isUser = false,
+    id,
+}) => {
     //called if image from imageUrl cannot be loaded
     const [imageError, setImageError] = useState(false);
 
@@ -25,8 +29,8 @@ const GuessCard: FC<GuessCardProps> = ({
         <Box
             sx={{
                 position: 'relative', //contain the Locked overlays
-                width: {width},
-                height: {height},
+                width: { width },
+                height: { height },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -36,6 +40,46 @@ const GuessCard: FC<GuessCardProps> = ({
                 bgcolor: 'background.paper', //background color of the card
             }}
         >
+            {isUser && (
+                <>
+                    {/* Edit button */}
+                    <Button
+                        color="primary"
+                        sx={{
+                            position: 'absolute',
+                            left: '1.5vh',
+                            top: '1.5vh',
+                            bgcolor: 'primary.main',
+                            '&:hover': {
+                                bgcolor: 'primary.light',
+                            },
+                            minWidth: '6vh',
+                            minHeight: '6vh',
+                        }}
+                        onClick={() => console.log(`Edit location ${id}`)}
+                    >
+                        <Box component="img" src="/icon-edit.svg" alt="+" sx={{ height: '3vh' }} />
+                    </Button>
+                    {/* Delete button */}
+                    <Button
+                        color="primary"
+                        sx={{
+                            position: 'absolute',
+                            right: '1.5vh',
+                            top: '1.5vh',
+                            bgcolor: '#9B6161',
+                            '&:hover': {
+                                bgcolor: 'coral',
+                            },
+                            minWidth: '6vh',
+                            minHeight: '6vh',
+                        }}
+                        onClick={() => console.log(`Delete location ${id}`)}
+                    >
+                        <Box component="img" src="/icon-trash.svg" alt="X" sx={{ height: '4vh' }} />
+                    </Button>
+                </>
+            )}
             {/* Image element */}
             {!imageError ? (
                 <Box
@@ -64,15 +108,15 @@ const GuessCard: FC<GuessCardProps> = ({
                         bgcolor: `${theme.palette.primary.dark}1A`, //color from custom theme with alpha channel (10% = 1A in hex color code)
                     }}
                 >
-                <Typography
-                    sx={{
-                        color: 'primary.dark',
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                    }}
-                >
-                    No image available.
-                </Typography>
+                    <Typography
+                        sx={{
+                            color: 'primary.dark',
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        No image available.
+                    </Typography>
                 </Box>
             )}
             {/* Locked green overlay */}
@@ -91,11 +135,11 @@ const GuessCard: FC<GuessCardProps> = ({
                     }}
                 >
                     {/* Lock logo */}
-                    <Box component="img" src="/lock.svg" alt="Lock" sx={{ height: 40 }} />
+                    <Box component="img" src="/icon-lock.svg" alt="Lock" sx={{ height: 40 }} />
                 </Box>
             )}
             {/* ErrorDistance green overlay */}
-            {errorDistance!=-1 && (
+            {errorDistance != -1 && (
                 <Box
                     sx={{
                         position: 'absolute',
@@ -109,9 +153,9 @@ const GuessCard: FC<GuessCardProps> = ({
                         justifyContent: 'center',
                     }}
                 >
-                 <Typography color="primary.contrastText" variant="body2" sx={{
-                    fontSize: '3vh'
-                 }} >{errorDistance} m</Typography>
+                    <Typography color="primary.contrastText" variant="body2" sx={{
+                        fontSize: '3vh'
+                    }} >{errorDistance} m</Typography>
                 </Box>
             )}
         </Box>

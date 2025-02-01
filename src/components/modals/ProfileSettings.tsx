@@ -320,7 +320,7 @@ const ProfileSettings = forwardRef((
                                                             onClick={toggleOldPasswordVisibility}
                                                             edge="end"
                                                         >
-                                                            <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                            <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
                                                         </IconButton>
                                                     </InputAdornment>
                                                 ),
@@ -352,7 +352,7 @@ const ProfileSettings = forwardRef((
                                                             onClick={togglePasswordVisibility}
                                                             edge="end"
                                                         >
-                                                            <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                            <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
                                                         </IconButton>
                                                     </InputAdornment>
                                                 ),
@@ -384,7 +384,7 @@ const ProfileSettings = forwardRef((
                                                             onClick={toggleConfirmPasswordVisibility}
                                                             edge="end"
                                                         >
-                                                            <Box component="img" src="/eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                            <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
                                                         </IconButton>
                                                     </InputAdornment>
                                                 ),

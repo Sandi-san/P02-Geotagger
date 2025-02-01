@@ -121,7 +121,7 @@ const HomeLogged: FC = () => {
         fetchLocations(pageLocation + 1); // Fetch the next page
     };
 
-    //TODO: open Location when clicking on Card
+    //TODO: fetch data, same as in Profile
 
     return (
         <>

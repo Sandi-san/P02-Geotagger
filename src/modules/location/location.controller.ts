@@ -21,8 +21,15 @@ export class LocationController {
     */
     @HttpCode(HttpStatus.OK)
     @Get('')
-    async getPaginate(@Query('page') page: number): Promise<PaginatedResult> {
-        return this.locationService.getPaginate(page)
+    async getPaginate(
+        @Query('page') page?: string,
+        @Query('take') take?: string,
+    ): Promise<PaginatedResult> {
+        //if page/take is not passed or cannot be parsed, use default value
+        const pageParsed = parseInt(page, 10) || 1
+        const takeParsed = parseInt(take, 10) || 9
+        // console.log(`Locations: Page: ${page}, Take: ${take}`)
+        return this.locationService.getPaginate(pageParsed, takeParsed)
     }
 
     /*

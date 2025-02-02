@@ -94,9 +94,14 @@ export class UserController {
     @Get('locations')
     async getLocations(
         @GetLoggedUser('id') id: number,
-        @Query('page') page: number,
+        @Query('page') page?: string,
+        @Query('take') take?: string,
     ): Promise<PaginatedResult> {
-        return this.userService.getLocations(id, page);
+        //if page/take is not passed or cannot be parsed, use default value
+        const pageParsed = parseInt(page, 10) || 1
+        const takeParsed = parseInt(take, 10) || 4
+        // console.log(`Location: Page: ${page}, Take: ${take}`)
+        return this.userService.getLocations(id, pageParsed, takeParsed);
     }
 
     /*
@@ -106,9 +111,14 @@ export class UserController {
     @Get('guesses')
     async getGuesses(
         @GetLoggedUser('id') id: number,
-        @Query('page') page: number,
+        @Query('page') page?: string,
+        @Query('take') take?: string,
     ): Promise<PaginatedResult> {
-        return this.userService.getGuesses(id, page);
+        //if page/take is not passed or cannot be parsed, use default value
+        const pageParsed = parseInt(page, 10) || 1
+        const takeParsed = parseInt(take, 10) || 4
+        // console.log(`Location: Page: ${page}, Take: ${take}`)
+        return this.userService.getGuesses(id, pageParsed, takeParsed);
     }
 
 

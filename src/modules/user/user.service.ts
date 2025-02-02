@@ -106,13 +106,11 @@ export class UserService {
                     updatedAt: 'asc',
                 }
             })
-
-            // console.log("Locations: ",locations)
-
+            
             const total = locations.length
             const paginatedLocations = locations.slice((page - 1) * take, page * take)
 
-            console.log("Returned locations: ",paginatedLocations)
+            // console.log("Returned locations: ",paginatedLocations)
 
             return {
                 data: paginatedLocations,
@@ -146,7 +144,7 @@ export class UserService {
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
 
-            console.log("Returned guesses: ",paginatedGuesses)
+            // console.log("Returned guesses: ",paginatedGuesses)
 
             return {
                 data: paginatedGuesses,

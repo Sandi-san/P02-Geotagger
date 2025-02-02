@@ -16,9 +16,7 @@ export class LocationService {
         private userService: UserService
     ) { }
 
-    async getPaginate(page = 1, relations = []): Promise<PaginatedResult> {
-        //max number to display on one page
-        const take = 9
+    async getPaginate(page = 1, take = 9, relations = []): Promise<PaginatedResult> {
         try {
             //get paginated locations
             const data = await this.prisma.location.findMany({

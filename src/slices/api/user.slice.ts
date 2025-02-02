@@ -79,17 +79,34 @@ export const userSlice = createApi({
         }
       }
     }),
-    getLocations: builder.query<FetchPaginatedLocationType, { page: number }>({
-      query: ({ page }) => ({
-        url: `/locations?page=${page}`,
-        method: 'GET',
-      }),
+    getLocations: builder.query<FetchPaginatedLocationType, { page: number, take?: number }>({
+      query: ({ page, take }) => {
+        //construct query parameters dynamically
+        const params = new URLSearchParams({ page: page.toString() });
+        //if take is passed, append as parameter
+        if (take !== undefined) {
+          params.append('take', take.toString());
+        }
+        //call route with arguments
+        return {
+          url: `/locations?${params.toString()}`,
+          method: 'GET',
+        };
+      },
     }),
-    getGuesses: builder.query<FetchPaginatedGuessType, { page: number }>({
-      query: ({ page }) => ({
-        url: `/guesses?page=${page}`,
-        method: 'GET',
-      }),
+    getGuesses: builder.query<FetchPaginatedGuessType, { page: number, take?: number }>({
+      query: ({ page, take }) => {
+        const params = new URLSearchParams({ page: page.toString() });
+
+        if (take !== undefined) {
+          params.append('take', take.toString());
+        }
+
+        return {
+          url: `/guesses?${params.toString()}`,
+          method: 'GET',
+        };
+      },
     })
   }),
 });

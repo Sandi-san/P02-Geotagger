@@ -98,7 +98,7 @@ const ProfileSettings = forwardRef((
     const onSubmit = async (formData: UpdateUserFields) => {
         console.log('Form Data:', formData);
         console.log('Image:', imageFile);
-        console.log(`Submit: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
+        // console.log(`Submit: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
 
         try {
             //update basic User data
@@ -114,7 +114,7 @@ const ProfileSettings = forwardRef((
                 setShowSuccess(true)
             }
             //update image
-            else {
+            else if (!showPasswordForm && showAvatarForm) {
                 if (imageFile) {
                     const formDataImage = new FormData()
                     formDataImage.append('image', imageFile)
@@ -143,6 +143,11 @@ const ProfileSettings = forwardRef((
                             setShowError(true);
                         }
                     }
+                }
+                else {
+                    setApiError("Please choose valid image to upload.");
+                    setApiStatus("404");
+                    setShowError(true);
                 }
             }
         }
@@ -432,7 +437,7 @@ const ProfileSettings = forwardRef((
                                         onChange={handleAvatarChange}
                                     />
                                     <Avatar
-                                        src={imageFile ? URL.createObjectURL(imageFile) : 
+                                        src={imageFile ? URL.createObjectURL(imageFile) :
                                             (getValidImagePath(userStore.user?.image))}
                                         sx={{
                                             width: '8vh',
@@ -483,10 +488,10 @@ const ProfileSettings = forwardRef((
                     aria-describedby="success-modal-description"
                 >
                     <DialogContent>
-                        <SuccessConformation 
-                        handleClose={() => setShowSuccess(false)} 
-                        title={"Information changed"} 
-                        message={"Your settings are saved."} />
+                        <SuccessConformation
+                            handleClose={() => setShowSuccess(false)}
+                            title={"Information changed"}
+                            message={"Your settings are saved."} />
                     </DialogContent>
                 </Modal>
             )}

@@ -3,7 +3,7 @@ import { UserType } from '../../models/user';
 import { RootState } from '../../stores/configure.store';
 import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
-import { LocationType } from '../../models/location';
+import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import { CreateLocationFields } from '../../hooks/react-hook-form/useCreateLocation';
 
 //api for /location route in backend 
@@ -21,9 +21,24 @@ export const locationSlice = createApi({
     }
   }),
   endpoints: (builder) => ({
-    getLocation: builder.query<LocationType, void>({
-      query: () => ({
-        url: '',
+    getLocations: builder.query<FetchPaginatedLocationType, { page: number, take?: number }>({
+      query: ({ page, take }) => {
+        //construct query parameters dynamically
+        const params = new URLSearchParams({ page: page.toString() });
+        //if take is passed, append as parameter
+        if (take !== undefined) {
+          params.append('take', take.toString());
+        }
+        //call route with arguments
+        return {
+          url: `/?${params.toString()}`,
+          method: 'GET',
+        };
+      },
+    }),
+    getLocation: builder.query<LocationType, { id: number }>({
+      query: ({ id }) => ({
+        url: `${id}`,
         method: 'GET',
       }),
 
@@ -84,6 +99,7 @@ export const locationSlice = createApi({
 });
 
 export const {
+  useGetLocationsQuery,
   useGetLocationQuery,
   useCreateLocationMutation,
   useUploadImageMutation,

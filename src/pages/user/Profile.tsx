@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Avatar, Box, Button, Typography } from '@mui/material';
+import { Avatar, Box, Button, DialogContent, Modal, Typography } from '@mui/material';
 import GuessCard from '../../components/ui/GuessCard';
 import { FetchGuessType, FetchPaginatedGuessType } from '../../models/guess';
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
@@ -11,9 +11,16 @@ import getValidImagePath from '../../utils/validImagePath';
 import { useGetGuessesQuery, useGetLocationsQuery } from '../../slices/api/user.slice';
 import { computeHeadingLevel } from '@testing-library/react';
 import Loading from '../../components/ui/Loading';
+import isApiError from '../../utils/apiErrorChecker';
+import ErrorDisplay from '../../components/modals/ErrorDisplay';
 
 const Profile: FC = () => {
     const { isMobile } = useMediaQuery(720)
+
+    //states for opening Error Modal
+    const [apiError, setApiError] = useState('')
+    const [apiStatus, setApiStatus] = useState('')
+    const [showError, setShowError] = useState(false)
 
     const { image, firstName, lastName } = userStore.user as UserType
 
@@ -32,12 +39,12 @@ const Profile: FC = () => {
     const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
     const [pageGuess, setPageGuess] = useState(1); //current page for fetching guesses
     const [pageGuessTotal, setPageGuessTotal] = useState(1); //total pages for fetching guesses
-    
+
     //states for Locations
     const [locations, setLocations] = useState<LocationType[]>([]); //array to hold fetched locations
     const [pageLocation, setPageLocation] = useState(1)
     const [pageLocationTotal, setPageLocationTotal] = useState(1); //total pages for fetching locations
-    
+
     //methods of API calls from user.slice
     const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageLocation });
     const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageGuess });
@@ -74,6 +81,37 @@ const Profile: FC = () => {
 
     if (isLoadingGuess || isLoadingLocation) {
         return <Loading />
+    }
+
+    if (locationsError) {
+        if (isApiError(locationsError)) {
+            setApiError(locationsError.data.message);
+            setApiStatus(locationsError.status.toString());
+            setShowError(true);
+        }
+    }
+    if (guessesError) {
+        if (isApiError(guessesError)) {
+            setApiError(guessesError.data.message);
+            setApiStatus(guessesError.status.toString());
+            setShowError(true);
+        }
+    }
+
+    if (locationsError || guessesError) {
+        {showError && (
+                <Modal
+                    open={showError} // Modal visibility tied to the showError state
+                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    aria-labelledby="error-modal-title"
+                    aria-describedby="error-modal-description"
+                >
+                    <DialogContent>
+                        <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                    </DialogContent>
+                </Modal>
+            )
+        }
     }
 
     return (
@@ -144,15 +182,15 @@ const Profile: FC = () => {
                         ))}
                     </Box>
                     {pageGuess < pageGuessTotal && (
-                    <Button
-                        variant="outlined"
-                        color='primary'
-                        onClick={handleLoadMoreGuesses}
-                        disabled={isLoadingGuess} //disable while loading
-                        sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
-                    >
-                        {isLoadingGuess ? 'Loading...' : 'Load more'}
-                    </Button>
+                        <Button
+                            variant="outlined"
+                            color='primary'
+                            onClick={handleLoadMoreGuesses}
+                            disabled={isLoadingGuess} //disable while loading
+                            sx={{ marginTop: 2, minWidth: 150, flex: 2, border: 2 }}
+                        >
+                            {isLoadingGuess ? 'Loading...' : 'Load more'}
+                        </Button>
                     )}
                 </Box>
             ) : (

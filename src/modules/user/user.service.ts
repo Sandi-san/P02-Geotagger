@@ -133,6 +133,16 @@ export class UserService {
         try {
             const guesses = await this.prisma.guess.findMany({
                 where: { userId },
+                include: {
+                    //return Location data
+                    location: {
+                        select: {
+                            id: true,
+                            image: true,
+                            address: true,
+                        }
+                    }
+                },
                 orderBy: [{
                     errorDistance: 'asc',
                 },
@@ -144,7 +154,7 @@ export class UserService {
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
 
-            // console.log("Returned guesses: ",paginatedGuesses)
+            console.log("Returned guesses: ",paginatedGuesses)
 
             return {
                 data: paginatedGuesses,

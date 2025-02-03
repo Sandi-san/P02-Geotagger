@@ -23,7 +23,7 @@ export class LocationService {
                 take,
                 skip: (page - 1) * take, //calculate which pages to return
                 orderBy: {
-                    createdAt: 'asc',
+                    updatedAt: 'desc',
                 }
             })
 

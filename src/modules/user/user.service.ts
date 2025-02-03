@@ -103,7 +103,7 @@ export class UserService {
             const locations = await this.prisma.location.findMany({
                 where: { userId },
                 orderBy: {
-                    updatedAt: 'asc',
+                    updatedAt: 'desc',
                 }
             })
             
@@ -154,7 +154,7 @@ export class UserService {
             const total = guesses.length
             const paginatedGuesses = guesses.slice((page - 1) * take, page * take)
 
-            console.log("Returned guesses: ",paginatedGuesses)
+            // console.log("Returned guesses: ",paginatedGuesses)
 
             return {
                 data: paginatedGuesses,

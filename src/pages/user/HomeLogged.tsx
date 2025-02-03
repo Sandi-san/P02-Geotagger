@@ -46,6 +46,7 @@ const HomeLogged: FC = () => {
             setGuesses(dataGuesses.data)
             setPageGuessTotal(dataGuesses.meta.last_page)
         }
+        console.log("Guesses: ", dataGuesses)
     }, [dataGuesses])
 
     useEffect(() => {

@@ -1,23 +1,41 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box, Button, DialogContent, FormControl, Modal, TextField, Typography } from '@mui/material';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Layout from '../../components/ui/Layout';
 import theme from '../../theme';
-import { Controller } from 'react-hook-form';
-import WorldMap from '../../components/ui/Map';
 import { CreateLocationFields, useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
-import { useCreateLocationMutation, useUploadImageMutation } from '../../slices/api/location.slice';
+import { useGetLocationQuery, useUpdateLocationMutation, useUploadImageMutation } from '../../slices/api/location.slice';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
-import SuccessConformation from '../../components/modals/SuccessConformation';
+import { LocationType } from '../../models/location';
+import Loading from '../../components/ui/Loading';
+import userStore from '../../stores/user.store';
+import { useNavigate } from 'react-router-dom';
+import getValidImagePath from '../../utils/validImagePath';
+import { Controller } from 'react-hook-form';
+import { UpdateLocationFields, useUpdateLocationForm } from '../../hooks/react-hook-form/useUpdateLocation';
 
-const LocationAdd: FC = () => {
+interface LocationEditProps {
+    id: number
+}
+
+const LocationEdit: FC<LocationEditProps> = ({ id }) => {
     const { isMobile } = useMediaQuery(720)
+    const navigate = useNavigate()
 
-    //form for creating/updating Location 
-    const { handleSubmit, control, errors, setValue } = useCreateLocationForm();
+    //method for updating location
+    const [updateLocation] = useUpdateLocationMutation()
+    //method for fetching location with id
+    const { data: dataLocation, error: locationError, isLoading: isLoadingLocation } = useGetLocationQuery({ id });
+    //state for saving location
+    const [location, setLocation] = useState<LocationType>()
 
-    const [createLocation] = useCreateLocationMutation()
+    useEffect(() => {
+        if (dataLocation) {
+            console.log("Fetched: ", dataLocation)
+            setLocation(dataLocation)
+        }
+    }, [dataLocation]);
 
     //value of error returned by api
     const [apiError, setApiError] = useState('')
@@ -25,9 +43,6 @@ const LocationAdd: FC = () => {
     const [apiStatus, setApiStatus] = useState('')
     //state if error has occured
     const [showError, setShowError] = useState(false)
-
-    //state for opening Successful Creation Modal
-    const [showSuccess, setShowSuccess] = useState(false)
 
     //set state for image file
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -50,18 +65,23 @@ const LocationAdd: FC = () => {
         }
     };
 
-    const onSubmit = async (formData: CreateLocationFields) => {
-        // console.log('Form Data:', formData);
+    //form for creating/updating Location 
+    const { handleSubmit, control, errors, setValue } = useUpdateLocationForm({});
+
+    //update form values when location is fetched
+    useEffect(() => {
+        if (location) {
+            setValue("lat", location.lat);
+            setValue("lon", location.lon);
+            setValue("address", location.address);
+        }
+    }, [location, setValue]); //runs when location changes
+
+    const onSubmit = async (formData: UpdateLocationFields) => {
+        console.log('Form Data:', formData);
         console.log('Image:', imageFile);
 
-        if ((formData.lat == 0 || null) || (formData.lon == 0 || null)) {
-            console.log('Please select a valid location!')
-            setApiError('Please select a valid location!');
-            setApiStatus('404');
-            setShowError(true);
-            return
-        }
-        if (!imageFile) {
+        if (!imageFile && !location?.image) {
             console.log('Please choose image for location!')
             setApiError('Please choose image for location!');
             setApiStatus('404');
@@ -70,17 +90,17 @@ const LocationAdd: FC = () => {
         }
 
         try {
-            //call RTK Query mutation with valid formData (create location)
-            const locationResponse = await createLocation(formData).unwrap();
-            // console.log('Location created successfully:', locationResponse);
+            //call RTK Query mutation with valid formData (update location)
+            const locationResponse = await updateLocation({ id, formData }).unwrap();
+            console.log('Location updated successfully:', locationResponse);
 
-            //if created location returned successfully, call uploadFile route
-            if (locationResponse.id) {
+            //if image file was set, call update
+            if (imageFile) {
                 const formDataImage = new FormData()
                 formDataImage.append('image', imageFile)
                 //call api with id from location and image as parameters
                 const imageUploadResponse = await uploadImage({
-                    id: locationResponse.id,
+                    id,
                     formData: formDataImage
                 });
 
@@ -100,12 +120,11 @@ const LocationAdd: FC = () => {
                 }
                 else {
                     console.log('Image uploaded successfully:', imageUploadResponse);
-                    setShowSuccess(true)
                 }
             }
         }
         catch (err) {
-            console.error("Error during creation of location: ", err)
+            console.error("Error during edit of location: ", err)
             if (isApiError(err)) {
                 setApiError(err.data.message);
                 setApiStatus(err.status.toString());
@@ -118,17 +137,50 @@ const LocationAdd: FC = () => {
         }
     }
 
-    const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lon: number; address: string } | null>(null);
+    const handleCancel = () => {
+        if (window.history.length > 2) {
+            navigate(-1); //go back if there's history
+            //TODO: go back and refetch
+        } else {
+            navigate('/profile'); //otherwise go to Profile page
+        }
+    };
 
-    const handleLocationSelect = (lat: number, lon: number, address: string) => {
-        setSelectedLocation({ lat, lon, address })
-        console.log("Location:", { lat, lon });
-        // console.log("Address:", address);
 
-        //update formData
-        setValue("lat", lat, { shouldValidate: true });
-        setValue("lon", lon, { shouldValidate: true });
-        setValue("address", address, { shouldValidate: true });
+    //handle data loading
+    if (isLoadingLocation || !location) {
+        return <Loading />
+    }
+
+    //handle error fetching data
+    if (locationError) {
+        if (isApiError(locationError)) {
+            setApiError(locationError.data.message);
+            setApiStatus(locationError.status.toString());
+            setShowError(true);
+        }
+        else {
+            setApiError("An unexpected error has occured.");
+            setShowError(true);
+        }
+    }
+
+    //handle unauthorization (user tries to delete location that isn't theirs)
+    if (location) {
+        const checkAccess = location.userId === userStore.user?.id
+        if (!checkAccess) {
+            console.log("Access denied! User unauthorized.")
+            return <Modal
+                open={showError}
+                onClose={() => navigate('/')} //when modal is closed, exit current page
+                aria-labelledby="error-modal-title"
+                aria-describedby="error-modal-description"
+            >
+                <DialogContent>
+                    <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                </DialogContent>
+            </Modal>
+        }
     }
 
     return (
@@ -146,7 +198,7 @@ const LocationAdd: FC = () => {
                 }}>
                     {/* Main text */}
                     <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'center', marginBottom: '2vh' }}>
-                        <span style={{ color: theme.palette.primary.dark }}>Add a new</span>
+                        <span style={{ color: theme.palette.primary.dark }}>Edit</span>
                         <span style={{ color: theme.palette.primary.main }}>&nbsp;location</span>
                     </Typography>
                     {/* Location image */}
@@ -171,7 +223,9 @@ const LocationAdd: FC = () => {
                         {/* Display the image */}
                         <Box
                             component="img"
-                            src={imageFile ? URL.createObjectURL(imageFile) : '/placeholder-image.png'}
+                            src={imageFile ? URL.createObjectURL(imageFile) :
+                                (location.image ? (getValidImagePath(location.image)) :
+                                    '/placeholder-image.png')}
                             alt="Location image preview"
                             sx={{
                                 width: '100%',
@@ -182,49 +236,9 @@ const LocationAdd: FC = () => {
                             }}
                         />
                     </label>
-                </Box>
-                {/* Button for choosing image */}
-                <Box sx={{
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    width: '80%', //in line with image
-                    overflow: 'hidden',
-                    marginY: 1
-                }}>
-                    <Button variant="outlined" color="primary"
-                        sx={{ marginBottom: 2, border: 2 }}
-                        onClick={triggerFileInput}>
-                        Upload new picture
-                    </Button>
-                </Box>
 
-                {/* Second section - Map */}
-                <Box sx={{
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    textAlign: 'center',
-                    alignItems: 'center',
-                    paddingX: '8vh',
-                    overflow: 'hidden',
-                }}>
-                    {/* Box for Map component */}
-                    <Box
-                        sx={{
-                            width: '66%',
-                            height: '30vh',
-                            objectFit: 'cover',
-                            // border: '2px solid #ccc', // Optional border for styling
-                            backgroundColor: '#f0f0f0', // Fallback color if no image
-                        }}
-                    >
-                        <WorldMap onSelectLocation={handleLocationSelect} />
-                    </Box>
-                    <FormControl
-                        sx={{ width: '66%' }}
-                    >
+                    {/* Location text-box */}
+                    <FormControl sx={{ width: '66%' }}>
                         {/* Address field */}
                         <Controller
                             name="address"
@@ -232,12 +246,10 @@ const LocationAdd: FC = () => {
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    onChange={(e) => {
-                                        //allow user input after change
-                                        field.onChange(e);
-                                        //set value from selectedLocation
-                                        setSelectedLocation((prev) => prev ? { ...prev, address: e.target.value } : null);
-                                    }}
+                                    // value={field.value} // Ensure controlled component
+                                    // onChange={(e) => {
+                                    //     field.onChange(e); // Update form state
+                                    // }}
                                     type='text'
                                     label="Location"
                                     error={!!errors.address}
@@ -251,26 +263,40 @@ const LocationAdd: FC = () => {
                         />
                     </FormControl>
                 </Box>
-                {/* Button for submit */}
+
+                {/* Buttons */}
                 <Box sx={{
                     position: 'relative',
                     display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-end',
-                    width: '80%', //in line with image
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     overflow: 'hidden',
-                    marginY: 1
+                    marginY: 1,
+                    marginX: '21%',
                 }}>
-                    <Button type='submit' variant="contained" color="primary"
-                        sx={{ marginBottom: 2, }}>
-                        Add location
+                    <Button variant="outlined" color="primary"
+                        sx={{ marginBottom: 2, border: 2 }}
+                        onClick={triggerFileInput}>
+                        Upload image
                     </Button>
+                    <Box>
+                        <Button type='submit' variant="contained" color="primary"
+                            sx={{ marginBottom: 2, marginRight: 2 }}>
+                            Save
+                        </Button>
+                        <Button variant="contained"
+                            sx={{ marginBottom: 2, backgroundColor: '#FFF', color: '#000' }}
+                            onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </Box>
             </form>
             {showError && (
                 <Modal
-                    open={showError} // Modal visibility tied to the showError state
-                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    open={showError}
+                    onClose={() => setShowError(false)}
                     aria-labelledby="error-modal-title"
                     aria-describedby="error-modal-description"
                 >
@@ -278,24 +304,10 @@ const LocationAdd: FC = () => {
                         <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
                     </DialogContent>
                 </Modal>
-            )}
-            {showSuccess && (
-                <Modal
-                    open={showSuccess}
-                    onClose={() => setShowSuccess(false)}
-                    aria-labelledby="success-modal-title"
-                    aria-describedby="success-modal-description"
-                >
-                    <DialogContent>
-                        <SuccessConformation 
-                            handleClose={() => setShowSuccess(false)} 
-                            title={"Location created"} 
-                            message={"Your location was created successfully."} />
-                    </DialogContent>
-                </Modal>
-            )}
+            )
+            }
         </Layout>
     );
 };
 
-export default LocationAdd;
+export default LocationEdit;

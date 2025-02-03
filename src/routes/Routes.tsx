@@ -24,6 +24,7 @@ const Home = lazy(() => import('../pages/Home'));
 //TODO: ADD PAGES (EG. PROFILE)
 const Profile = lazy(() => import('../pages/user/Profile'));
 const LocationAdd = lazy(() => import('../pages/location/LocationAdd'));
+const LocationEditWrapper = lazy(() => import('../pages/location/LocationEditWrapper'));
 
 // Restricted routes
 const Login = lazy(() => import('../pages/auth/Login'));
@@ -71,6 +72,11 @@ export const AppRoutes: AppRoute[] = [
     type: RouteType.PRIVATE,
     path: '/location/add',
     children: <LocationAdd />,
+  },
+  {
+    type: RouteType.PRIVATE,
+    path: '/location/edit/:id',
+    children: <LocationEditWrapper />,
   },
 
   // Public Routes

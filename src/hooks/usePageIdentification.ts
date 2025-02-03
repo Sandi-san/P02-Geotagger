@@ -4,27 +4,27 @@ import { useLocation } from 'react-router-dom';
 //TODO: CHANGE FOR PROJECT 02
 
 const onDefault = () => {
-  document.title = 'AuctionBay';
+  document.title = 'Geotagger';
   document.body.id = '';
 };
 const onHome = () => {
-  document.title = 'AuctionBay';
+  document.title = 'Geotagger';
   document.body.id = 'home-page';
 };
 const onAuctions = () => {
-  document.title = 'AuctionBay - Auctions';
+  document.title = 'Geotagger - Auctions';
   document.body.id = 'auctions-page';
 };
 const onProfile = () => {
-  document.title = 'AuctionBay - Profile';
+  document.title = 'Geotagger - Profile';
   document.body.id = 'profile-page';
 };
 const onLogin = () => {
-  document.title = 'AuctionBay - Login';
+  document.title = 'Geotagger - Login';
   document.body.id = 'login-page';
 };
 const onSignup = () => {
-  document.title = 'AuctionBay - Signup';
+  document.title = 'Geotagger - Signup';
   document.body.id = 'signup-page';
 };
 

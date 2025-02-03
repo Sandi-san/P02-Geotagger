@@ -126,6 +126,9 @@ const Header: FC = () => {
                             sx={{
                                 textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
+                                '&:hover': {
+                                    cursor: 'pointer'
+                                }
                             }}
                             onClick={handleLogout}
                         >
@@ -212,7 +215,6 @@ const Header: FC = () => {
                                         },
                                         minWidth: '4vh',
                                     }}
-                                // onClick={() => console.log('Open Add Location form!')}
                                 >
                                     <Typography
                                         variant="h6"

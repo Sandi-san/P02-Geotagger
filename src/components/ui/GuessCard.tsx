@@ -1,8 +1,10 @@
-import { Box, Button, IconButton, Typography } from "@mui/material"
+import { Box, Button, IconButton, Modal, Typography } from "@mui/material"
 import { FC, useState } from "react"
 import theme from "../../theme"
 import useMediaQuery from "../../hooks/useMediaQuery"
 import getValidImagePath from "../../utils/validImagePath"
+import LocationEdit from "../../pages/location/LocationEdit"
+import { useNavigate } from "react-router-dom"
 
 interface GuessCardProps {
     imageUrl: string
@@ -24,6 +26,11 @@ const GuessCard: FC<GuessCardProps> = ({
 }) => {
     //called if image from imageUrl cannot be loaded
     const [imageError, setImageError] = useState(false);
+
+    const navigate = useNavigate()
+    const handleOpenEditLocation = () => {
+        navigate(`/location/edit/${id}`)         
+    }
 
     return (
         <Box
@@ -56,7 +63,7 @@ const GuessCard: FC<GuessCardProps> = ({
                             minWidth: '6vh',
                             minHeight: '6vh',
                         }}
-                        onClick={() => console.log(`Edit location ${id}`)}
+                        onClick={handleOpenEditLocation}
                     >
                         <Box component="img" src="/icon-edit.svg" alt="+" sx={{ height: '3vh' }} />
                     </Button>

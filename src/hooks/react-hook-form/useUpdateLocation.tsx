@@ -26,6 +26,7 @@ export const useUpdateLocationForm = ({ defaultValues }: Props) => {
     handleSubmit,
     formState: { errors },
     control,
+    setValue, //for setting formData
   } = useForm<UpdateLocationFields>({
     defaultValues: {
       lat: 0,
@@ -41,6 +42,7 @@ export const useUpdateLocationForm = ({ defaultValues }: Props) => {
     handleSubmit,
     errors,
     control,
+    setValue,
   };
 };
 

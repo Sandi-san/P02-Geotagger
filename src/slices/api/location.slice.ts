@@ -5,6 +5,7 @@ import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import { CreateLocationFields } from '../../hooks/react-hook-form/useCreateLocation';
+import { UpdateLocationFields } from '../../hooks/react-hook-form/useUpdateLocation';
 
 //api for /location route in backend 
 export const locationSlice = createApi({
@@ -60,6 +61,23 @@ export const locationSlice = createApi({
         }
       }
     }),
+    updateLocation: builder.mutation<LocationType, {id: number, formData: UpdateLocationFields}>({
+      query: ({id, formData}) => ({
+        url: `${id}`,
+        method: 'PATCH',
+        body: formData,
+      }),
+      transformResponse: (response: any): LocationType => {
+        return {
+          id: response.id,
+          address: response.address,
+          image: response.image,
+          lat: response.lat,
+          lon: response.lon,
+          userId: response.userId,
+        }
+      }
+    }),
     updateUser: builder.mutation<UserType, UpdateUserFields>({
       query: (formData: UpdateUserFields) => ({
         url: '/update',
@@ -102,6 +120,7 @@ export const {
   useGetLocationsQuery,
   useGetLocationQuery,
   useCreateLocationMutation,
+  useUpdateLocationMutation,
   useUploadImageMutation,
   // useUpdateUserMutation,
   // useUploadImageMutation,

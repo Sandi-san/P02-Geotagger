@@ -1,9 +1,22 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import GuessCard from '../components/ui/GuessCard';
+import { useGetLocationsQuery } from '../slices/api/location.slice';
+import { LocationType } from '../models/location';
 
 const HomeUnlogged: FC = () => {
-    //TODO: load GuessCard images from DB
+    //methods of API calls from user.slice
+    const { data: dataLocations } = useGetLocationsQuery({ page: 1, take: 3 });
+    //array to hold fetched locations
+    const [locations, setLocations] = useState<LocationType[]>([])
+
+    //update when data changes
+    useEffect(() => {
+        if (dataLocations && dataLocations.data) {
+            setLocations(dataLocations.data)
+        }
+        // console.log("Data: ", dataLocations)
+    }, [dataLocations])
 
     return (
         <>
@@ -91,15 +104,30 @@ const HomeUnlogged: FC = () => {
                     }}
                 >
                     <GuessCard
-                        imageUrl='placeholder1.jpg'
+                        //check if locations is valid array and can be accessed at index, 
+                        //then check if it has an image. if these conditions are not all fullfilled
+                        //display the placeholder image instead
+                        imageUrl={locations ? (locations.at(0) ?
+                            (locations.at(0)?.image ? (locations.at(0)?.image as string) :
+                                ('/public/placeholder1.jpg')) :
+                            ('/public/placeholder1.jpg')) :
+                            ('/public/placeholder1.jpg')}
                         isLocked={true}
                     />
                     <GuessCard
-                        imageUrl='placeholder2.jpg'
+                        imageUrl={locations ? (locations.at(1) ?
+                            (locations.at(1)?.image ? (locations.at(1)?.image as string) :
+                                ('/public/placeholder2.jpg')) :
+                            ('/public/placeholder2.jpg')) :
+                            ('/public/placeholder2.jpg')}
                         isLocked={true}
                     />
                     <GuessCard
-                        imageUrl='placeholder3.jpg'
+                        imageUrl={locations ? (locations.at(2) ?
+                            (locations.at(2)?.image ? (locations.at(2)?.image as string) :
+                                ('/public/placeholder3.jpg')) :
+                            ('/public/placeholder3.jpg')) :
+                            ('/public/placeholder3.jpg')}
                         isLocked={true}
                     />
                 </Box>

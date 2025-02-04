@@ -43,6 +43,8 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
     const [apiStatus, setApiStatus] = useState('')
     //state if error has occured
     const [showError, setShowError] = useState(false)
+    //auth error to show error modal and redirect user from this page
+    const [showAuthError, setShowAuthError] = useState(false)
 
     //set state for image file
     const [imageFile, setImageFile] = useState<File | null>(null)
@@ -140,12 +142,26 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
     const handleCancel = () => {
         if (window.history.length > 2) {
             navigate(-1); //go back if there's history
-            //TODO: go back and refetch
         } else {
             navigate('/profile'); //otherwise go to Profile page
         }
     };
 
+    //run when location is loaded or local user changes
+    useEffect(() => {
+        if (location) {
+            const checkAccess = location.userId === userStore.user?.id;
+            console.log("Access: ", checkAccess);
+            console.log(`Loc: ${location.userId} User: ${userStore.user?.id}`);
+            //handle unauthorization (user tries to delete location that isn't theirs)
+            if (!checkAccess) {
+                console.log("Access denied! User unauthorized.");
+                setApiError("Access denied! User unauthorized.");
+                setApiStatus("401");
+                setShowAuthError(true);
+            }
+        }
+    }, [location, userStore.user]);
 
     //handle data loading
     if (isLoadingLocation || !location) {
@@ -165,22 +181,24 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
         }
     }
 
-    //handle unauthorization (user tries to delete location that isn't theirs)
-    if (location) {
-        const checkAccess = location.userId === userStore.user?.id
-        if (!checkAccess) {
-            console.log("Access denied! User unauthorized.")
-            return <Modal
-                open={showError}
-                onClose={() => navigate('/')} //when modal is closed, exit current page
+    // Handle unauthorized access
+    if (showAuthError) {
+        return (
+            <Modal
+                open={showAuthError}
+                onClose={() => navigate('/')} // Redirect on close
                 aria-labelledby="error-modal-title"
                 aria-describedby="error-modal-description"
             >
                 <DialogContent>
-                    <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                    <ErrorDisplay message={apiError} errorStatus={apiStatus}
+                        handleClose={() => {
+                            setShowAuthError(false);
+                            navigate('/');
+                        }} />
                 </DialogContent>
             </Modal>
-        }
+        );
     }
 
     return (

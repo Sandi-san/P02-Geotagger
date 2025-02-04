@@ -113,6 +113,12 @@ export const locationSlice = createApi({
         }
       }
     }),
+    deleteLocation: builder.mutation<{response: string}, {id: number}>({
+      query: ({id}) => ({
+        url: `${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -122,6 +128,5 @@ export const {
   useCreateLocationMutation,
   useUpdateLocationMutation,
   useUploadImageMutation,
-  // useUpdateUserMutation,
-  // useUploadImageMutation,
+  useDeleteLocationMutation,
 } = locationSlice;

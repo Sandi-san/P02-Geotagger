@@ -1,10 +1,13 @@
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material"
+import { Box, Button, DialogContent, Modal, Typography } from "@mui/material"
 import { FC, useState } from "react"
 import theme from "../../theme"
-import useMediaQuery from "../../hooks/useMediaQuery"
 import getValidImagePath from "../../utils/validImagePath"
-import LocationEdit from "../../pages/location/LocationEdit"
 import { useNavigate } from "react-router-dom"
+import DeleteQuote from "../modals/DeleteQuote"
+import { useDeleteLocationMutation } from "../../slices/api/location.slice"
+import ErrorDisplay from "../modals/ErrorDisplay"
+import isApiError from "../../utils/apiErrorChecker"
+import DeleteQuoteConformation from "../modals/DeleteQuoteConformation"
 
 interface GuessCardProps {
     imageUrl: string
@@ -13,6 +16,7 @@ interface GuessCardProps {
     width?: number, height?: number //override width/height?
     isUser?: boolean, //display delete/edit options?
     id?: number, //id of location (for edit/delete)
+    removeFromArray?: (locationId: number) => void
 }
 
 const GuessCard: FC<GuessCardProps> = ({
@@ -23,13 +27,95 @@ const GuessCard: FC<GuessCardProps> = ({
     height = 200,
     isUser = false,
     id,
+    removeFromArray,
 }) => {
     //called if image from imageUrl cannot be loaded
     const [imageError, setImageError] = useState(false);
 
     const navigate = useNavigate()
     const handleOpenEditLocation = () => {
-        navigate(`/location/edit/${id}`)         
+        navigate(`/location/edit/${id}`)
+    }
+
+
+    //states for opening Error Modal
+    const [apiError, setApiError] = useState('')
+    const [apiStatus, setApiStatus] = useState('')
+    const [showError, setShowError] = useState(false)
+
+    //API call for delete location
+    const [deleteLocation] = useDeleteLocationMutation()
+
+    //open/close states for Delete modal
+    const [openDeleteLocationModal, setOpenDeleteLocationModal] = useState(false);
+    //open the modal
+    const handleOpenDeleteLocation = () => setOpenDeleteLocationModal(true);
+    //close the modal
+    const handleCloseDeleteLocation = () => setOpenDeleteLocationModal(false);
+
+    //open/close states for Successful deletion modal
+    const [openDeleteSuccessModal, setOpenDeleteSuccessModal] = useState(false);
+    //close the modal
+    const handleCloseDeleteSuccess = () => {
+        setOpenDeleteSuccessModal(false)
+        //call removeFromArray function from parent
+        if(id && removeFromArray)
+            removeFromArray(id)
+    }
+
+
+    const handleDeleteLocation = async () => {
+        if (!id) {
+            console.error("No id passed. Cannot delete location.");
+            return
+        }
+
+        try {
+            const deleteResponse = await deleteLocation({ id }).unwrap()
+            // console.log("Response: ", deleteResponse)
+            setOpenDeleteLocationModal(false)
+            if (deleteResponse.response) {
+                setOpenDeleteSuccessModal(true)
+            }
+            else {
+                if (isApiError(deleteResponse)) {
+                    setApiError(deleteResponse.data.message);
+                    setApiStatus(deleteResponse.status.toString());
+                    setShowError(true);
+                }
+            }
+        } catch (error) {
+            if (isApiError(error)) {
+                setApiError(error.data.message);
+                setApiStatus(error.status.toString());
+                setShowError(true);
+            }
+        }
+    }
+
+    if (showError) {
+        return <Modal
+            open={showError}
+            onClose={() => setShowError(false)}
+            aria-labelledby="error-modal-title"
+            aria-describedby="error-modal-description"
+        >
+            <DialogContent>
+                <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+            </DialogContent>
+        </Modal>
+    }
+    else if(openDeleteSuccessModal){
+        return <Modal
+            open={openDeleteSuccessModal}
+            onClose={handleCloseDeleteSuccess}
+            aria-labelledby="profile-settings-title"
+            aria-describedby="profile-settings-description"
+        >
+            <DeleteQuoteConformation
+                handleClose={handleCloseDeleteSuccess}
+            />
+        </Modal>
     }
 
     return (
@@ -81,10 +167,22 @@ const GuessCard: FC<GuessCardProps> = ({
                             minWidth: '6vh',
                             minHeight: '6vh',
                         }}
-                        onClick={() => console.log(`Delete location ${id}`)}
+                        // onClick={() => console.log(`Delete location ${id}`)}
+                        onClick={handleOpenDeleteLocation}
                     >
                         <Box component="img" src="/icon-trash.svg" alt="X" sx={{ height: '4vh' }} />
                     </Button>
+                    <Modal
+                        open={openDeleteLocationModal}
+                        onClose={handleCloseDeleteLocation}
+                        aria-labelledby="profile-settings-title"
+                        aria-describedby="profile-settings-description"
+                    >
+                        <DeleteQuote
+                            handleClose={handleCloseDeleteLocation}
+                            handleSubmit={handleDeleteLocation}
+                        />
+                    </Modal>
                 </>
             )}
             {/* Image element */}

@@ -49,6 +49,12 @@ const Profile: FC = () => {
     const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageLocation });
     const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageGuess });
 
+    // Function to remove a location from the array
+    const handleRemoveFromArray = (id: number) => {
+        console.log("Remove location: ",id)
+        setLocations((prevLocations) => prevLocations.filter(location => location.id !== id));
+    };
+
     //update when data changes
     useEffect(() => {
         if (dataLocations && dataLocations.data) {
@@ -90,7 +96,7 @@ const Profile: FC = () => {
             setShowError(true);
         }
     }
-    if (guessesError) {
+    else if (guessesError) {
         if (isApiError(guessesError)) {
             setApiError(guessesError.data.message);
             setApiStatus(guessesError.status.toString());
@@ -99,19 +105,16 @@ const Profile: FC = () => {
     }
 
     if (locationsError || guessesError) {
-        {showError && (
-                <Modal
-                    open={showError} // Modal visibility tied to the showError state
-                    onClose={() => setShowError(false)} // Close the modal on backdrop click
-                    aria-labelledby="error-modal-title"
-                    aria-describedby="error-modal-description"
-                >
-                    <DialogContent>
-                        <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
-                    </DialogContent>
-                </Modal>
-            )
-        }
+        return <Modal
+            open={showError} // Modal visibility tied to the showError state
+            onClose={() => setShowError(false)} // Close the modal on backdrop click
+            aria-labelledby="error-modal-title"
+            aria-describedby="error-modal-description"
+        >
+            <DialogContent>
+                <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+            </DialogContent>
+        </Modal>
     }
 
     return (
@@ -251,6 +254,7 @@ const Profile: FC = () => {
                                 imageUrl={location.image || ''}
                                 isUser={true}
                                 id={location.id}
+                                removeFromArray={handleRemoveFromArray}
                             />
                         ))}
                     </Box>

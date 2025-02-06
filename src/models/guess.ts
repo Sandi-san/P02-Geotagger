@@ -13,6 +13,7 @@ export type GuessType = {
 export type FetchGuessType = {
   id: number;
   errorDistance: number,
+  createdAt?: Date,
   location: LocationType,
   user: UserType,
 };

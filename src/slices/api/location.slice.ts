@@ -6,6 +6,7 @@ import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUse
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import { CreateLocationFields } from '../../hooks/react-hook-form/useCreateLocation';
 import { UpdateLocationFields } from '../../hooks/react-hook-form/useUpdateLocation';
+import { FetchGuessType } from '../../models/guess';
 
 //api for /location route in backend 
 export const locationSlice = createApi({
@@ -119,6 +120,12 @@ export const locationSlice = createApi({
         method: 'DELETE',
       }),
     }),
+    getGuesses: builder.query<FetchGuessType[], { id: number }>({
+      query: ({ id }) => ({
+        url: `${id}/guesses`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -129,4 +136,5 @@ export const {
   useUpdateLocationMutation,
   useUploadImageMutation,
   useDeleteLocationMutation,
+  useGetGuessesQuery,
 } = locationSlice;

@@ -46,4 +46,4 @@ export const useUpdateLocationForm = ({ defaultValues }: Props) => {
   };
 };
 
-export type CreateUpdateLocationForm = ReturnType<typeof useUpdateLocationForm>;
+export type UpdateLocationForm = ReturnType<typeof useUpdateLocationForm>;

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, DialogContent, Modal, Typography } from '@mui/material';
-import GuessCard from '../../components/ui/GuessCard';
+import Card from '../../components/ui/Card';
 import { FetchGuessType } from '../../models/guess';
 import { LocationType } from '../../models/location';
 import useMediaQuery from '../../hooks/useMediaQuery';
@@ -46,7 +46,7 @@ const HomeLogged: FC = () => {
             setGuesses(dataGuesses.data)
             setPageGuessTotal(dataGuesses.meta.last_page)
         }
-        console.log("Guesses: ", dataGuesses)
+        // console.log("Guesses: ", dataGuesses)
     }, [dataGuesses])
 
     useEffect(() => {
@@ -112,9 +112,10 @@ const HomeLogged: FC = () => {
                     >
                         {/* Render GuessCards dynamically */}
                         {guesses.map((guess, index) => (
-                            <GuessCard key={index}
+                            <Card key={index}
                                 imageUrl={(guess.location.image ? guess.location.image : '')}
                                 errorDistance={guess.errorDistance}
+                                isLocation={false}
                                 width={450}
                                 height={300}
                             />
@@ -174,8 +175,9 @@ const HomeLogged: FC = () => {
                     >
                         {/* Render GuessCards dynamically */}
                         {locations.map((location, index) => (
-                            <GuessCard key={index}
+                            <Card key={index}
                                 imageUrl={location.image || ''}
+                                id={location.id}
                                 width={450}
                                 height={300}
                             />

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import GuessCard from '../components/ui/GuessCard';
+import Card from '../components/ui/Card';
 import { useGetLocationsQuery } from '../slices/api/location.slice';
 import { LocationType } from '../models/location';
 
@@ -103,7 +103,7 @@ const HomeUnlogged: FC = () => {
                         gap: 2, //padding between child elements
                     }}
                 >
-                    <GuessCard
+                    <Card
                         //check if locations is valid array and can be accessed at index, 
                         //then check if it has an image. if these conditions are not all fullfilled
                         //display the placeholder image instead
@@ -114,7 +114,7 @@ const HomeUnlogged: FC = () => {
                             ('/public/placeholder1.jpg')}
                         isLocked={true}
                     />
-                    <GuessCard
+                    <Card
                         imageUrl={locations ? (locations.at(1) ?
                             (locations.at(1)?.image ? (locations.at(1)?.image as string) :
                                 ('/public/placeholder2.jpg')) :
@@ -122,7 +122,7 @@ const HomeUnlogged: FC = () => {
                             ('/public/placeholder2.jpg')}
                         isLocked={true}
                     />
-                    <GuessCard
+                    <Card
                         imageUrl={locations ? (locations.at(2) ?
                             (locations.at(2)?.image ? (locations.at(2)?.image as string) :
                                 ('/public/placeholder3.jpg')) :

@@ -9,23 +9,25 @@ import ErrorDisplay from "../modals/ErrorDisplay"
 import isApiError from "../../utils/apiErrorChecker"
 import DeleteQuoteConformation from "../modals/DeleteQuoteConformation"
 
-interface GuessCardProps {
-    imageUrl: string
+interface CardProps {
+    imageUrl: string //image to display on card
     isLocked?: boolean //display lock icon on card?
     errorDistance?: number //display error distance on card?
     width?: number, height?: number //override width/height?
     isUser?: boolean, //display delete/edit options?
-    id?: number, //id of location (for edit/delete)
-    removeFromArray?: (locationId: number) => void
+    isLocation?: boolean, //states if element is location (default yes) 
+    id?: number, //id of displayed element (for edit/delete location or )
+    removeFromArray?: (locationId: number) => void //reference function to remove object with id from array
 }
 
-const GuessCard: FC<GuessCardProps> = ({
+const Card: FC<CardProps> = ({
     imageUrl,
     isLocked = false,
     errorDistance = -1,
     width = 300,
     height = 200,
     isUser = false,
+    isLocation = true,
     id,
     removeFromArray,
 }) => {
@@ -36,7 +38,10 @@ const GuessCard: FC<GuessCardProps> = ({
     const handleOpenEditLocation = () => {
         navigate(`/location/edit/${id}`)
     }
-
+    const handleOpenLocation = () => {
+        if(isLocation && !isLocked)
+            navigate(`/location/${id}`)
+    }
 
     //states for opening Error Modal
     const [apiError, setApiError] = useState('')
@@ -59,7 +64,7 @@ const GuessCard: FC<GuessCardProps> = ({
     const handleCloseDeleteSuccess = () => {
         setOpenDeleteSuccessModal(false)
         //call removeFromArray function from parent
-        if(id && removeFromArray)
+        if (id && removeFromArray)
             removeFromArray(id)
     }
 
@@ -105,7 +110,7 @@ const GuessCard: FC<GuessCardProps> = ({
             </DialogContent>
         </Modal>
     }
-    else if(openDeleteSuccessModal){
+    else if (openDeleteSuccessModal) {
         return <Modal
             open={openDeleteSuccessModal}
             onClose={handleCloseDeleteSuccess}
@@ -129,9 +134,14 @@ const GuessCard: FC<GuessCardProps> = ({
                 justifyContent: 'center',
                 overflow: 'hidden', //content (image) stays within bounds
                 borderRadius: 3, //rounded corners
-                //   boxShadow: 3, //drop shadow
                 bgcolor: 'background.paper', //background color of the card
+                '&:hover': {
+                    boxShadow: 3, //drop shadow
+                    transform: 'scale(1.05)', //increase size by fraction
+                    cursor: 'pointer',
+                },
             }}
+            onClick={handleOpenLocation}
         >
             {isUser && (
                 <>
@@ -263,7 +273,7 @@ const GuessCard: FC<GuessCardProps> = ({
                     }} >{errorDistance} m</Typography>
                 </Box>
             )}
-        </Box>
+        </Box >
     )
 }
-export default GuessCard
+export default Card

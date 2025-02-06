@@ -1,0 +1,317 @@
+import { FC, useEffect, useState } from 'react';
+import { Box, Button, DialogContent, FormControl, Modal, TextField, Typography } from '@mui/material';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import Layout from '../../components/ui/Layout';
+import theme from '../../theme';
+import { Controller } from 'react-hook-form';
+import WorldMap from '../../components/ui/Map';
+import { CreateLocationFields, useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
+import { useCreateLocationMutation, useGetLocationQuery, useUploadImageMutation } from '../../slices/api/location.slice';
+import isApiError from '../../utils/apiErrorChecker';
+import ErrorDisplay from '../../components/modals/ErrorDisplay';
+import SuccessConformation from '../../components/modals/SuccessConformation';
+import Loading from '../../components/ui/Loading';
+import getValidImagePath from '../../utils/validImagePath';
+import { CreateGuessFields } from '../../hooks/react-hook-form/useCreateGuess';
+import { FetchGuessType } from '../../models/guess';
+import GuessesLeaderboard from '../../components/ui/GuessesLeaderboard';
+
+interface LocationProps {
+    locationId: number, //id of the location displayed on the page
+}
+
+const Location: FC<LocationProps> = ({ locationId }) => {
+    const { isMobile } = useMediaQuery(720)
+
+    //form for creating/updating Location 
+    const { handleSubmit, control, errors, setValue } = useCreateLocationForm();
+    //location data
+    const { data: dataLocation, error: locationError, isLoading: isLoadingLocation } = useGetLocationQuery({ id: locationId })
+
+    // const [createLocation] = useCreateLocationMutation()
+
+    //value of error returned by api
+    const [apiError, setApiError] = useState('')
+    //status code returned by api
+    const [apiStatus, setApiStatus] = useState('')
+    //state if error has occured
+    const [showError, setShowError] = useState(false)
+
+    interface GuessType {
+        address: string,
+        errorDistance: number
+    }
+    const [guess, setGuess] = useState<GuessType>()
+
+    const onSubmit = async (formData: CreateGuessFields) => {
+        console.log('Form Data:', guessLocation)
+
+        if ((formData.lat == 0 || null) || (formData.lon == 0 || null)) {
+            console.log('Please select a valid location!')
+            setApiError('Please select a valid location!');
+            setApiStatus('404');
+            setShowError(true);
+            return
+        }
+
+        //create GuessType variable to later set as global guess object 
+        let guessData: GuessType = ({ address: "", errorDistance: 0 })
+        if (guessLocation?.address)
+            guessData.address = guessLocation.address
+
+        setGuess(guessData)
+
+        try {
+            /*
+            //call RTK Query mutation with valid formData (create location)
+            const locationResponse = await createLocation(formData).unwrap();
+            // console.log('Location created successfully:', locationResponse);
+
+            //if created location returned successfully, call uploadFile route
+            if (locationResponse.id) {
+                const formDataImage = new FormData()
+                formDataImage.append('image', imageFile)
+                //call api with id from location and image as parameters
+                const imageUploadResponse = await uploadImage({
+                    id: locationResponse.id,
+                    formData: formDataImage
+                });
+
+                if (typeof (imageUploadResponse as any).error === 'object' &&
+                    imageUploadResponse.error !== undefined) {
+                    const err = imageUploadResponse.error
+                    console.error("Error during image upload: ", err)
+                    if (isApiError(err)) {
+                        setApiError(err.data.message);
+                        setApiStatus(err.status.toString());
+                        setShowError(true);
+                    }
+                    else {
+                        setApiError("An unexpected error has occured.");
+                        setShowError(true);
+                    }
+                }
+                else {
+                    console.log('Image uploaded successfully:', imageUploadResponse);
+                    setShowSuccess(true)
+                }
+            }
+                */
+        }
+        catch (err) {
+            console.error("Error during creation of guess: ", err)
+            if (isApiError(err)) {
+                setApiError(err.data.message);
+                setApiStatus(err.status.toString());
+                setShowError(true);
+            }
+            else {
+                setApiError("An unexpected error has occured.");
+                setShowError(true);
+            }
+        }
+    }
+
+    const [guessLocation, setGuessLocation] = useState<{ lat: number; lon: number; address: string } | null>(null);
+
+    const handleLocationSelect = (lat: number, lon: number, address: string) => {
+        setGuessLocation({ lat, lon, address })
+        console.log("Location:", { lat, lon });
+        // console.log("Address:", address);
+
+        //update formData
+        setValue("lat", lat, { shouldValidate: true });
+        setValue("lon", lon, { shouldValidate: true });
+    }
+
+    //update when data changes
+    useEffect(() => {
+        if (dataLocation) {
+            console.log("Fetched: ", dataLocation)
+        }
+    }, [dataLocation])
+
+    if (!dataLocation || isLoadingLocation) {
+        <Loading />
+    }
+
+    if (locationError) {
+        //TODO: display error
+    }
+
+    return (
+        <Layout>
+            <Box sx={{
+                position: 'relative',
+                display: 'flex',
+                // height: '100vh',
+                width: '100%',
+                flexDirection: 'row',
+                textAlign: 'center',
+                alignItems: 'stretch',
+                overflow: 'hidden', //prevent accidental overflow
+            }}>
+                {/* Left section - Location */}
+                <Box
+                    sx={{
+                        flex: 2,
+                        // height: '100%',
+                        bgcolor: 'background.paper',
+                        minHeight: 0,
+                    }}
+                >
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        {/* First section - Image */}
+                        <Box sx={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            textAlign: 'center',
+                            // alignItems: 'center',
+                            paddingLeft: '8vh',
+                            overflow: 'hidden',
+                        }}>
+                            {/* Main text */}
+                            <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '2vh' }}>
+                                <span style={{ color: theme.palette.primary.dark }}>Take a</span>
+                                <span style={{ color: theme.palette.primary.main }}>&nbsp;guess</span>
+                                <span style={{ color: theme.palette.primary.dark }}>!</span>
+                            </Typography>
+                            {/* Location image */}
+                            <Box
+                                component="img"
+                                src={dataLocation?.image ? getValidImagePath(dataLocation?.image) : '/placeholder-image.png'}
+                                alt="Location image preview"
+                                sx={{
+                                    marginBottom: 4,
+                                    width: '100%',
+                                    height: '40vh',
+                                    objectFit: 'cover',
+                                    backgroundColor: '#f0f0f0',
+                                    display: 'inline-block', //label behaves like block but only takes up the size of the content
+                                    borderRadius: 2,
+                                    // width: '66%',  //set width relative on parent    
+                                }}
+                            />
+                        </Box>
+
+                        {/* Second section - Map */}
+                        <Box sx={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            textAlign: 'center',
+                            alignItems: 'center',
+                            paddingLeft: '8vh',
+                            overflow: 'hidden',
+                        }}>
+                            {/* Box for Map component */}
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: '30vh',
+                                    objectFit: 'cover',
+                                    // border: '2px solid #ccc', // Optional border for styling
+                                    backgroundColor: '#f0f0f0', // Fallback color if no image
+                                }}
+                            >
+                                <WorldMap onSelectLocation={handleLocationSelect} />
+                            </Box>
+                            {/* Guess data */}
+                            <Box sx={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                            }}>
+                                <FormControl
+                                    sx={{
+                                        paddingRight: 2,
+                                        flex: 2,
+                                    }}>
+                                    {/* Address field */}
+                                    <TextField
+                                        value={guess?.address || ''}
+                                        type='text'
+                                        label="Guessed location"
+                                        // error={!!errors.address}
+                                        // helperText={errors.address?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginY: 2 }}
+                                        slotProps={{
+                                            input: {
+                                                readOnly: true,
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    sx={{
+                                        flex: 1,
+                                    }}>
+                                    {/* Error distance field */}
+                                    <TextField
+                                        value={guess?.errorDistance || ''}
+                                        type='text'
+                                        label="Error distance"
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginY: 2 }}
+                                        slotProps={{
+                                            input: {
+                                                readOnly: true,
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                            </Box>
+                        </Box>
+                        {/* Button for submit */}
+                        <Box sx={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-end',
+                            overflow: 'hidden',
+                            paddingLeft: '8vh',
+                        }}>
+                            <Button type='submit' variant="contained" color="primary">
+                                Guess
+                            </Button>
+                        </Box>
+                    </form>
+                </Box>
+
+                {/* Right section leaderboard */}
+                <Box
+                sx={{
+                    position: 'relative',
+                    flex: 1,
+                    height: '100vh', //stretch through entire height
+                    // justifyContent: 'center',
+                    // alignItems: 'center',
+                    marginLeft: 2,
+                    marginRight: '8vh',
+                }}>
+                    <GuessesLeaderboard locationId={locationId} />
+                </Box>
+
+            </Box>
+
+            {showError && (
+                <Modal
+                    open={showError} // Modal visibility tied to the showError state
+                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    aria-labelledby="error-modal-title"
+                    aria-describedby="error-modal-description"
+                >
+                    <DialogContent>
+                        <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                    </DialogContent>
+                </Modal>
+            )}
+        </Layout>
+    );
+};
+
+export default Location;

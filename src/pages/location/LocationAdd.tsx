@@ -178,6 +178,7 @@ const LocationAdd: FC = () => {
                                 height: '40vh',
                                 objectFit: 'cover',
                                 backgroundColor: '#f0f0f0',
+                                borderRadius: 2,
                                 // border: '2px solid #ccc',
                             }}
                         />

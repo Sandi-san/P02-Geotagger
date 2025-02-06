@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Avatar, Box, Button, DialogContent, Modal, Typography } from '@mui/material';
-import GuessCard from '../../components/ui/GuessCard';
+import Card from '../../components/ui/Card';
 import { FetchGuessType, FetchPaginatedGuessType } from '../../models/guess';
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import useMediaQuery from '../../hooks/useMediaQuery';
@@ -82,8 +82,6 @@ const Profile: FC = () => {
         if (pageGuess < pageGuessTotal)
             setPageGuess((prev) => prev + 1)
     }
-
-    //TODO: open Location when clicking on Card (check same user in GuessCard)
 
     if (isLoadingGuess || isLoadingLocation) {
         return <Loading />
@@ -178,9 +176,10 @@ const Profile: FC = () => {
                     >
                         {/* Render GuessCards dynamically */}
                         {guesses.map((guess, index) => (
-                            <GuessCard key={index}
+                            <Card key={index}
                                 imageUrl={(guess.location.image ? guess.location.image : '')}
                                 errorDistance={guess.errorDistance}
+                                isLocation={false}
                             />
                         ))}
                     </Box>
@@ -250,7 +249,7 @@ const Profile: FC = () => {
                     >
                         {/* Render GuessCards dynamically */}
                         {locations.map((location, index) => (
-                            <GuessCard key={index}
+                            <Card key={index}
                                 imageUrl={location.image || ''}
                                 isUser={true}
                                 id={location.id}

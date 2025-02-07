@@ -2,6 +2,7 @@ import { Avatar, Box, Typography } from "@mui/material"
 import { FC, useEffect, useState } from "react";
 import theme from "../../theme";
 import getValidImagePath from "../../utils/validImagePath";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 interface GuessItemProps {
     itemNumber: number,
@@ -22,10 +23,6 @@ const GuessItem: FC<GuessItemProps> = ({
     errorDistance,
     isUser,
 }) => {
-    //TODO: get guesses data here
-
-    const dateText = new Date(creationDate).toLocaleDateString()
-
     const [validImage, setValidImage] = useState(false);
     const userImage = getValidImagePath(userAvatarImage)
 
@@ -47,6 +44,32 @@ const GuessItem: FC<GuessItemProps> = ({
         }
     };
 
+    //convert date of guess to display
+    const formatDate = (creationDate: Date) => {
+        const convertedDate = new Date(creationDate)
+        const now = new Date()
+        const diffMs = now.getTime() - convertedDate.getTime() // Difference in milliseconds
+        const diffMinutes = Math.floor(diffMs / (1000 * 60)) // Convert to minutes
+        const diffHours = Math.floor(diffMinutes / 60) // Convert to hours
+
+        //return text
+        if (diffMinutes < 60) {
+            return `${diffMinutes} min ago`;
+        } else if (diffHours < 24) {
+            return `${diffHours} h ago`;
+        } else {
+            //show creation date if older than 24 hours
+            return convertedDate.toLocaleDateString();
+        }
+    }
+
+    const formatDistance = (errorDistance: number) => {
+        if(errorDistance<1000)
+            return `${errorDistance} m`
+        const errorKm = errorDistance/1000
+        return `${errorKm.toFixed()} km`
+    }
+
     return (
         <Box sx={{
             display: 'flex',
@@ -54,6 +77,7 @@ const GuessItem: FC<GuessItemProps> = ({
             alignItems: 'center',
             padding: 1,
             borderRadius: 2,
+            marginY: '2px',
             backgroundColor: isUser ? (`${theme.palette.primary.main}`) : (`${theme.palette.background}`)
         }}>
             <Box sx={{
@@ -74,7 +98,7 @@ const GuessItem: FC<GuessItemProps> = ({
                 <Box
                     sx={{
                         width: '10vh',
-                        height: '100%',
+                        height: '10vh',
                         borderRadius: '50%',
                         overflow: 'hidden',
                         display: 'flex',
@@ -111,16 +135,15 @@ const GuessItem: FC<GuessItemProps> = ({
                             color: 'white',
                         }}>You</Typography>
                     ) : (
-                        <Typography variant="h5" sx={{
+                        <Typography variant="h5" noWrap sx={{
                             flex: 1,
                             color: 'black',
-                        }}>{userFirstName}&nbsp;{userLastName}</Typography>
+                        }}>{userFirstName} {userLastName}</Typography>
                     )}
-                    <Typography variant="body1" 
-                    sx={{
+                    <Typography variant="body1" noWrap sx={{
                         flex: 1,
                         color: isUser ? 'white' : 'black',
-                    }}>{dateText}</Typography>
+                    }}>{formatDate(creationDate)}</Typography>
                 </Box>
             </Box>
             <Box sx={{
@@ -131,10 +154,9 @@ const GuessItem: FC<GuessItemProps> = ({
                 alignItems: 'center',
                 marginLeft: 2,
             }}>
-                <Typography variant="h5"
-                    sx={{
+                <Typography variant="h5" noWrap sx={{
                         color: isUser ? 'white' : 'black',
-                    }}>{errorDistance}&nbsp;m</Typography>
+                    }}>{formatDistance(errorDistance)}</Typography>
             </Box>
         </Box>
     )

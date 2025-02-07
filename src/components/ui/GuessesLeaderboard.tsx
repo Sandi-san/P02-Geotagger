@@ -10,9 +10,10 @@ import userStore from "../../stores/user.store";
 
 interface GuessesLeaderboardProps {
     locationId: number,
+    refreshKey?: number,
 }
 
-const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId }) => {
+const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKey }) => {
     //states for opening Error Modal
     const [apiError, setApiError] = useState('')
     const [apiStatus, setApiStatus] = useState('')
@@ -21,7 +22,7 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId }) => {
     //states for Guesses
     const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
 
-    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ id: locationId })
+    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess, refetch } = useGetGuessesQuery({ id: locationId })
 
     useEffect(() => {
         if (dataGuesses) {
@@ -29,6 +30,14 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId }) => {
             console.log("Guesses: ", dataGuesses)
         }
     }, [dataGuesses])
+
+    //refetch guesses when refreshKey changes (passed as prop)
+    useEffect(() => {
+        if (refreshKey !== undefined) {
+            if (refreshKey > 0)
+                refetch()
+        }
+    }, [refreshKey, refetch])
 
     if (isLoadingGuess) {
         return <Loading />

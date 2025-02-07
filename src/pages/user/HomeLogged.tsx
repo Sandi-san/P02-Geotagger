@@ -97,7 +97,7 @@ const HomeLogged: FC = () => {
             </Box>
             {/* Guess Card widgets */}
             {guesses && guesses.length > 0 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 16, }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingY: 2, alignItems: 'center', marginBottom: 4, }}>
                     <Box
                         sx={{
                             flex: 1,

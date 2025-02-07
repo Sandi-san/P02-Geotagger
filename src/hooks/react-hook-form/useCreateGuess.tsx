@@ -18,7 +18,7 @@ export const useCreateGuessForm = () => {
     handleSubmit,
     formState: { errors },
     control,
-    // setValue, //for setting Map data
+    setValue, //for setting Map data
   } = useForm<CreateGuessFields>({
     defaultValues: {
       lat: 0,
@@ -32,7 +32,7 @@ export const useCreateGuessForm = () => {
     handleSubmit,
     errors,
     control,
-    // setValue,
+    setValue,
   };
 };
 

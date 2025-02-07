@@ -3,17 +3,14 @@ import { Box, Button, DialogContent, FormControl, Modal, TextField, Typography }
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Layout from '../../components/ui/Layout';
 import theme from '../../theme';
-import { Controller } from 'react-hook-form';
 import WorldMap from '../../components/ui/Map';
-import { CreateLocationFields, useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
-import { useCreateLocationMutation, useGetLocationQuery, useUploadImageMutation } from '../../slices/api/location.slice';
+import { useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
+import { useCreateGuessMutation, useGetLocationQuery } from '../../slices/api/location.slice';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
-import SuccessConformation from '../../components/modals/SuccessConformation';
 import Loading from '../../components/ui/Loading';
 import getValidImagePath from '../../utils/validImagePath';
-import { CreateGuessFields } from '../../hooks/react-hook-form/useCreateGuess';
-import { FetchGuessType } from '../../models/guess';
+import { CreateGuessFields, useCreateGuessForm } from '../../hooks/react-hook-form/useCreateGuess';
 import GuessesLeaderboard from '../../components/ui/GuessesLeaderboard';
 
 interface LocationProps {
@@ -21,14 +18,14 @@ interface LocationProps {
 }
 
 const Location: FC<LocationProps> = ({ locationId }) => {
-    const { isMobile } = useMediaQuery(720)
+    const { isMobile } = useMediaQuery(1000)
 
     //form for creating/updating Location 
-    const { handleSubmit, control, errors, setValue } = useCreateLocationForm();
+    const { handleSubmit, control, errors, setValue } = useCreateGuessForm();
     //location data
     const { data: dataLocation, error: locationError, isLoading: isLoadingLocation } = useGetLocationQuery({ id: locationId })
 
-    // const [createLocation] = useCreateLocationMutation()
+    const [createGuess] = useCreateGuessMutation()
 
     //value of error returned by api
     const [apiError, setApiError] = useState('')
@@ -42,6 +39,9 @@ const Location: FC<LocationProps> = ({ locationId }) => {
         errorDistance: number
     }
     const [guess, setGuess] = useState<GuessType>()
+
+    //triggers a refresh in of Guesses in GuessLeaderboard
+    const [refreshKey, setRefreshKey] = useState(0)
 
     const onSubmit = async (formData: CreateGuessFields) => {
         console.log('Form Data:', guessLocation)
@@ -59,24 +59,22 @@ const Location: FC<LocationProps> = ({ locationId }) => {
         if (guessLocation?.address)
             guessData.address = guessLocation.address
 
-        setGuess(guessData)
-
         try {
-            /*
-            //call RTK Query mutation with valid formData (create location)
-            const locationResponse = await createLocation(formData).unwrap();
-            // console.log('Location created successfully:', locationResponse);
+            //call RTK Query mutation with valid formData (create guess)
+            const guessResponse = await createGuess({id: locationId, formData}).unwrap();
+            
+            //if created guess returned successfully, set data in inputs
+            if (guessResponse.id) {
+                console.log('Guess created successfully:', guessResponse);
+                
+                guessData.errorDistance = guessResponse.errorDistance
+                setGuess(guessData)
 
-            //if created location returned successfully, call uploadFile route
-            if (locationResponse.id) {
-                const formDataImage = new FormData()
-                formDataImage.append('image', imageFile)
-                //call api with id from location and image as parameters
-                const imageUploadResponse = await uploadImage({
-                    id: locationResponse.id,
-                    formData: formDataImage
-                });
+                setRefreshKey(prevKey => prevKey + 1)
 
+                //TODO: update leaderboard
+
+                /*
                 if (typeof (imageUploadResponse as any).error === 'object' &&
                     imageUploadResponse.error !== undefined) {
                     const err = imageUploadResponse.error
@@ -95,8 +93,8 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                     console.log('Image uploaded successfully:', imageUploadResponse);
                     setShowSuccess(true)
                 }
-            }
                 */
+            }
         }
         catch (err) {
             console.error("Error during creation of guess: ", err)
@@ -154,7 +152,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                 {/* Left section - Location */}
                 <Box
                     sx={{
-                        flex: 2,
+                        flex: 1,
                         // height: '100%',
                         bgcolor: 'background.paper',
                         minHeight: 0,
@@ -168,7 +166,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                             flexDirection: 'column',
                             textAlign: 'center',
                             // alignItems: 'center',
-                            paddingLeft: '8vh',
+                            paddingLeft: isMobile ? '2vh' : '8vh',
                             overflow: 'hidden',
                         }}>
                             {/* Main text */}
@@ -202,7 +200,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                             flexDirection: 'column',
                             textAlign: 'center',
                             alignItems: 'center',
-                            paddingLeft: '8vh',
+                            paddingLeft: isMobile ? '2vh' : '8vh',
                             overflow: 'hidden',
                         }}>
                             {/* Box for Map component */}
@@ -285,15 +283,14 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                 {/* Right section leaderboard */}
                 <Box
                 sx={{
-                    position: 'relative',
                     flex: 1,
                     height: '100vh', //stretch through entire height
                     // justifyContent: 'center',
                     // alignItems: 'center',
-                    marginLeft: 2,
-                    marginRight: '8vh',
+                    marginLeft: isMobile ? 1 : 2,
+                    marginRight: isMobile ? '2vh' : '8vh',
                 }}>
-                    <GuessesLeaderboard locationId={locationId} />
+                    <GuessesLeaderboard locationId={locationId} refreshKey={refreshKey} />
                 </Box>
 
             </Box>

@@ -110,13 +110,14 @@ export class GuessService {
                         },
                     },
                     //return Location data
+                    /*
                     location: {
                         select: {
                             id: true,
                             image: true,
                             address: true,
                         }
-                    }
+                    }*/
                 },
                 orderBy: [{
                     errorDistance: 'asc'

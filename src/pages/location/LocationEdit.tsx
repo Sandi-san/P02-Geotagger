@@ -151,8 +151,8 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
     useEffect(() => {
         if (location) {
             const checkAccess = location.userId === userStore.user?.id;
-            console.log("Access: ", checkAccess);
-            console.log(`Loc: ${location.userId} User: ${userStore.user?.id}`);
+            // console.log("Access: ", checkAccess);
+            // console.log(`Loc: ${location.userId} User: ${userStore.user?.id}`);
             //handle unauthorization (user tries to delete location that isn't theirs)
             if (!checkAccess) {
                 console.log("Access denied! User unauthorized.");

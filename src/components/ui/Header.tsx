@@ -87,6 +87,18 @@ const Header: FC = () => {
                     // User is logged in
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {/* Menu links */}
+                        {/* Activity page - only for admins */}
+                        {userStore.user?.role === "admin" && (
+                            <Link variant="body2" color='primary.dark'
+                                sx={{
+                                    textDecoration: 'none',
+                                    marginRight: isMobile ? 1 : 3,
+                                }}
+                                href="/activity-log"
+                            >
+                                Log
+                            </Link>
+                        )}
                         {/* Go to home page */}
                         <Link variant="body1" color='primary.dark'
                             sx={{

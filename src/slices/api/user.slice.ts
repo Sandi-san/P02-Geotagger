@@ -35,6 +35,7 @@ export const userSlice = createApi({
           email: response.email,
           image: response.image,
           guessTokens: response.guessTokens,
+          role: response.role,
         }
       }
     }),

@@ -80,23 +80,6 @@ export const locationSlice = createApi({
         }
       }
     }),
-    updateUser: builder.mutation<UserType, UpdateUserFields>({
-      query: (formData: UpdateUserFields) => ({
-        url: '/update',
-        method: 'PATCH',
-        body: formData,
-      }),
-      transformResponse: (response: any): UserType => {
-        return {
-          id: response.id,
-          firstName: response.firstName,
-          lastName: response.lastName,
-          email: response.email,
-          image: response.image,
-          guessTokens: response.guessTokens,
-        }
-      }
-    }),
     //get FormData and Id as arguments, return Location
     uploadImage: builder.mutation<LocationType, { id: number, formData: FormData }>({
       query: ({ id, formData }) => ({

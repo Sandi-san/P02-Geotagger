@@ -15,17 +15,14 @@ type AppRoute = RouteProps & {
 };
 
 // Public routes
-//TODO: ADD PAGES
 const Home = lazy(() => import('../pages/Home'));
-// const Auction = lazy(() => import('../pages/Auction'));
-// const Auctions = lazy(() => import('../pages/Auctions'));
 
 // Private routes
-//TODO: ADD PAGES (EG. PROFILE)
 const Profile = lazy(() => import('../pages/user/Profile'));
 const LocationAdd = lazy(() => import('../pages/location/LocationAdd'));
 const LocationEditWrapper = lazy(() => import('../pages/location/LocationEditWrapper'));
 const LocationWrapper = lazy(() => import('../pages/location/LocationWrapper'));
+const ActivityLog = lazy(() => import('../pages/admin/ActivityLog'));
 
 // Restricted routes
 const Login = lazy(() => import('../pages/auth/Login'));
@@ -35,8 +32,6 @@ const OAuthCallback = lazy(() => import('../pages/auth/OAuth'));
 
 // Error routes
 const Page404 = lazy(() => import('../pages/Page404'));
-
-//TODO: add new pages below as: type, path (/auction), link
 
 export const AppRoutes: AppRoute[] = [
   // Restricted Routes
@@ -83,6 +78,12 @@ export const AppRoutes: AppRoute[] = [
     type: RouteType.PRIVATE,
     path: '/location/:id',
     children: <LocationWrapper />,
+  },
+  
+  {
+    type: RouteType.PRIVATE,
+    path: '/activity-log',
+    children: <ActivityLog />,
   },
 
   // Public Routes

@@ -39,7 +39,7 @@ const Card: FC<CardProps> = ({
         navigate(`/location/edit/${id}`)
     }
     const handleOpenLocation = () => {
-        if(isLocation && !isLocked)
+        if (isLocation && !isLocked)
             navigate(`/location/${id}`)
     }
 
@@ -141,7 +141,6 @@ const Card: FC<CardProps> = ({
                     cursor: 'pointer',
                 },
             }}
-            onClick={handleOpenLocation}
         >
             {isUser && (
                 <>
@@ -208,6 +207,7 @@ const Card: FC<CardProps> = ({
                         borderRadius: 'inherit',
                     }}
                     onError={() => setImageError(true)} //handle image loading error
+                    onClick={handleOpenLocation}
                 />
             ) : (
                 // if image cannot be loaded, show text in middle of card
@@ -222,6 +222,7 @@ const Card: FC<CardProps> = ({
                         justifyContent: 'center',
                         bgcolor: `${theme.palette.primary.dark}1A`, //color from custom theme with alpha channel (10% = 1A in hex color code)
                     }}
+                    onClick={handleOpenLocation}
                 >
                     <Typography
                         sx={{

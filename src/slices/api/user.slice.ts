@@ -5,6 +5,7 @@ import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import { FetchGuessType, FetchPaginatedGuessType, GuessType } from '../../models/guess';
+import { FetchActionType } from '../../models/action';
 
 //api for /user route in backend 
 export const userSlice = createApi({
@@ -108,6 +109,12 @@ export const userSlice = createApi({
           method: 'GET',
         };
       },
+    }),
+    getActions: builder.query<FetchActionType[], void>({
+      query: () => ({
+        url: '/actions',
+        method: 'GET',
+      }),
     })
   }),
 });
@@ -119,4 +126,5 @@ export const {
   useUploadImageMutation,
   useGetLocationsQuery,
   useGetGuessesQuery,
+  useGetActionsQuery,
 } = userSlice;

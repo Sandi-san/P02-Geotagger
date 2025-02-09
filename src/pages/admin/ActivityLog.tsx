@@ -1,20 +1,37 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import Layout from "../../components/ui/Layout";
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import userStore from "../../stores/user.store";
 import { useNavigate } from "react-router-dom";
+import { FetchActionType } from "../../models/action";
+import { useGetActionsQuery } from "../../slices/api/user.slice";
+import getValidImagePath from "../../utils/validImagePath";
 
 const ActivityLog: FC = () => {
-    const navigate = useNavigate()
+    //states for opening Error Modal
+    const [apiError, setApiError] = useState('')
+    const [apiStatus, setApiStatus] = useState('')
+    const [showError, setShowError] = useState(false)
 
+    //states for User Actions
+    const [actions, setActions] = useState<FetchActionType[]>([]); //array to hold fetched actions
+
+    const { data: actionData, error: actionsError, isLoading: isLoadingActions } = useGetActionsQuery()
+
+    useEffect(() => {
+        if (actionData) {
+            setActions(actionData)
+            console.log("Actions: ", actionData)
+        }
+    }, [actionData])
+
+    const navigate = useNavigate()
     useEffect(() => {
         if (userStore.user?.role !== "admin") {
             console.error("Unauthorized user. Redirecting to home page.")
             navigate('/')
         }
     }, []);
-
-    const data: any[] = []
 
     return (
         <Layout>
@@ -28,7 +45,7 @@ const ActivityLog: FC = () => {
                     textAlign: 'left',
                     marginBottom: 2,
                 }}>Activity log</Typography>
-                {data.length > 0 ? (
+                {actions.length > 0 ? (
                     <TableContainer component={Paper} sx={{
                         alignContent: 'center',
                     }}>
@@ -47,19 +64,75 @@ const ActivityLog: FC = () => {
 
                             {/* Table Body */}
                             <TableBody>
-                                {data.map((log, index) => (
+                                {actions.map((action, index) => (
                                     <TableRow key={index}>
-                                        <TableCell align="center">{log.user}</TableCell>
                                         <TableCell align="center">
-                                            {new Date(log.dateTime).toLocaleString()}
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <Box
+                                                    sx={{
+                                                        width: '6vh',
+                                                        height: '6vh',
+                                                        borderRadius: '50%',
+                                                        overflow: 'hidden',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        bgcolor: 'grey.400',
+                                                    }}>
+                                                    <img
+                                                        src={getValidImagePath(action.user?.image) || '/placeholder-avatar.png'}
+                                                        alt="User Avatar"
+                                                        style={{
+                                                            width: getValidImagePath(action.user?.image) ? '100%' : '80%',
+                                                            height: getValidImagePath(action.user?.image) ? '100%' : '80%',
+                                                            objectFit: 'cover',
+                                                            boxSizing: 'border-box',
+                                                            borderRadius: getValidImagePath(action.user?.image) ? '100%' : '50%',
+                                                        }}
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).src = '/placeholder-avatar.png';
+                                                        }}
+                                                    />
+                                                </Box>
+                                                <Box sx={{ paddingLeft: 2 }}>
+                                                    {(action.user?.firstName && action.user?.lastName) ? (
+                                                        <Typography variant="body2" noWrap>{action.user?.firstName} {action.user?.lastName}</Typography>
+                                                    ) : (
+                                                        <Typography variant="body2" noWrap>{action.user?.email}</Typography>
+                                                    )}
+                                                </Box>
+                                            </Box>
                                         </TableCell>
-                                        <TableCell align="center">{log.action}</TableCell>
-                                        <TableCell align="center">{log.componentType}</TableCell>
-                                        <TableCell align="center">{log.newValue}</TableCell>
-                                        <TableCell align="center">{log.location}</TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="body1">
+                                                {action.createdAt ? (<>
+                                                    <Typography>{new Date(action.createdAt as Date).toLocaleDateString()}</Typography>
+                                                    <Typography>{new Date(action.createdAt as Date).toLocaleTimeString()}</Typography>
+                                                </>) : ("/")}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="body1">
+                                                {action.action || "/"}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="body1">
+                                                {action.type || "/"}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="body1">
+                                                {action.newValue || "/"}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="body1">
+                                                {action.url || "/"}
+                                            </Typography>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
-
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -91,7 +164,7 @@ const ActivityLog: FC = () => {
                             alignContent: 'center',
                         }}>
                             {/* Display "No results found" when data is empty */}
-                            <Box component="img" src="/icon-search.svg" alt="" sx={{ height: 20, padding: 1 }} />
+                            <Box component="img" src="/icon-search.svg" alt="" sx={{ height: 30, padding: 2 }} />
                             <Typography variant="h5" >
                                 No activity log found
                             </Typography>

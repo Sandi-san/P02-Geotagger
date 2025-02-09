@@ -200,6 +200,16 @@ export class UserService {
                 orderBy: {
                     createdAt: 'desc'
                 },
+                include: {
+                    user: {
+                        select: {
+                            email: true,
+                            firstName: true,
+                            lastName: true,
+                            image: true,
+                        }
+                    }
+                },
                 take
             })
         }

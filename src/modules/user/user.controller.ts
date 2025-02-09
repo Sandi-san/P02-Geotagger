@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, Query, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/index';
 import { UserService } from './user.service';
 import { User, UserAction } from '@prisma/client';
@@ -83,7 +83,7 @@ export class UserController {
         Logger.log(file);
         //console.log(file)
         //call method that saves image file in /files folder    
-        const filename = await saveImageLocally(file,user.image)
+        const filename = await saveImageLocally(file, user.image)
         return this.userService.updateImage(user.id, filename);
     }
 
@@ -131,18 +131,20 @@ export class UserController {
         @GetLoggedUser('id') id: number,
         @Body() dto: CreateUserActionDto
     ): Promise<{ response: string }> {
-        return this.userService.saveActions(id,dto)
+        return this.userService.saveActions(id, dto)
     }
-    
+
     /*
     GET LAST 100 ACTIONS FROM DB
     */
     @HttpCode(HttpStatus.OK)
     @Get('actions')
     async getActions(
+        @GetLoggedUser('role') role: string,
         @Query('take') take = 100
     ): Promise<UserAction[]> {
-        //TODO: check if user is admin?
+        if (role !== "admin")
+            throw new UnauthorizedException("Unauthorized access! User is not an admin!")
         return this.userService.getActions(take)
     }
 }

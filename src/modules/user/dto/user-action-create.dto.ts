@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsDate, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 export class UserActionDto {
     @ApiProperty()
@@ -13,12 +13,17 @@ export class UserActionDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    @IsNumber()
-    newValue: number;
+    @IsString()
+    newValue: string;
 
     @ApiProperty()
     @IsString()
     url: string;
+
+    @ApiProperty()
+    @IsDate()
+    @Transform(({ value }) => new Date(value)) // Convert ISO string to Date
+    timestamp: Date;
 }
 
 export class CreateUserActionDto {

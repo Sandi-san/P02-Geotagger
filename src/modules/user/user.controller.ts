@@ -131,6 +131,7 @@ export class UserController {
         @GetLoggedUser('id') id: number,
         @Body() dto: CreateUserActionDto
     ): Promise<{ response: string }> {
+        console.log(dto)
         return this.userService.saveActions(id, dto)
     }
 

@@ -176,9 +176,10 @@ export class UserService {
     async saveActions(userId: number, dto: CreateUserActionDto): Promise<{ response: string }> {
         try {
             //parse each action from an array of actions, add userId
-            const actions = dto.actions.map((action) => ({
+            const actions = dto.actions.map(({ timestamp, ...action }) => ({
                 ...action,
-                userId
+                userId,
+                createdAt: new Date(timestamp),
             }))
 
             //save the actions
@@ -186,7 +187,9 @@ export class UserService {
                 data: actions
             })
             const numActions = actions.length
-            return { response: `Saved ${numActions} actions of user with id: ${userId}.` }
+            const response = `Saved ${numActions} actions of user with id: ${userId}.`
+            console.log(response)
+            return {response}
         }
         catch (error) {
             Logger.error(error)

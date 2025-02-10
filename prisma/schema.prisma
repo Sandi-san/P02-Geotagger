@@ -87,7 +87,7 @@ model UserAction {
 
   action String //click, scroll, added value, changed value, removed value
   type String //Component type: Button, Textbox, Dropdown, Checkbox, Radio
-  newValue Int?
+  newValue String? //Value added to component
   url String //Url where action was saved
 
   //FOREIGN KEY

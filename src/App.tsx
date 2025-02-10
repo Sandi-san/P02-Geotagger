@@ -8,6 +8,7 @@ import userStore from './stores/user.store';
 import fetchUser from './utils/fetchLocalUser';
 import { UserType } from './models/user';
 import Loading from './components/ui/Loading';
+import useActivityLogger from './hooks/useActivityLogger';
 
 //Main App page, prepare theme, run routes
 const App: FC = () => {
@@ -53,6 +54,10 @@ const App: FC = () => {
 
     initLocalUser();
   }, []);
+
+
+  //use User Logger
+  useActivityLogger()
 
   if (loading) {
     //Show loading widget

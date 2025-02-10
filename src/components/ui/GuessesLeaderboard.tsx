@@ -27,7 +27,7 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
     useEffect(() => {
         if (dataGuesses) {
             setGuesses(dataGuesses)
-            console.log("Guesses: ", dataGuesses)
+            // console.log("Guesses: ", dataGuesses)
         }
     }, [dataGuesses])
 
@@ -63,6 +63,8 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
             </DialogContent>
         </Modal>
     }
+
+    //TODO: display no guesses if length is 0
 
     return (
         <>

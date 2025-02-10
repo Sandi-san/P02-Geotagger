@@ -27,7 +27,7 @@ const GuessItem: FC<GuessItemProps> = ({
     const userImage = getValidImagePath(userAvatarImage)
 
     useEffect(() => {
-        console.log("Valid: ", userImage)
+        // console.log("Valid: ", userImage)
         if (userImage !== undefined)
             setValidImage(true)
         else

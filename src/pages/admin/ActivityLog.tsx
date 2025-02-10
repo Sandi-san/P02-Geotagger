@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import Layout from "../../components/ui/Layout";
-import { Avatar, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, DialogContent, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import userStore from "../../stores/user.store";
 import { useNavigate } from "react-router-dom";
 import { FetchActionType } from "../../models/action";
 import { useGetActionsQuery } from "../../slices/api/user.slice";
 import getValidImagePath from "../../utils/validImagePath";
+import Loading from "../../components/ui/Loading";
+import ErrorDisplay from "../../components/modals/ErrorDisplay";
+import isApiError from "../../utils/apiErrorChecker";
 
 const ActivityLog: FC = () => {
     //states for opening Error Modal
@@ -21,7 +24,7 @@ const ActivityLog: FC = () => {
     useEffect(() => {
         if (actionData) {
             setActions(actionData)
-            console.log("Actions: ", actionData)
+            // console.log("Actions: ", actionData)
         }
     }, [actionData])
 
@@ -32,6 +35,18 @@ const ActivityLog: FC = () => {
             navigate('/')
         }
     }, []);
+
+    if (isLoadingActions) {
+        return <Loading />
+    }
+
+    if (actionsError) {
+        if (isApiError(actionsError)) {
+            setApiError(actionsError.data.message);
+            setApiStatus(actionsError.status.toString());
+            setShowError(true);
+        }
+    }
 
     return (
         <Layout>
@@ -175,7 +190,20 @@ const ActivityLog: FC = () => {
                     </>
                 )}
             </Box>
-        </Layout >
+
+            {showError && (
+                <Modal
+                    open={showError} // Modal visibility tied to the showError state
+                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    aria-labelledby="error-modal-title"
+                    aria-describedby="error-modal-description"
+                >
+                    <DialogContent>
+                        <ErrorDisplay message={apiError} errorStatus={apiStatus} handleClose={() => setShowError(false)} />
+                    </DialogContent>
+                </Modal>
+            )}
+        </Layout>
     )
 }
 export default ActivityLog;

@@ -9,9 +9,11 @@ import fetchUser from "../../utils/fetchLocalUser";
 import Loading from "./Loading";
 import ProfileSettings from "../modals/ProfileSettings";
 import getValidImagePath from "../../utils/validImagePath";
+import { useNavigate } from "react-router-dom";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
+    const navigate = useNavigate()
 
     //open/close states for User Settings popup
     const [open, setOpen] = useState(false);
@@ -29,11 +31,19 @@ const Header: FC = () => {
         window.location.reload()
     }
 
+    const handleOpenActivityLog = () => {
+        navigate("/activity-log")
+    }
+    const handleOpenHomePage = () => {
+        navigate("/")
+    }
+
     //check if User avatar image can be displayed 
     const [validImage, setValidImage] = useState(false);
     const userImage = getValidImagePath(userStore.user?.image)
 
     useEffect(() => {
+        // console.log("User image: ",userImage)
         if (userImage !== undefined)
             setValidImage(true)
         else
@@ -93,8 +103,11 @@ const Header: FC = () => {
                                 sx={{
                                     textDecoration: 'none',
                                     marginRight: isMobile ? 1 : 3,
+                                    '&:hover': {
+                                    cursor: 'pointer'
+                                }
                                 }}
-                                href="/activity-log"
+                                onClick={handleOpenActivityLog}
                             >
                                 Log
                             </Link>
@@ -104,8 +117,11 @@ const Header: FC = () => {
                             sx={{
                                 textDecoration: 'none',
                                 marginRight: isMobile ? 1 : 3,
+                                '&:hover': {
+                                    cursor: 'pointer'
+                                }
                             }}
-                            href="/"
+                            onClick={handleOpenHomePage}
                         >
                             Home
                         </Link>
@@ -179,8 +195,7 @@ const Header: FC = () => {
                                     }}
                                 >
                                     <img
-                                        src={userImage ? (userImage) :
-                                            ('/placeholder-avatar.png')}
+                                        src={userImage || '/placeholder-avatar.png'}
                                         alt="User Avatar"
                                         style={{
                                             //if user does not have an image, display placeholder with different styling

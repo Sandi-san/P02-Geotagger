@@ -32,8 +32,8 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
 
     useEffect(() => {
         if (dataLocation) {
-            console.log("Fetched: ", dataLocation)
             setLocation(dataLocation)
+            // console.log("Fetched: ", dataLocation)
         }
     }, [dataLocation]);
 

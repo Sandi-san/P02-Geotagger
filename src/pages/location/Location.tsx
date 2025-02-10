@@ -71,29 +71,6 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                 setGuess(guessData)
 
                 setRefreshKey(prevKey => prevKey + 1)
-
-                //TODO: update leaderboard
-
-                /*
-                if (typeof (imageUploadResponse as any).error === 'object' &&
-                    imageUploadResponse.error !== undefined) {
-                    const err = imageUploadResponse.error
-                    console.error("Error during image upload: ", err)
-                    if (isApiError(err)) {
-                        setApiError(err.data.message);
-                        setApiStatus(err.status.toString());
-                        setShowError(true);
-                    }
-                    else {
-                        setApiError("An unexpected error has occured.");
-                        setShowError(true);
-                    }
-                }
-                else {
-                    console.log('Image uploaded successfully:', imageUploadResponse);
-                    setShowSuccess(true)
-                }
-                */
             }
         }
         catch (err) {
@@ -130,11 +107,15 @@ const Location: FC<LocationProps> = ({ locationId }) => {
     }, [dataLocation])
 
     if (!dataLocation || isLoadingLocation) {
-        <Loading />
+        return <Loading />
     }
 
     if (locationError) {
-        //TODO: display error
+        if (isApiError(locationError)) {
+            setApiError(locationError.data.message);
+            setApiStatus(locationError.status.toString());
+            setShowError(true);
+        }
     }
 
     return (

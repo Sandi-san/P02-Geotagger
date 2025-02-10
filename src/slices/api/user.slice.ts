@@ -5,7 +5,7 @@ import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
 import { FetchPaginatedLocationType, LocationType } from '../../models/location';
 import { FetchGuessType, FetchPaginatedGuessType, GuessType } from '../../models/guess';
-import { FetchActionType } from '../../models/action';
+import { ActionType, FetchActionType } from '../../models/action';
 
 //api for /user route in backend 
 export const userSlice = createApi({
@@ -115,7 +115,14 @@ export const userSlice = createApi({
         url: '/actions',
         method: 'GET',
       }),
-    })
+    }),
+    saveActions: builder.mutation<{ response: string }, { actions: ActionType[] }>({
+      query: (formData: { actions: ActionType[] }) => ({
+        url: '/actions',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
   }),
 });
 
@@ -127,4 +134,5 @@ export const {
   useGetLocationsQuery,
   useGetGuessesQuery,
   useGetActionsQuery,
+  useSaveActionsMutation,
 } = userSlice;

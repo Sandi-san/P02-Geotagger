@@ -74,7 +74,7 @@ const Login: FC = () => {
         if (typeof err === 'object' && (err !== undefined || null)
           && 'status' in (err as any) && 'error' in (err as any)) {
           setApiStatus((err as any).status);
-          setApiError((err as any).error);
+          setApiError("Check your connection. " + (err as any).error);
         }
         else
           setApiError("An unexpected error has occured.");
@@ -240,6 +240,7 @@ const Login: FC = () => {
               >
                 Sign in with Facebook
               </Button> */}
+          {/* Link to Registration */}
           <Box sx={{
             width: '100%',
             position: 'relative',
@@ -263,10 +264,31 @@ const Login: FC = () => {
               </Link>
             </Box>
           </Box>
+          {/* Link to Password reset */}
+          <Box sx={{
+            width: '100%',
+            position: 'relative',
+            display: 'flex',
+            textAlign: 'center',
+            justifyContent: 'space-between',
+            marginTop: isMobile ? 0 : 1,
+            maxWidth: isMobile ? '100vh' : '55vh',
+          }}>
+            <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
+              <Typography variant="body1" color='primary.dark'>
+                Forgotten password?
+              </Typography>
+            </Box>
+            <Box sx={{ alignContent: 'flex-end', textAlign: 'end' }} >
+              <Link variant="body1" color='primary.main'
+                sx={{ textDecoration: 'none' }}
+                href="/forgotten-password"
+              >
+                Reset here
+              </Link>
+            </Box>
+          </Box>
           {/* If api error occurs, show error widget  */}
-          {/* {showError && (
-            <ErrorDisplay message={apiError} />
-          )} */}
           {showError && (
             <Modal
               open={showError} // Modal visibility tied to the showError state
@@ -314,7 +336,7 @@ const Login: FC = () => {
               position: 'absolute',
               width: '100%',
               height: '100vh',
-              //gradient from left to right: color from custom theme with alpha channel (50% = 80 in hex color code)
+              //gradient from left to right: color from custom theme with alpha channel opacity (50% = 80 in hex color code)
               background: `linear-gradient(to right, ${theme.palette.primary.main}80, ${theme.palette.primary.light}80)`,
               zIndex: 2,
               display: 'flex',

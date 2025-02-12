@@ -1,8 +1,17 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { alpha, Box, CircularProgress, Typography } from '@mui/material';
 import { FC } from 'react';
+import theme from '../../theme';
+
+interface LoadingProps {
+  backgroundColor?: string,
+  backgroundOpacity?: number,
+}
 
 //custom loading spinner widget for when data is loading
-const Loading: FC = () => {
+const Loading: FC<LoadingProps> = ({
+  backgroundColor,
+  backgroundOpacity,
+}) => {
   return (
     <Box
       sx={{
@@ -13,6 +22,9 @@ const Loading: FC = () => {
         justifyContent: "center",
         height: "100vh", // Full-page height
         // background: "linear-gradient(135deg, #667eea, #764ba2)",
+        bgcolor: backgroundColor
+          ? alpha(backgroundColor, backgroundOpacity ?? 1) // Default to full opacity
+          : "transparent", // Default if no color is provided
       }}
     >
       {/* Animated Loading Spinner */}
@@ -20,7 +32,7 @@ const Loading: FC = () => {
         size={70}
         thickness={4}
         sx={{
-          color: "secondary.main",
+          color: "primary.main",
           marginBottom: 2,
           animation: "pulse 1.5s infinite alternate",
           "@keyframes pulse": {
@@ -29,9 +41,9 @@ const Loading: FC = () => {
           },
         }}
       />
-      
+
       {/* Loading Text */}
-      <Typography variant="h6" color='secondary.main' sx={{ fontWeight: "bold", textShadow: "0px 0px 8px rgba(255,255,255,0.7)" }}>
+      <Typography variant="h6" color='primary.main' sx={{ fontWeight: "bold", textShadow: `0px 0px 8px ${theme.palette.secondary.main}` }}>
         Loading...
       </Typography>
     </Box>

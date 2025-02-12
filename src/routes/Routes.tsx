@@ -27,7 +27,8 @@ const ActivityLog = lazy(() => import('../pages/admin/ActivityLog'));
 // Restricted routes
 const Login = lazy(() => import('../pages/auth/Login'));
 const Register = lazy(() => import('../pages/auth/Register'));
-const Password = lazy(() => import('../pages/auth/Password'));
+const ForgottenPassword = lazy(() => import('../pages/auth/ForgottenPassword'));
+// const ResetPassword = lazy(() => import('../pages/auth/ResetPassword'));
 const OAuthCallback = lazy(() => import('../pages/auth/OAuth'));
 
 // Error routes
@@ -48,8 +49,8 @@ export const AppRoutes: AppRoute[] = [
   //TODO
   {
     type: RouteType.RESTRICTED,
-    path: '/forgot_password',
-    children: <Password />,
+    path: '/forgotten-password',
+    children: <ForgottenPassword />,
   },
   //route for parsing OAuth User data
   {

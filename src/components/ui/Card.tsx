@@ -220,7 +220,7 @@ const Card: FC<CardProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        bgcolor: `${theme.palette.primary.dark}1A`, //color from custom theme with alpha channel (10% = 1A in hex color code)
+                        bgcolor: `${theme.palette.primary.dark}1A`, //color from custom theme with alpha channel opacity (10% = 1A in hex color code)
                     }}
                     onClick={handleOpenLocation}
                 >
@@ -242,7 +242,7 @@ const Card: FC<CardProps> = ({
                         position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        bgcolor: `${theme.palette.primary.main}80`, //color from custom theme with alpha channel (50% = 80 in hex color code)
+                        bgcolor: `${theme.palette.primary.main}80`, //color from custom theme with alpha channel opacity (50% = 80 in hex color code)
                         borderRadius: 'inherit',
                         zIndex: 2,
                         display: 'flex',
@@ -261,7 +261,7 @@ const Card: FC<CardProps> = ({
                         position: 'absolute',
                         width: '100%',
                         height: '100%',
-                        bgcolor: `${theme.palette.primary.main}80`, //color from custom theme with alpha channel (50% = 80 in hex color code)
+                        bgcolor: `${theme.palette.primary.main}80`, //color from custom theme with alpha channel opacity (50% = 80 in hex color code)
                         borderRadius: 'inherit',
                         zIndex: 2,
                         display: 'flex',

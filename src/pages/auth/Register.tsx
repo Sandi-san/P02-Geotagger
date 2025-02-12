@@ -94,7 +94,14 @@ const Register: FC = () => {
                 setShowError(true);
             }
             else {
-                setApiError("An unexpected error has occured.");
+                //check if thrown error is a FETCH_ERROR
+                if (typeof err === 'object' && (err !== undefined || null)
+                    && 'status' in (err as any) && 'error' in (err as any)) {
+                    setApiStatus((err as any).status);
+                    setApiError("Check your connection. " + (err as any).error);
+                }
+                else
+                    setApiError("An unexpected error has occured.");
                 setShowError(true);
             }
         }
@@ -323,6 +330,7 @@ const Register: FC = () => {
                             </Button>
                         </FormControl>
                     </form>
+                    {/* Link to Login */}
                     <Box sx={{
                         width: '100%',
                         position: 'relative',
@@ -343,6 +351,30 @@ const Register: FC = () => {
                                 href="/login"
                             >
                                 Sign in
+                            </Link>
+                        </Box>
+                    </Box>
+                    {/* Link to Password reset */}
+                    <Box sx={{
+                        width: '100%',
+                        position: 'relative',
+                        display: 'flex',
+                        textAlign: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: isMobile ? 0 : 1,
+                        maxWidth: isMobile ? '100vh' : '60vh',
+                    }}>
+                        <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
+                            <Typography variant="body1" color='primary.dark'>
+                                Forgotten password?
+                            </Typography>
+                        </Box>
+                        <Box sx={{ alignContent: 'flex-end', textAlign: 'end' }} >
+                            <Link variant="body1" color='primary.main'
+                                sx={{ textDecoration: 'none' }}
+                                href="/forgotten-password"
+                            >
+                                Reset here
                             </Link>
                         </Box>
                     </Box>
@@ -394,7 +426,7 @@ const Register: FC = () => {
                             position: 'absolute',
                             width: '100%',
                             height: '100vh',
-                            //gradient from left to right: color from custom theme with alpha channel (50% = 80 in hex color code)
+                            //gradient from left to right: color from custom theme with alpha channel opacity (50% = 80 in hex color code)
                             background: `linear-gradient(to right, ${theme.palette.primary.main}80, ${theme.palette.primary.light}80)`,
                             zIndex: 2,
                             display: 'flex',

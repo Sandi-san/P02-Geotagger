@@ -2,30 +2,25 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-//Strucutre for Login User forms
-export interface LoginUserFields {
+export interface EmailUserFields {
   email: string;
-  password: string;
 }
 
-//Class called in forms
-export const useLoginForm = () => {
-  const LoginSchema = Yup.object().shape({
+export const useEmailForm = () => {
+  const EmailSchema = Yup.object().shape({
     email: Yup.string().email().required('Please enter a valid email'),
-    password: Yup.string().required(),
   });
 
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<LoginUserFields>({
+  } = useForm<EmailUserFields>({
     defaultValues: {
       email: '',
-      password: '',
     },
     mode: 'onSubmit',
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(EmailSchema),
   });
 
   return {
@@ -35,4 +30,4 @@ export const useLoginForm = () => {
   };
 };
 
-export type LoginForm = ReturnType<typeof useLoginForm>;
+export type EmailForm = ReturnType<typeof useEmailForm>;

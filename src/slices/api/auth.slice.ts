@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RegisterUserFields } from '../../hooks/react-hook-form/useRegister';
 import { LoginUserFields } from '../../hooks/react-hook-form/useLogin';
+import { CreateUpdateUserForm } from '../../hooks/react-hook-form/useCreateUpdateUser';
+import { EmailUserFields } from '../../hooks/react-hook-form/useEmailReset';
 
 //api for /user route in backend
 export const authSlice = createApi({
@@ -10,18 +12,18 @@ export const authSlice = createApi({
   }), //base URL (matches backend)
   endpoints: (builder) => ({
     //define enpoints as functions
-    registerUser: builder.mutation({
-      query: (user: RegisterUserFields) => ({
+    registerUser: builder.mutation<{ access_token: string }, RegisterUserFields>({
+      query: (formData: RegisterUserFields) => ({
         url: '/register',
         method: 'POST',
-        body: user,
+        body: formData,
       }),
     }),
-    loginUser: builder.mutation({
-      query: (user: LoginUserFields) => ({
+    loginUser: builder.mutation<{ access_token: string }, LoginUserFields>({
+      query: (formData: LoginUserFields) => ({
         url: '/login',
         method: 'POST',
-        body: user,
+        body: formData,
       }),
     }),
     redirectOAuthUser: builder.mutation({
@@ -38,6 +40,20 @@ export const authSlice = createApi({
         // credentials: 'include', // Include cookies if needed
       }),
     }),
+    forgottenPassword: builder.mutation<{ response: string }, EmailUserFields>({
+      query: (formData: EmailUserFields) => ({
+        url: '/forgotten-password',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    resetPassword: builder.mutation<{ response: string }, {formData: CreateUpdateUserForm}>({
+      query: () => ({
+        url: '/reset-password',
+        method: 'POST',
+        // body: formData,
+      }),
+    }),
   }),
 });
 
@@ -46,4 +62,6 @@ export const {
   useLoginUserMutation,
   useRedirectOAuthUserMutation,
   useLoginOAuthUserMutation,
+  useForgottenPasswordMutation,
+  useResetPasswordMutation,
 } = authSlice;

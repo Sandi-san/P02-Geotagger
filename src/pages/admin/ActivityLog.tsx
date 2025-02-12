@@ -63,6 +63,8 @@ const ActivityLog: FC = () => {
                 {actions.length > 0 ? (
                     <TableContainer component={Paper} sx={{
                         alignContent: 'center',
+                        maxHeight: '90vh',
+                        overflow: 'auto', // Enables scrolling when content overflows
                     }}>
                         <Table stickyHeader>
                             {/* Table Head */}
@@ -119,12 +121,10 @@ const ActivityLog: FC = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Typography variant="body1">
-                                                {action.createdAt ? (<>
-                                                    <Typography>{new Date(action.createdAt as Date).toLocaleDateString()}</Typography>
-                                                    <Typography>{new Date(action.createdAt as Date).toLocaleTimeString()}</Typography>
-                                                </>) : ("/")}
-                                            </Typography>
+                                            {action.createdAt ? (<>
+                                                <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleDateString()}</Typography>
+                                                <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleTimeString()}</Typography>
+                                            </>) : (<Typography variant="body1">"/"</Typography>)}
                                         </TableCell>
                                         <TableCell align="center">
                                             <Typography variant="body1">

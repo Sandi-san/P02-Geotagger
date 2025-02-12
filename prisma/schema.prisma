@@ -55,7 +55,7 @@ model Location {
 
   //FOREIGN KEY
   userId Int
-  user   User  @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   Guess  Guess[]
   
@@ -74,7 +74,7 @@ model Guess {
 
   //FOREIGN KEY
   userId Int
-  user   User  @relation(fields: [userId], references: [id])
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   locationId Int
   location Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
 
@@ -92,7 +92,7 @@ model UserAction {
 
   //FOREIGN KEY
   userId Int
-  user   User  @relation(fields: [userId], references: [id])  
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)  
 
   //indexes: increases return speed for specific queries
   @@index(fields: [createdAt, userId]) 

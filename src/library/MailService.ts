@@ -12,7 +12,7 @@ export class MailService {
     });
 
     async sendPasswordResetRequest(email: string, token: string){
-        const resetUrl = `${process.env.FRONTEND_DOMAIN}/auth/reset-password?token=${token}`;
+        const resetUrl = `${process.env.FRONTEND_DOMAIN}/reset-password?token=${token}`;
     
         await this.transporter.sendMail({
             from: '"Guess Location App" <no-reply@geotagger.com>',

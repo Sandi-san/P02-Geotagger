@@ -1,32 +1,38 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import isApiError from '../../utils/apiErrorChecker';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
 import theme from '../../theme';
-import { LoginUserFields, useLoginForm } from '../../hooks/react-hook-form/useLogin';
-import { useLoginOAuthUserMutation, useRedirectOAuthUserMutation, useLoginUserMutation, useForgottenPasswordMutation } from '../../slices/api/auth.slice';
-import { tokenStorage } from '../../utils/tokenStorage';
-import userStore from '../../stores/user.store';
-import fetchUser from '../../utils/fetchLocalUser';
-import { UserType } from '../../models/user';
-import { EmailForm, EmailUserFields, useEmailForm } from '../../hooks/react-hook-form/useResetEmail';
+import { useResetPasswordMutation } from '../../slices/api/auth.slice';
+import { PasswordUserFields, usePasswordForm } from '../../hooks/react-hook-form/useResetPassword';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SuccessConformation from '../../components/modals/SuccessConformation';
-import Loading from '../../components/ui/Loading';
 
-const ForgottenPassword: FC = () => {
+const ResetPassword: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
     //TODO: remove right section display when set as isMobile
+    const navigate = useNavigate()
 
-    //mediaQuery for top-left logo
-    const unstickLogo = useMediaQuery(850)
+    //mediaQuery for top-left logo on zoom-in
+    const unstickLogo = useMediaQuery(950)
 
-    //form validation for email
-    const { handleSubmit, errors, control } = useEmailForm();
-    //initialize mutation hook for reset User password
-    const [sendResetToken] = useForgottenPasswordMutation()
+    //extract token from url
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get("token") || ""
+
+    const { handleSubmit, errors, control, setValue } = usePasswordForm();
+    // Ensure resetToken is set (in case of async behavior)
+    setValue("resetToken", token);
+
+    //initialize mutation hook for registering User (register user api call)
+    const [resetPassword] = useResetPasswordMutation()
+
+    //toggle buttons for showing values inside password and confirm_password forms
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     //value of error returned by api
     const [apiError, setApiError] = useState('')
@@ -34,20 +40,19 @@ const ForgottenPassword: FC = () => {
     const [apiStatus, setApiStatus] = useState('')
     //state if error has occured
     const [showError, setShowError] = useState(false)
+    //error when url token is invalid
+    const [showTokenError, setShowTokenError] = useState(false)
 
     //state for opening Successful Change Modal
     const [showSuccess, setShowSuccess] = useState(false)
     const [successResponse, setSuccessResponse] = useState('')
 
-    //loading state when waiting for API to respond
-    const [loading, setLoading] = useState(false)
+    const onSubmit = async (formData: PasswordUserFields) => {
+        console.log('Form Data:', formData);
 
-    const onSubmit = async (formData: EmailUserFields) => {
-        // console.log('Form Data:', formData);
         try {
-            setLoading(true)
-
-            const resetResponse = await sendResetToken(formData).unwrap();
+            //call RTK Query mutation with valid formData (login user)
+            const resetResponse = await resetPassword(formData).unwrap();
             console.log('Response:', resetResponse);
 
             if (typeof resetResponse === 'object' && (resetResponse !== undefined || null)
@@ -56,7 +61,6 @@ const ForgottenPassword: FC = () => {
                 setShowSuccess(true)
             }
             else {
-                //TODO: copy to other pages
                 //force call catch error block
                 throw new Error()
             }
@@ -80,9 +84,47 @@ const ForgottenPassword: FC = () => {
                 setShowError(true);
             }
         }
-        finally {
-            setLoading(false); // Stop loading after response
+    }
+
+    //Show/hide password visibility
+    const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+    const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
+
+    //Check token in url
+    useEffect(() => {
+        // console.log("Token: ", token)
+        if (!token) {
+            console.error("Missing token in url")
+            setApiError("Missing token in url.");
+            setApiStatus("400");
+            setShowTokenError(true);
         }
+        else if (token.length !== 64) {
+            console.error("Invalid token in url")
+            setApiError("Invalid token in url.");
+            setApiStatus("400");
+            setShowTokenError(true);
+        }
+    }, []);
+
+    // Handle invalid token
+    if (showTokenError) {
+        return (
+            <Modal
+                open={showTokenError}
+                onClose={() => navigate('/')} // Redirect on close
+                aria-labelledby="error-modal-title"
+                aria-describedby="error-modal-description"
+            >
+                <DialogContent>
+                    <ErrorDisplay message={apiError} errorStatus={apiStatus}
+                        handleClose={() => {
+                            setShowTokenError(false);
+                            navigate('/');
+                        }} />
+                </DialogContent>
+            </Modal>
+        );
     }
 
     return (
@@ -108,6 +150,8 @@ const ForgottenPassword: FC = () => {
                         alignItems: 'center',
                         bgcolor: 'background.paper',
                         paddingX: isMobile ? 0 : 8,
+                        // width: '100%',
+                        // maxWidth: '100vh',
                         minHeight: 0,
                         overflow: 'auto',
                     }}
@@ -141,26 +185,93 @@ const ForgottenPassword: FC = () => {
                         Reset password
                     </Typography>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <Typography variant="body1" color='primary.dark' >
-                            To reset your password, input your email below.
-                        </Typography>
-                        <Typography variant="body1" color='primary.dark' sx={{ marginBottom: 2 }} >
-                            The reset token will be sent to an <span style={{ fontWeight: 'bold' }}>existing</span> email.
-                        </Typography>
                         <FormControl fullWidth>
-                            {/* Email */}
+                            <Box sx={{
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                textAlign: 'center',
+                                alignItems: 'center',
+                            }}>
+                                <Typography variant="body1" color='primary.dark' sx={{ marginBottom: 2 }}>
+                                    Choose a new password. Your account will be updated automatically.
+                                </Typography>
+                            </Box>
+                            {/* Password */}
                             <Controller
-                                name="email"
+                                name="password"
                                 control={control}
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
-                                        label="Email"
-                                        error={!!errors.email}
-                                        helperText={errors.email?.message}
+                                        type={showPassword ? 'text' : 'password'}
+                                        label="Password"
+                                        error={!!errors.password}
+                                        helperText={errors.password?.message}
                                         variant="outlined"
                                         fullWidth
                                         sx={{ marginBottom: 2 }}
+                                        // Eye icon for toggling visiblity
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={togglePasswordVisibility}
+                                                            edge="end"
+                                                        >
+                                                            <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
+                                    />
+                                )}
+                            />
+                            {/* Confirm Password */}
+                            <Controller
+                                name="confirm_password"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        label="Confirm Password"
+                                        error={!!errors.confirm_password}
+                                        helperText={errors.confirm_password?.message}
+                                        variant="outlined"
+                                        fullWidth
+                                        sx={{ marginBottom: 2 }}
+                                        // Eye icon for toggling visiblity
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={toggleConfirmPasswordVisibility}
+                                                            edge="end"
+                                                        >
+                                                            <Box component="img" src="/icon-eye.svg" alt="Icon" sx={{ height: '2vh' }} />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
+                                    />
+                                )}
+                            />
+                            {/* Reset token - hidden field */}
+                            <Controller
+                                name="resetToken"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        // label="Reset token"
+                                        type="hidden"
+                                        error={!!errors.resetToken}
+                                        helperText={errors.resetToken?.message}
                                     />
                                 )}
                             />
@@ -171,7 +282,7 @@ const ForgottenPassword: FC = () => {
                                 fullWidth
                                 sx={{ marginBottom: 2 }}
                             >
-                                Send
+                                Reset
                             </Button>
                         </FormControl>
                     </form>
@@ -184,7 +295,7 @@ const ForgottenPassword: FC = () => {
                         textAlign: 'center',
                         justifyContent: 'space-between',
                         // minHeight: 0,
-                        maxWidth: isMobile ? '100vh' : '45vh',
+                        maxWidth: isMobile ? '100vh' : '65vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
                             <Typography variant="body1" color='primary.dark'>
@@ -207,7 +318,7 @@ const ForgottenPassword: FC = () => {
                         textAlign: 'center',
                         justifyContent: 'space-between',
                         marginTop: isMobile ? 0 : 1,
-                        maxWidth: isMobile ? '100vh' : '45vh',
+                        maxWidth: isMobile ? '100vh' : '65vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
                             <Typography variant="body1" color='primary.dark'>
@@ -226,8 +337,8 @@ const ForgottenPassword: FC = () => {
                     {/* If api error occurs, show error widget  */}
                     {showError && (
                         <Modal
-                            open={showError} // Modal visibility tied to the showError state
-                            onClose={() => setShowError(false)} // Close the modal on backdrop click
+                            open={showError}
+                            onClose={() => setShowError(false)}
                             aria-labelledby="error-modal-title"
                             aria-describedby="error-modal-description"
                         >
@@ -239,29 +350,15 @@ const ForgottenPassword: FC = () => {
                     {showSuccess && (
                         <Modal
                             open={showSuccess}
-                            onClose={() => setShowSuccess(false)}
+                            onClose={() => navigate("/login")}
                             aria-labelledby="success-modal-title"
                             aria-describedby="success-modal-description"
                         >
                             <DialogContent>
                                 <SuccessConformation
-                                    handleClose={() => setShowSuccess(false)}
-                                    title={"Token sent successfully"}
+                                    handleClose={() => navigate("/login")}
+                                    title={"Reset successful"}
                                     message={successResponse} />
-                            </DialogContent>
-                        </Modal>
-                    )}
-                    {loading && (
-                        <Modal
-                            open={loading}
-                            onClose={() => setLoading(false)}
-                            aria-labelledby="loading"
-                            aria-describedby="waiting for response"
-                        >
-                            {/* Remove Dialog padding for child to take up full page */}
-                            <DialogContent sx={{ padding: 0 }}>
-                                {/* Show Loading widget and darken background */}
-                                <Loading backgroundColor='#000' backgroundOpacity={0.3} />
                             </DialogContent>
                         </Modal>
                     )}
@@ -311,7 +408,7 @@ const ForgottenPassword: FC = () => {
                 </Box>
             </Box >
         </>
-    );
+    )
 };
 
-export default ForgottenPassword;
+export default ResetPassword;

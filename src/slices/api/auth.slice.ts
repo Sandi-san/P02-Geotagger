@@ -2,7 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RegisterUserFields } from '../../hooks/react-hook-form/useRegister';
 import { LoginUserFields } from '../../hooks/react-hook-form/useLogin';
 import { CreateUpdateUserForm } from '../../hooks/react-hook-form/useCreateUpdateUser';
-import { EmailUserFields } from '../../hooks/react-hook-form/useEmailReset';
+import { EmailUserFields } from '../../hooks/react-hook-form/useResetEmail';
+import { PasswordForm, PasswordUserFields } from '../../hooks/react-hook-form/useResetPassword';
 
 //api for /user route in backend
 export const authSlice = createApi({
@@ -47,11 +48,11 @@ export const authSlice = createApi({
         body: formData,
       }),
     }),
-    resetPassword: builder.mutation<{ response: string }, {formData: CreateUpdateUserForm}>({
-      query: () => ({
+    resetPassword: builder.mutation<{ response: string }, PasswordUserFields>({
+      query: (formData: PasswordUserFields) => ({
         url: '/reset-password',
         method: 'POST',
-        // body: formData,
+        body: formData,
       }),
     }),
   }),

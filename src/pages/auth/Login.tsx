@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
 import theme from '../../theme';
 import { LoginUserFields, useLoginForm } from '../../hooks/react-hook-form/useLogin';
-import { useLoginOAuthUserMutation, useRedirectOAuthUserMutation, useLoginUserMutation } from '../../slices/api/auth.slice';
+import { useLoginUserMutation } from '../../slices/api/auth.slice';
 import { tokenStorage } from '../../utils/tokenStorage';
 import userStore from '../../stores/user.store';
 import fetchUser from '../../utils/fetchLocalUser';

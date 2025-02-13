@@ -54,7 +54,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('forgotten-password')
   async forgottenPassword(@Body() dto: UserEmailDto): Promise<{ response: string }> {
-    //console.log(dto)
+    // console.log(dto)
     if (!this.rateLimiterService.isAllowed(dto.email)) {
       throw new BadRequestException(
         'Too many requests. Please wait a while before trying again.',
@@ -69,7 +69,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   async resetPassword(@Body() dto: UpdateUserDto): Promise<{ response: string }> {
-    //console.log(dto)
+    // console.log(dto)
     return this.authService.resetPassword(dto);
   }
 

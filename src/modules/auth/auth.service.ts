@@ -140,9 +140,9 @@ export class AuthService {
       select: { id: true, email: true, password: true, resetTokenExpiry: true }
     })
     if (!user)
-      throw new NotFoundException(`User with email '${user.email}' not found`);
+      throw new NotFoundException(`User not found. Reset token is invalid.`);
     if (new Date() > user.resetTokenExpiry)
-      throw new BadRequestException('Invalid or expired reset token!');
+      throw new BadRequestException('Reset token expired.');
 
     if (password && confirm_password) {
       //check new password

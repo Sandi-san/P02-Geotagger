@@ -26,6 +26,12 @@ class UserStore {
     tokenStorage.clearToken();
     this.user = undefined;
   }
+
+  //set guessToken (same as login for token only)
+  setToken(token: number){
+    if(this.user)
+      this.user.guessTokens = token
+  }
 }
 
 const userStore = new UserStore();

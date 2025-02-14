@@ -68,7 +68,6 @@ const Card: FC<CardProps> = ({
             removeFromArray(id)
     }
 
-
     const handleDeleteLocation = async () => {
         if (!id) {
             console.error("No id passed. Cannot delete location.");
@@ -96,6 +95,13 @@ const Card: FC<CardProps> = ({
                 setShowError(true);
             }
         }
+    }
+
+    const formatDistance = (errorDistance: number) => {
+        if(errorDistance<1000)
+            return `${errorDistance} m`
+        const errorKm = errorDistance/1000
+        return `${errorKm.toFixed()} km`
     }
 
     if (showError) {
@@ -271,7 +277,7 @@ const Card: FC<CardProps> = ({
                 >
                     <Typography color="primary.contrastText" variant="body2" sx={{
                         fontSize: '3vh'
-                    }} >{errorDistance} m</Typography>
+                    }} >{formatDistance(errorDistance)}</Typography>
                 </Box>
             )}
         </Box >

@@ -21,7 +21,6 @@ const Header: FC = () => {
     const handleOpen = () => setOpen(true);
     //close the modal
     const handleClose = () => {
-        //TODO: refetch user here
         setOpen(false);
     }
 

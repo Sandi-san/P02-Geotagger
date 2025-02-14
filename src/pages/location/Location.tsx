@@ -12,6 +12,9 @@ import Loading from '../../components/ui/Loading';
 import getValidImagePath from '../../utils/validImagePath';
 import { CreateGuessFields, useCreateGuessForm } from '../../hooks/react-hook-form/useCreateGuess';
 import GuessesLeaderboard from '../../components/ui/GuessesLeaderboard';
+import fetchUser from '../../utils/fetchLocalUser';
+import { UserType } from '../../models/user';
+import userStore from '../../stores/user.store';
 
 interface LocationProps {
     locationId: number, //id of the location displayed on the page
@@ -61,14 +64,20 @@ const Location: FC<LocationProps> = ({ locationId }) => {
 
         try {
             //call RTK Query mutation with valid formData (create guess)
-            const guessResponse = await createGuess({id: locationId, formData}).unwrap();
-            
+            const guessResponse = await createGuess({ id: locationId, formData }).unwrap();
+
             //if created guess returned successfully, set data in inputs
             if (guessResponse.id) {
                 console.log('Guess created successfully:', guessResponse);
-                
+
                 guessData.errorDistance = guessResponse.errorDistance
                 setGuess(guessData)
+                
+                //refresh guess token for header
+                if(guessResponse.user.guessTokens){
+                    if(userStore.user)
+                        userStore.user.guessTokens = guessResponse.user.guessTokens
+                }
 
                 setRefreshKey(prevKey => prevKey + 1)
             }
@@ -263,14 +272,14 @@ const Location: FC<LocationProps> = ({ locationId }) => {
 
                 {/* Right section leaderboard */}
                 <Box
-                sx={{
-                    flex: 1,
-                    height: '100vh', //stretch through entire height
-                    // justifyContent: 'center',
-                    // alignItems: 'center',
-                    marginLeft: isMobile ? 1 : 2,
-                    marginRight: isMobile ? '2vh' : '8vh',
-                }}>
+                    sx={{
+                        flex: 1,
+                        height: '100vh', //stretch through entire height
+                        // justifyContent: 'center',
+                        // alignItems: 'center',
+                        marginLeft: isMobile ? 1 : 2,
+                        marginRight: isMobile ? '2vh' : '8vh',
+                    }}>
                     <GuessesLeaderboard locationId={locationId} refreshKey={refreshKey} />
                 </Box>
 

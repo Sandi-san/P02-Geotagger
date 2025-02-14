@@ -64,8 +64,6 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
         </Modal>
     }
 
-    //TODO: display no guesses if length is 0
-
     return (
         <>
             <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'flex-start', marginBottom: '2vh' }}>
@@ -88,17 +86,52 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
                     },
                 }}
             >
-                {guesses.map((guess, index) => (
-                    <GuessItem key={index}
-                        itemNumber={index + 1}
-                        userFirstName={guess.user.firstName || undefined}
-                        userLastName={guess.user.lastName || undefined}
-                        userAvatarImage={guess.user.image || undefined}
-                        errorDistance={guess.errorDistance}
-                        creationDate={guess.createdAt as Date}
-                        isUser={guess.user.id === userStore.user?.id}
-                    />
-                ))}
+                {guesses.length > 0 ? (
+                    guesses.map((guess, index) => (
+                        <GuessItem key={index}
+                            itemNumber={index + 1}
+                            userFirstName={guess.user.firstName || undefined}
+                            userLastName={guess.user.lastName || undefined}
+                            userAvatarImage={guess.user.image || undefined}
+                            errorDistance={guess.errorDistance}
+                            creationDate={guess.createdAt as Date}
+                            isUser={guess.user.id === userStore.user?.id}
+                        />
+                    ))
+                ) : (
+                    <>
+                        <Typography
+                            variant="h5"
+                            color="primary"
+                            sx={{
+                                marginTop: 2,
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',
+                                // color: 'gray',
+                                fontStyle: 'italic',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            No guesses yet.
+                        </Typography>
+                        <Typography
+                            variant="h6"
+                            color="primary"
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',
+                                // color: 'gray',
+                                fontStyle: 'italic',
+                            }}
+                        >
+                            Make a guess to add it to the leaderboard.
+                        </Typography>
+                    </>
+                )}
             </Box>
         </>
     )

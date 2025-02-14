@@ -105,12 +105,11 @@ export const AppRoutes: AppRoute[] = [
     children: <Page404 />,
   },
   //url for testing style of Loading widget
-  //TODO: DELETE IN PRODUCTION
-  {
-    type: RouteType.PUBLIC,
-    path: '/loading-test',
-    children: <Loading />,
-  },
+  // {
+  //   type: RouteType.PUBLIC,
+  //   path: '/loading-test',
+  //   children: <Loading />,
+  // },
 ];
 
 const Routes: FC = () => {

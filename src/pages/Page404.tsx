@@ -1,18 +1,43 @@
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import theme from '../theme';
 
-//TODO: REMAKE FOR MUI
-//404 NOT FOUND PAGE (prikazi ce page ne obstaja)
+//404 Not Found Page, displays when no page for url is found
 const Page404: FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-4">
-        Nothing found <span className="text-red-500">404</span>!
-      </h1>
-      <Link to="/" className="text-blue-500 hover:underline">
-        Go home
-      </Link>
-    </div>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        backgroundColor: (`${theme.palette.background}`)
+      }}
+    >
+      <Typography variant="h1" color="error" sx={{ fontWeight: "bold" }}>
+        404
+      </Typography>
+      <Typography variant="h5" color='secondary' sx={{ marginBottom: 2 }}>
+        Nothing found
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        component={Link}
+        to="/"
+        sx={{
+          paddingX: 3,
+          paddingY: 1,
+          borderRadius: "8px",
+          textTransform: "none",
+        }}
+      >
+        Go Home
+      </Button>
+    </Box>
   );
 };
 

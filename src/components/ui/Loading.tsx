@@ -43,7 +43,7 @@ const Loading: FC<LoadingProps> = ({
       />
 
       {/* Loading Text */}
-      <Typography variant="h6" color='primary.main' sx={{ fontWeight: "bold", textShadow: `0px 0px 8px ${theme.palette.secondary.main}` }}>
+      <Typography variant="h6" color='primary.main' sx={{ fontWeight: "bold", textShadow: `0px 0px 2px ${theme.palette.primary.light}` }}>
         Loading...
       </Typography>
     </Box>

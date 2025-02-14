@@ -76,14 +76,21 @@ export class GuessService {
             userId,
         }
 
-        //console.log("Guess: ", dto)
-
         try {
             const guess = await this.prisma.guess.create({
                 data: {
                     ...dto
+                },
+                //return user tokens
+                include: {
+                    user: {
+                        select: {
+                            guessTokens: true,
+                        }
+                    }
                 }
             })
+            console.log("Guess: ", guess)
             return guess
         }
         catch (error) {

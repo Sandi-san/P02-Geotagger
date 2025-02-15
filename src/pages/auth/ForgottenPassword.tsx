@@ -14,6 +14,7 @@ import { UserType } from '../../models/user';
 import { EmailForm, EmailUserFields, useEmailForm } from '../../hooks/react-hook-form/useResetEmail';
 import SuccessConformation from '../../components/modals/SuccessConformation';
 import Loading from '../../components/ui/Loading';
+import AuthHeader from '../../components/ui/AuthHeader';
 
 const ForgottenPassword: FC = () => {
     //mediaQuery for Responsive Web Design
@@ -112,31 +113,7 @@ const ForgottenPassword: FC = () => {
                         overflow: 'auto',
                     }}
                 >
-                    {/* Top left logo with functionality and RWD */}
-                    <Box
-                        sx={{
-                            position: unstickLogo.isMobile ? 'static' : 'absolute',
-                            top: isMobile ? 'auto' : '2vh',
-                            left: isMobile ? 'auto' : '4vh',
-                            display: 'flex',
-                            alignItems: 'center',
-                            // width: '100%',
-                            margin: isMobile ? 2 : 0,
-                            justifyContent: isMobile ? 'center' : 'flex-start',
-                            gap: 1,
-                        }}
-                    >
-                        {/* Logo */}
-                        <Link href="/">
-                            <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
-                        </Link>
-                        {/* Text */}
-                        <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
-                            <span style={{ color: theme.palette.primary.main }}>Geo</span>
-                            <span style={{ color: theme.palette.primary.dark }}>tagger</span>
-                        </Typography>
-                    </Box>
-
+                    <AuthHeader />
                     <Typography variant="h3" gutterBottom>
                         Reset password
                     </Typography>
@@ -184,7 +161,7 @@ const ForgottenPassword: FC = () => {
                         textAlign: 'center',
                         justifyContent: 'space-between',
                         // minHeight: 0,
-                        maxWidth: isMobile ? '100vh' : '45vh',
+                        maxWidth: '45vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
                             <Typography variant="body1" color='primary.dark'>
@@ -207,7 +184,7 @@ const ForgottenPassword: FC = () => {
                         textAlign: 'center',
                         justifyContent: 'space-between',
                         marginTop: isMobile ? 0 : 1,
-                        maxWidth: isMobile ? '100vh' : '45vh',
+                        maxWidth: '45vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
                             <Typography variant="body1" color='primary.dark'>
@@ -266,49 +243,51 @@ const ForgottenPassword: FC = () => {
                         </Modal>
                     )}
                 </Box>
-                <Box
-                    sx={{
-                        position: 'relative',
-                        flex: 3,
-                        height: '100vh', //stretch through entire height
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        bgcolor: 'primary.main'
-                    }}
-                >
-                    {/* Image background */}
-                    <Box
-                        component="img"
-                        src='background-map.png'
-                        alt="No image"
-                        sx={{
-                            width: '100%',
-                            height: '100vh',
-                            objectFit: 'cover',
-                            borderRadius: 'inherit',
-
-                        }}
-                    />
-                    {/* Green overlay */}
+                {!isMobile && (
                     <Box
                         sx={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100vh',
-                            //gradient from left to right: color from custom theme with alpha channel opacity (50% = 80 in hex color code)
-                            background: `linear-gradient(to right, ${theme.palette.primary.main}80, ${theme.palette.primary.light}80)`,
-                            zIndex: 2,
+                            position: 'relative',
+                            flex: 3,
+                            height: '100vh', //stretch through entire height
                             display: 'flex',
-                            alignItems: 'center',
+                            flexDirection: 'column',
                             justifyContent: 'center',
+                            alignItems: 'center',
+                            bgcolor: 'primary.main'
                         }}
                     >
-                        {/* Logo */}
-                        <Box component="img" src="/logo-outline.svg" alt="Lock" sx={{ height: 200, position: 'relative' }} />
+                        {/* Image background */}
+                        <Box
+                            component="img"
+                            src='background-map.png'
+                            alt="No image"
+                            sx={{
+                                width: '100%',
+                                height: '100vh',
+                                objectFit: 'cover',
+                                borderRadius: 'inherit',
+
+                            }}
+                        />
+                        {/* Green overlay */}
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100vh',
+                                //gradient from left to right: color from custom theme with alpha channel opacity (50% = 80 in hex color code)
+                                background: `linear-gradient(to right, ${theme.palette.primary.main}80, ${theme.palette.primary.light}80)`,
+                                zIndex: 2,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {/* Logo */}
+                            <Box component="img" src="/logo-outline.svg" alt="Lock" sx={{ height: 200, position: 'relative' }} />
+                        </Box>
                     </Box>
-                </Box>
+                )}
             </Box >
         </>
     );

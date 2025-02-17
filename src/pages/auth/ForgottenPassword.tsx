@@ -1,17 +1,12 @@
 import { FC, useState } from 'react';
 import isApiError from '../../utils/apiErrorChecker';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import { Box, Button, DialogContent, FormControl, IconButton, InputAdornment, Link, Modal, TextField, Typography } from '@mui/material';
+import { Box, Button, DialogContent, FormControl, Link, Modal, TextField, Typography } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
 import theme from '../../theme';
-import { LoginUserFields, useLoginForm } from '../../hooks/react-hook-form/useLogin';
-import { useLoginOAuthUserMutation, useRedirectOAuthUserMutation, useLoginUserMutation, useForgottenPasswordMutation } from '../../slices/api/auth.slice';
-import { tokenStorage } from '../../utils/tokenStorage';
-import userStore from '../../stores/user.store';
-import fetchUser from '../../utils/fetchLocalUser';
-import { UserType } from '../../models/user';
-import { EmailForm, EmailUserFields, useEmailForm } from '../../hooks/react-hook-form/useResetEmail';
+import { useForgottenPasswordMutation } from '../../slices/api/auth.slice';
+import { EmailUserFields, useEmailForm } from '../../hooks/react-hook-form/useResetEmail';
 import SuccessConformation from '../../components/modals/SuccessConformation';
 import Loading from '../../components/ui/Loading';
 import AuthHeader from '../../components/ui/AuthHeader';
@@ -19,10 +14,6 @@ import AuthHeader from '../../components/ui/AuthHeader';
 const ForgottenPassword: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
-    //TODO: remove right section display when set as isMobile
-
-    //mediaQuery for top-left logo
-    const unstickLogo = useMediaQuery(850)
 
     //form validation for email
     const { handleSubmit, errors, control } = useEmailForm();

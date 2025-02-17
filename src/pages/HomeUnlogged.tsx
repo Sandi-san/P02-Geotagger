@@ -3,8 +3,12 @@ import { Box, Button, Typography } from '@mui/material';
 import Card from '../components/ui/Card';
 import { useGetLocationsQuery } from '../slices/api/location.slice';
 import { LocationType } from '../models/location';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 const HomeUnlogged: FC = () => {
+    //mediaQuery for Responsive Web Design
+    const { isMobile } = useMediaQuery(720)
+
     //methods of API calls from user.slice
     const { data: dataLocations } = useGetLocationsQuery({ page: 1, take: 3 });
     //array to hold fetched locations
@@ -21,18 +25,25 @@ const HomeUnlogged: FC = () => {
     return (
         <>
             {/* First section */}
-            <Box sx={{ display: 'flex', flexDirection: 'row', overflow: 'hidden', paddingTop: 2 }}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
+                overflow: 'hidden',
+                paddingTop: 2
+            }}>
                 {/* Left section: text */}
                 <Box
                     sx={{
                         flex: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'flex-start',
+                        alignItems: isMobile ? 'center' : 'flex-start',
+                        textAlign: isMobile ? 'center' : 'left',
                         justifyContent: 'center',
                         position: 'relative',
-                        paddingLeft: 10,
-                        maxWidth: '20%',
+                        paddingLeft: isMobile ? 6 : 10,
+                        paddingRight: isMobile ? 6 : 0,
+                        maxWidth: isMobile ? '100%' : '20%',
                         zIndex: 2, //text overlaps the image
                     }}
                 >
@@ -57,7 +68,8 @@ const HomeUnlogged: FC = () => {
                     sx={{
                         flex: 3,
                         position: 'relative',
-                        marginLeft: -10, //overlapping with the text
+                        marginLeft: isMobile ? 0 : -10, //overlapping with the text
+                        paddingY: isMobile ? 6 : 0,
                         zIndex: 1, //image is in the background
                     }}
                 >
@@ -73,7 +85,9 @@ const HomeUnlogged: FC = () => {
                 </Box>
             </Box>
             {/* {Second section} */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', paddingTop: 10, alignItems: 'center', }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center',
+                paddingTop: isMobile ? 0 : 10,
+             }}>
                 <Typography variant="h4" color='primary'
                     sx={{
                         marginBottom: 2,
@@ -99,6 +113,7 @@ const HomeUnlogged: FC = () => {
                         flexDirection: 'row',
                         flexWrap: 'wrap', //if child elements exceed width, wrap into next line
                         position: 'relative',
+                        justifyContent: 'center',
                         padding: 2,
                         gap: 2, //padding between child elements
                     }}

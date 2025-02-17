@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
 
 interface ErrorDisplayProps {

@@ -1,8 +1,12 @@
 import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { FC } from "react";
 import theme from "../../theme";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 const Footer: FC = () => {
+    //mediaQuery for Responsive Web Design
+    const { isMobile } = useMediaQuery(720)
+
     return (
         <AppBar position="static" sx={{
             backgroundColor: theme.palette.primary.main,
@@ -12,9 +16,13 @@ const Footer: FC = () => {
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Far-left items */}
                 <Box>
-                    <Typography variant="h5" color='primary.contrastText'>
-                        Geotagger
-                    </Typography>
+                    {isMobile ? (
+                        <Box component="img" src="/logo-filled.svg" alt="Geotagger" sx={{ height: '6vh' }} />
+                    ) : (
+                        <Typography variant="h5" color='primary.contrastText'>
+                            Geotagger
+                        </Typography>
+                    )}
                 </Box>
                 {/* Far-right items */}
                 <Box>

@@ -35,7 +35,7 @@ const App: FC = () => {
         if (!userStore.user) {
           try {
             const fetchUserResponse = await fetchUser();
-            console.log('Returned user:', fetchUserResponse);
+            // console.log('Returned user:', fetchUserResponse);
             if (typeof (fetchUserResponse as UserType) === 'object' &&
               fetchUserResponse !== undefined && fetchUserResponse !== null)
               userStore.login(fetchUserResponse)

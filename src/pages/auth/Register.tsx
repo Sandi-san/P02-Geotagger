@@ -17,10 +17,6 @@ import AuthHeader from '../../components/ui/AuthHeader';
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
-    //TODO: remove right section display when set as isMobile
-
-    //mediaQuery for top-left logo on zoom-in
-    const unstickLogo = useMediaQuery(950)
 
     //form validation for user registration (custom hook)
     const { handleSubmit, errors, control } = useRegisterForm();
@@ -81,7 +77,7 @@ const Register: FC = () => {
             if (!userStore.user) {
                 //fetch newly created User from DB (with access token) and login
                 const fetchUserResponse = await fetchUser();
-                console.log('Returned user:', fetchUserResponse);
+                // console.log('Returned user:', fetchUserResponse);
                 if (typeof (fetchUserResponse as UserType) === 'object' &&
                     fetchUserResponse !== undefined && fetchUserResponse !== null)
                     userStore.login(fetchUserResponse)

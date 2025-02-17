@@ -13,27 +13,26 @@ import { computeHeadingLevel } from '@testing-library/react';
 import Loading from '../../components/ui/Loading';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
+import { useNavigate } from 'react-router-dom';
 
 const Profile: FC = () => {
     const { isMobile } = useMediaQuery(720)
+    const navigate = useNavigate()
 
     //states for opening Error Modal
     const [apiError, setApiError] = useState('')
     const [apiStatus, setApiStatus] = useState('')
     const [showError, setShowError] = useState(false)
 
-    const { image, firstName, lastName } = userStore.user as UserType
-
-    //check if User avatar image can be displayed 
-    const [validImage, setValidImage] = useState(false);
-    const userImage = getValidImagePath(image)
-
     useEffect(() => {
-        if (userImage !== undefined)
-            setValidImage(true)
-        else
-            setValidImage(false)
+        if(!userStore.user){
+            console.error("Cannot access local user object on this widget! Redirecting...")
+            navigate("/")
+        }
     }, []);
+
+    const { image, firstName, lastName } = userStore.user as UserType
+    const userImage = getValidImagePath(image)
 
     //states for Guesses
     const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses

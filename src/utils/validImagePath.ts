@@ -1,6 +1,6 @@
 //get valid path of User avatar image file
 //NOTE: if registration is done with OAuth, the image path is copied from Google servers
-//may sometimes become inaccessible and requires the user to refresh the page or re-login
+//it may sometimes become inaccessible and requires the user to refresh the page or re-login
 const getValidImagePath = (imageName: string | undefined): string | undefined => {
     if (imageName === undefined) return undefined
     //check if image path name contains full path, if yes, return (for remote images)

@@ -14,11 +14,7 @@ import AuthHeader from '../../components/ui/AuthHeader';
 const ResetPassword: FC = () => {
     //mediaQuery for Responsive Web Design
     const { isMobile } = useMediaQuery(720)
-    //TODO: remove right section display when set as isMobile
     const navigate = useNavigate()
-
-    //mediaQuery for top-left logo on zoom-in
-    const unstickLogo = useMediaQuery(950)
 
     //extract token from url
     const [searchParams] = useSearchParams()

@@ -65,7 +65,8 @@ const Profile: FC = () => {
     }, [dataLocations])
     useEffect(() => {
         if (dataGuesses && dataGuesses.data) {
-            setGuesses(dataGuesses.data)
+            //append new guesses to array
+            setGuesses((prevGuesses) => [...prevGuesses, ...dataGuesses.data])
             setPageGuessTotal(dataGuesses.meta.last_page)
         }
     }, [dataGuesses])

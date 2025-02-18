@@ -22,15 +22,17 @@ const HomeLogged: FC = () => {
     const [guesses, setGuesses] = useState<FetchGuessType[]>([]); //array to hold fetched guesses
     const [pageGuess, setPageGuess] = useState(1); //current page for fetching guesses
     const [pageGuessTotal, setPageGuessTotal] = useState(1); //total pages for fetching guesses
+    const [takeGuess, setTakeGuess] = useState(isMobile ? 3 : 4); //how many elements to fetch at once
 
     //states for Locations
     const [locations, setLocations] = useState<LocationType[]>([]); //array to hold fetched locations
     const [pageLocation, setPageLocation] = useState(1)
     const [pageLocationTotal, setPageLocationTotal] = useState(1); //total pages for fetching locations
+    const [takeLocation, setTakeLocation] = useState(isMobile ? 3 : 9); //how many elements to fetch at once
 
     //methods of API calls from user.slice
-    const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageLocation });
-    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageGuess });
+    const { data: dataLocations, error: locationsError, isLoading: isLoadingLocation } = useGetLocationsQuery({ page: pageLocation, take: takeLocation });
+    const { data: dataGuesses, error: guessesError, isLoading: isLoadingGuess } = useGetGuessesQuery({ page: pageGuess, take: takeGuess });
 
     //update when data changes
     useEffect(() => {
@@ -43,7 +45,8 @@ const HomeLogged: FC = () => {
     }, [dataLocations])
     useEffect(() => {
         if (dataGuesses && dataGuesses.data) {
-            setGuesses(dataGuesses.data)
+            //append new guesses to array
+            setGuesses((prevGuesses) => [...prevGuesses, ...dataGuesses.data])
             setPageGuessTotal(dataGuesses.meta.last_page)
         }
         // console.log("Guesses: ", dataGuesses)
@@ -103,22 +106,43 @@ const HomeLogged: FC = () => {
                             flex: 1,
                             display: 'flex',
                             flexDirection: 'row',
-                            flexWrap: 'wrap', //wrap child elements into the next line
-                            position: 'relative',
-                            padding: 2,
                             gap: 2, //space between child elements
-                            justifyContent: 'center',
+                            //wrap child elements into next line by default, no wrap on mobile
+                            flexWrap: isMobile ? 'nowrap' : 'wrap',
+                            overflowX: isMobile ? 'auto' : 'visible', //horizontal scrolling in mobile
+                            justifyContent: isMobile ? 'flex-start' : 'center', //left-align for scrolling
+                            position: 'relative',
+                            paddingX: isMobile ? 0 : 2, //remove padding for mobile 100% width
+                            paddingY: 2,
+                            width: isMobile ? '100%' : 'auto', //full width (for mobile view)
+                            //horizontal scrollbar for mobile view
+                            scrollbarWidth: 'none',
+                            '&::-webkit-scrollbar': {
+                                height: '6px', // Visible scrollbar height
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: '#888',
+                                borderRadius: '4px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                                backgroundColor: '#555',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: '#f0f0f0',
+                            },
                         }}
                     >
                         {/* Render GuessCards dynamically */}
                         {guesses.map((guess, index) => (
-                            <Card key={index}
-                                imageUrl={(guess.location.image ? guess.location.image : '')}
-                                errorDistance={guess.errorDistance}
-                                isLocation={false}
-                                width={450}
-                                height={300}
-                            />
+                            <Box key={index} sx={{ flexShrink: 0, paddingLeft: isMobile ? 1 : 0, }}>
+                                <Card
+                                    imageUrl={guess.location.image || ''}
+                                    errorDistance={guess.errorDistance}
+                                    isLocation={false}
+                                    width={450} // Fixed width
+                                    height={300} // Fixed height
+                                />
+                            </Box>
                         ))}
                     </Box>
                     {/* Load more button */}

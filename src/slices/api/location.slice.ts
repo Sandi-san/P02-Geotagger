@@ -116,16 +116,6 @@ export const locationSlice = createApi({
         method: 'POST',
         body: formData,
       }),
-      // transformResponse: (response: any): LocationType => {
-      //   return {
-      //     id: response.id,
-      //     address: response.address,
-      //     image: response.image,
-      //     lat: response.lat,
-      //     lon: response.lon,
-      //     userId: response.userId,
-      //   }
-      // }
     }),
   }),
 });

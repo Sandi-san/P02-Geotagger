@@ -195,7 +195,7 @@ const Header: FC = () => {
                             {/* Menu links */}
                             {/* Activity page - only for admins */}
                             {userStore.user?.role === "admin" && (
-                                <Link variant="body2" color='primary.dark'
+                                <Link variant="body1" color='secondary.main'
                                     sx={{
                                         textDecoration: 'none',
                                         marginRight: isSquished.isMobile ? 1.5 : 3,

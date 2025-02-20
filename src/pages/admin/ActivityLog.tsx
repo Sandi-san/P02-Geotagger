@@ -9,8 +9,11 @@ import getValidImagePath from "../../utils/validImagePath";
 import Loading from "../../components/ui/Loading";
 import ErrorDisplay from "../../components/modals/ErrorDisplay";
 import isApiError from "../../utils/apiErrorChecker";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 const ActivityLog: FC = () => {
+    const { isMobile } = useMediaQuery(720)
+
     //states for opening Error Modal
     const [apiError, setApiError] = useState('')
     const [apiStatus, setApiStatus] = useState('')
@@ -55,106 +58,66 @@ const ActivityLog: FC = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100vh',
+                marginX: isMobile ? '4vh' : 0,
             }}>
                 <Typography color="primary" variant="h4" sx={{
                     textAlign: 'left',
                     marginBottom: 2,
                 }}>Activity log</Typography>
                 {actions.length > 0 ? (
-                    <TableContainer component={Paper} sx={{
-                        alignContent: 'center',
-                        maxHeight: '90vh',
-                        overflow: 'auto', // Enables scrolling when content overflows
-                    }}>
-                        <Table stickyHeader>
-                            {/* Table Head */}
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">User</TableCell>
-                                    <TableCell align="center">Date/Time</TableCell>
-                                    <TableCell align="center">Action</TableCell>
-                                    <TableCell align="center">Component Type</TableCell>
-                                    <TableCell align="center">New Value</TableCell>
-                                    <TableCell align="center">Location</TableCell>
-                                </TableRow>
-                            </TableHead>
+                    isMobile ? (
+                        // Mobile View: Display as condensed squares
+                        <Box sx={{
+                            display: 'flex', flexDirection: 'column',
+                            maxHeight: '90vh',
+                            overflow: 'auto', //enables scrolling when content overflows
+                        }}>
+                            {actions.map((action, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 2fr', // Two equal columns
+                                        alignItems: 'center',
+                                        padding: 2,
+                                        // borderRadius: 2,
+                                        boxShadow: 2,
+                                        bgcolor: index % 2 !== 0 ? 'grey.100' : 'white', // Alternate row colors
+                                    }}
+                                >
+                                    {/* Identifiers (left side) */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', fontWeight: 'bold', color: 'grey.700' }}>
+                                        <Typography variant="body1">User</Typography>
+                                        <Typography variant="body1">Date</Typography>
+                                        <Typography variant="body1">Action</Typography>
+                                        <Typography variant="body1">Component</Typography>
+                                        <Typography variant="body1">Value</Typography>
+                                        <Typography variant="body1">Location</Typography>
+                                    </Box>
 
-                            {/* Table Body */}
-                            <TableBody>
-                                {actions.map((action, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell align="center">
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Box
-                                                    sx={{
-                                                        width: '6vh',
-                                                        height: '6vh',
-                                                        borderRadius: '50%',
-                                                        overflow: 'hidden',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        bgcolor: 'grey.400',
-                                                    }}>
-                                                    <img
-                                                        src={getValidImagePath(action.user?.image) || '/placeholder-avatar.png'}
-                                                        alt="User Avatar"
-                                                        style={{
-                                                            width: getValidImagePath(action.user?.image) ? '100%' : '80%',
-                                                            height: getValidImagePath(action.user?.image) ? '100%' : '80%',
-                                                            objectFit: 'cover',
-                                                            boxSizing: 'border-box',
-                                                            borderRadius: getValidImagePath(action.user?.image) ? '100%' : '50%',
-                                                        }}
-                                                        onError={(e) => {
-                                                            (e.target as HTMLImageElement).src = '/placeholder-avatar.png';
-                                                        }}
-                                                    />
-                                                </Box>
-                                                <Box sx={{ paddingLeft: 2 }}>
-                                                    {(action.user?.firstName && action.user?.lastName) ? (
-                                                        <Typography variant="body2" noWrap>{action.user?.firstName} {action.user?.lastName}</Typography>
-                                                    ) : (
-                                                        <Typography variant="body2" noWrap>{action.user?.email}</Typography>
-                                                    )}
-                                                </Box>
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {action.createdAt ? (<>
-                                                <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleDateString()}</Typography>
-                                                <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleTimeString()}</Typography>
-                                            </>) : (<Typography variant="body1">"/"</Typography>)}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Typography variant="body1">
-                                                {action.action || "/"}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Typography variant="body1">
-                                                {action.type || "/"}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Typography variant="body1">
-                                                {action.newValue || "/"}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <Typography variant="body1">
-                                                {action.url || "/"}
-                                            </Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                ) : (
-                    <>
+                                    {/* Values (right side) */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                                        <Typography variant="body2">
+                                            {(action.user?.firstName && action.user?.lastName)
+                                                ? `${action.user?.firstName} ${action.user?.lastName}`
+                                                : action.user?.email || "/"}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            {action.createdAt ? new Date(action.createdAt as Date).toLocaleString() : "/"}
+                                        </Typography>
+                                        <Typography variant="body1">{action.action || "/"}</Typography>
+                                        <Typography variant="body1">{action.type || "/"}</Typography>
+                                        <Typography variant="body1">{action.newValue || "/"}</Typography>
+                                        <Typography variant="body1">{action.url || "/"}</Typography>
+                                    </Box>
+                                </Box>
+                            ))}
+                        </Box>
+                    ) : (
                         <TableContainer component={Paper} sx={{
                             alignContent: 'center',
+                            maxHeight: '90vh',
+                            overflow: 'auto', // Enables scrolling when content overflows
                         }}>
                             <Table stickyHeader>
                                 {/* Table Head */}
@@ -168,11 +131,105 @@ const ActivityLog: FC = () => {
                                         <TableCell align="center">Location</TableCell>
                                     </TableRow>
                                 </TableHead>
+
+                                {/* Table Body */}
+                                <TableBody>
+                                    {actions.map((action, index) => (
+                                        <TableRow key={index}
+                                            sx={{ backgroundColor: index % 2 !== 0 ? 'grey.100' : 'inherit' }} //standout odd rows
+                                        >
+                                            <TableCell align="center">
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <Box
+                                                        sx={{
+                                                            width: '6vh',
+                                                            height: '6vh',
+                                                            borderRadius: '50%',
+                                                            overflow: 'hidden',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            bgcolor: 'grey.400',
+                                                        }}>
+                                                        <img
+                                                            src={getValidImagePath(action.user?.image) || '/placeholder-avatar.png'}
+                                                            alt="User Avatar"
+                                                            style={{
+                                                                width: getValidImagePath(action.user?.image) ? '100%' : '80%',
+                                                                height: getValidImagePath(action.user?.image) ? '100%' : '80%',
+                                                                objectFit: 'cover',
+                                                                boxSizing: 'border-box',
+                                                                borderRadius: getValidImagePath(action.user?.image) ? '100%' : '50%',
+                                                            }}
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).src = '/placeholder-avatar.png';
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                    <Box sx={{ paddingLeft: 2 }}>
+                                                        {(action.user?.firstName && action.user?.lastName) ? (
+                                                            <Typography variant="body2" noWrap>{action.user?.firstName} {action.user?.lastName}</Typography>
+                                                        ) : (
+                                                            <Typography variant="body2" noWrap>{action.user?.email}</Typography>
+                                                        )}
+                                                    </Box>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {action.createdAt ? (<>
+                                                    <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleDateString()}</Typography>
+                                                    <Typography variant="body1">{new Date(action.createdAt as Date).toLocaleTimeString()}</Typography>
+                                                </>) : (<Typography variant="body1">"/"</Typography>)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="body1">
+                                                    {action.action || "/"}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="body1">
+                                                    {action.type || "/"}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="body1">
+                                                    {action.newValue || "/"}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="body1">
+                                                    {action.url || "/"}
+                                                </Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
                             </Table>
                         </TableContainer>
+                    )) : (
+                    <>
+                        {!isMobile && (
+                            <TableContainer component={Paper} sx={{
+                                alignContent: 'center',
+                            }}>
+                                <Table stickyHeader>
+                                    {/* Table Head */}
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center">User</TableCell>
+                                            <TableCell align="center">Date/Time</TableCell>
+                                            <TableCell align="center">Action</TableCell>
+                                            <TableCell align="center">Component Type</TableCell>
+                                            <TableCell align="center">New Value</TableCell>
+                                            <TableCell align="center">Location</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                </Table>
+                            </TableContainer>
+                        )}
                         <Box sx={{
                             padding: 4,
-                            height: '50vh',
+                            height: isMobile ? '40vh' : '50vh',
                             textAlign: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',

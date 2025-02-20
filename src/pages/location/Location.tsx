@@ -4,7 +4,6 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import Layout from '../../components/ui/Layout';
 import theme from '../../theme';
 import WorldMap from '../../components/ui/Map';
-import { useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
 import { useCreateGuessMutation, useGetLocationQuery } from '../../slices/api/location.slice';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
@@ -12,8 +11,6 @@ import Loading from '../../components/ui/Loading';
 import getValidImagePath from '../../utils/validImagePath';
 import { CreateGuessFields, useCreateGuessForm } from '../../hooks/react-hook-form/useCreateGuess';
 import GuessesLeaderboard from '../../components/ui/GuessesLeaderboard';
-import fetchUser from '../../utils/fetchLocalUser';
-import { UserType } from '../../models/user';
 import userStore from '../../stores/user.store';
 
 interface LocationProps {
@@ -21,7 +18,9 @@ interface LocationProps {
 }
 
 const Location: FC<LocationProps> = ({ locationId }) => {
-    const { isMobile } = useMediaQuery(1000)
+    const { isMobile } = useMediaQuery(720) //860
+    //for removing padding
+    const isUnpadded = useMediaQuery(1000)
 
     //form for creating/updating Location 
     const { handleSubmit, control, errors, setValue } = useCreateGuessForm();
@@ -134,7 +133,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                 display: 'flex',
                 // height: '100vh',
                 width: '100%',
-                flexDirection: 'row',
+                flexDirection: isMobile ? 'column' : 'row',
                 textAlign: 'center',
                 alignItems: 'stretch',
                 overflow: 'hidden', //prevent accidental overflow
@@ -155,8 +154,9 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                             display: 'flex',
                             flexDirection: 'column',
                             textAlign: 'center',
-                            // alignItems: 'center',
-                            paddingLeft: isMobile ? '2vh' : '8vh',
+                            //pad 8vh by default, 2vh for unpadded and 8vh when displaying mobile
+                            paddingLeft: isUnpadded.isMobile ? (isMobile ? '8vh' : '2vh') : '8vh',
+                            paddingRight: isMobile ? '8vh': 0,
                             overflow: 'hidden',
                         }}>
                             {/* Main text */}
@@ -190,7 +190,8 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                             flexDirection: 'column',
                             textAlign: 'center',
                             alignItems: 'center',
-                            paddingLeft: isMobile ? '2vh' : '8vh',
+                            paddingLeft: isUnpadded.isMobile ? (isMobile ? '8vh' : '2vh') : '8vh',
+                            paddingRight: isMobile ? '8vh': 0,
                             overflow: 'hidden',
                         }}>
                             {/* Box for Map component */}
@@ -259,9 +260,9 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                             position: 'relative',
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'flex-end',
+                            alignItems: isMobile ? 'flex-start' : 'flex-end',
                             overflow: 'hidden',
-                            paddingLeft: '8vh',
+                            paddingLeft: isMobile ? '8vh' : 0,
                         }}>
                             <Button type='submit' variant="contained" color="primary">
                                 Guess
@@ -277,8 +278,11 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                         height: '100vh', //stretch through entire height
                         // justifyContent: 'center',
                         // alignItems: 'center',
-                        marginLeft: isMobile ? 1 : 2,
-                        marginRight: isMobile ? '2vh' : '8vh',
+                        marginLeft: isUnpadded.isMobile ? 1 : 2,
+                        marginRight: isUnpadded.isMobile ? '2vh' : '8vh',
+                        marginTop: isMobile ? 4 : 0,
+                        marginX: isMobile ? '7vh' : 0,
+                        marginBottom: isMobile ? 8 : 0,
                     }}>
                     <GuessesLeaderboard locationId={locationId} refreshKey={refreshKey} />
                 </Box>

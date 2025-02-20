@@ -23,6 +23,8 @@ const GuessItem: FC<GuessItemProps> = ({
     errorDistance,
     isUser,
 }) => {
+    const { isMobile } = useMediaQuery(720) //860
+
     const [validImage, setValidImage] = useState(false);
     const userImage = getValidImagePath(userAvatarImage)
 
@@ -91,14 +93,14 @@ const GuessItem: FC<GuessItemProps> = ({
                 <Avatar sx={{
                     background: getRankColor(itemNumber),
                     marginRight: 3,
-                    width: '6vh',
-                    height: '6vh',
+                    width: isMobile ? '5vh' : '6vh',
+                    height: isMobile ? '5vh' : '6vh',
                 }} >{itemNumber}</Avatar>
                 {/* Image */}
                 <Box
                     sx={{
-                        width: '10vh',
-                        height: '10vh',
+                        width: isMobile ? '8vh' : '10vh',
+                        height: isMobile ? '8vh' : '10vh',
                         borderRadius: '50%',
                         overflow: 'hidden',
                         display: 'flex',
@@ -155,7 +157,7 @@ const GuessItem: FC<GuessItemProps> = ({
                 marginLeft: 2,
             }}>
                 <Typography variant="h5" noWrap sx={{
-                        color: isUser ? 'white' : 'black',
+                        color: isUser ? 'white' : (isMobile ? 'primary.main' : 'black'),
                     }}>{formatDistance(errorDistance)}</Typography>
             </Box>
         </Box>

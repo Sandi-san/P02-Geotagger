@@ -27,11 +27,11 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
 
         useEffect(() => {
             //redirect from page when user is not set, except when user has not logged yet (login, register, etc.)
-            if(tokenStorage.getToken() && !userStore.user){
+            if (tokenStorage.getToken() && !userStore.user) {
                 console.error("Cannot access local user object on this widget! Redirecting...")
                 navigate("/")
             }
-            else if(userStore.user)
+            else if (userStore.user)
                 setUser(userStore.user)
         }, []);
 
@@ -169,6 +169,23 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
                                     handleClose={handleCloseSettings}
                                 />
                             </Modal>
+
+                            {/* Activity page - only for admins */}
+                            {userStore.user?.role === "admin" && (
+                                <Link href="/activity-log" sx={{ flex: 1, display: 'flex', textDecoration: 'none' }}>
+                                    <Box sx={{
+                                        flex: 1, display: 'flex', alignItems: 'flex-start', marginLeft: '4vh'
+                                    }}>
+                                        <Typography variant="h4" color='secondary.main' component="span" sx={{ alignItems: 'center' }}>
+                                            Activity log
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end", flexGrow: 1, marginRight: '4vh', marginBottom: 4, }}>
+                                        <Box component="img" src="/icon-arrow-right_secondary-orange.svg" alt=">"
+                                            sx={{ height: '4vh' }} />
+                                    </Box>
+                                </Link>
+                            )}
 
                             {/* Logout */}
                             <Link sx={{ flex: 1, display: 'flex', textDecoration: 'none', '&:hover': { cursor: 'pointer' } }}

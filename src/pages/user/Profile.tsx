@@ -25,7 +25,7 @@ const Profile: FC = () => {
     const [showError, setShowError] = useState(false)
 
     useEffect(() => {
-        if(!userStore.user){
+        if (!userStore.user) {
             console.error("Cannot access local user object on this widget! Redirecting...")
             navigate("/")
         }
@@ -50,7 +50,7 @@ const Profile: FC = () => {
 
     // Function to remove a location from the array
     const handleRemoveFromArray = (id: number) => {
-        console.log("Remove location: ",id)
+        console.log("Remove location: ", id)
         setLocations((prevLocations) => prevLocations.filter(location => location.id !== id));
     };
 
@@ -132,8 +132,8 @@ const Profile: FC = () => {
                     src={userImage ? (userImage) :
                         ('/placeholder-avatar.png')}
                     sx={{
-                        width: '12vh',
-                        height: '12vh',
+                        width: isMobile ? '10vh' : '12vh',
+                        height: isMobile ? '10vh' : '12vh',
                         marginRight: 3,
                         marginLeft: 1,
                     }}
@@ -150,8 +150,11 @@ const Profile: FC = () => {
             </Box>
 
             {/* Second section */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', paddingTop: '4vh', marginLeft: '4vh', alignItems: 'flex-start', }}>
-                <Typography variant="h5" color='primary.dark'
+            <Box sx={{
+                display: 'flex', flexDirection: 'column', textAlign: 'left', paddingTop: '4vh', marginLeft: '4vh', alignItems: 'flex-start',
+                paddingBottom: isMobile ? '2vh' : 0,
+            }}>
+                <Typography variant="h5" color={isMobile ? 'primary' : 'primary.dark'}
                     sx={{
                         flex: 1,
                         position: 'relative',
@@ -223,8 +226,11 @@ const Profile: FC = () => {
             )}
 
             {/* Third section */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginLeft: '4vh', alignItems: 'flex-start', }}>
-                <Typography variant="h5" color='primary.dark'
+            <Box sx={{
+                display: 'flex', flexDirection: 'column', textAlign: 'left', marginLeft: '4vh', alignItems: 'flex-start',
+                paddingBottom: isMobile ? '2vh' : 0,
+            }}>
+                <Typography variant="h5" color={isMobile ? 'primary' : 'primary.dark'}
                     sx={{
                         flex: 1,
                         position: 'relative',
@@ -278,6 +284,7 @@ const Profile: FC = () => {
                     alignItems: 'flex-start',
                     marginY: '4vh',
                     marginLeft: '4vh',
+                    marginBottom: 16,
                 }}>
                     <Typography variant="body2" color='primary.dark'>
                         No uploads yet!

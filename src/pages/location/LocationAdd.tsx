@@ -143,6 +143,7 @@ const LocationAdd: FC = () => {
                     alignItems: 'center',
                     paddingX: '8vh',
                     overflow: 'hidden',
+                    marginTop: isMobile ? 6 : 0,
                 }}>
                     {/* Main text */}
                     <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'center', marginBottom: '2vh' }}>
@@ -155,7 +156,7 @@ const LocationAdd: FC = () => {
                         style={{
                             display: 'inline-block', //label behaves like block but only takes up the size of the content
                             cursor: 'pointer',
-                            width: '66%',  //set width relative on parent
+                            width: isMobile ? '100%' : '66%',  //set width relative on parent
                         }}
                     >
                         {/* Hidden file input */}
@@ -190,7 +191,7 @@ const LocationAdd: FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-end',
-                    width: '80%', //in line with image
+                    width: isMobile ? '90%' : '80%', //in line with image
                     overflow: 'hidden',
                     marginY: 1
                 }}>
@@ -214,7 +215,7 @@ const LocationAdd: FC = () => {
                     {/* Box for Map component */}
                     <Box
                         sx={{
-                            width: '66%',
+                            width: isMobile ? '100%' : '66%',
                             height: '30vh',
                             objectFit: 'cover',
                             // border: '2px solid #ccc', // Optional border for styling
@@ -224,7 +225,7 @@ const LocationAdd: FC = () => {
                         <WorldMap onSelectLocation={handleLocationSelect} />
                     </Box>
                     <FormControl
-                        sx={{ width: '66%' }}
+                        sx={{ width: isMobile ? '100%' : '66%', }}
                     >
                         {/* Address field */}
                         <Controller
@@ -258,9 +259,10 @@ const LocationAdd: FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-end',
-                    width: '80%', //in line with image
+                    width: isMobile ? '90%' : '80%', //in line with image
                     overflow: 'hidden',
-                    marginY: 1
+                    marginY: 1,
+                    marginBottom: 8,
                 }}>
                     <Button type='submit' variant="contained" color="primary"
                         sx={{ marginBottom: 2, }}>

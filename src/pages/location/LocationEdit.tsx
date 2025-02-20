@@ -213,6 +213,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                     alignItems: 'center',
                     paddingX: '8vh',
                     overflow: 'hidden',
+                    marginTop: isMobile ? 6 : 0,
                 }}>
                     {/* Main text */}
                     <Typography variant="h4" component="span" sx={{ display: 'flex', alignItems: 'center', marginBottom: '2vh' }}>
@@ -225,7 +226,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                         style={{
                             display: 'inline-block', //label behaves like block but only takes up the size of the content
                             cursor: 'pointer',
-                            width: '66%',  //set width relative on parent
+                            width: isMobile ? '100%' : '66%', //set width relative on parent
                         }}
                     >
                         {/* Hidden file input */}
@@ -257,7 +258,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                     </label>
 
                     {/* Location text-box */}
-                    <FormControl sx={{ width: '66%' }}>
+                    <FormControl sx={{ width: isMobile ? '100%' : '66%' }}>
                         {/* Address field */}
                         <Controller
                             name="address"
@@ -265,10 +266,6 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    // value={field.value} // Ensure controlled component
-                                    // onChange={(e) => {
-                                    //     field.onChange(e); // Update form state
-                                    // }}
                                     type='text'
                                     label="Location"
                                     error={!!errors.address}
@@ -287,19 +284,23 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                 <Box sx={{
                     position: 'relative',
                     display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'auto' : 'center',
                     justifyContent: 'space-between',
                     overflow: 'hidden',
                     marginY: 1,
-                    marginX: '21%',
+                    marginX: isMobile ? '9.5%' : '20.5%', //in line with text-box
+                    marginBottom: 8,
                 }}>
                     <Button variant="outlined" color="primary"
-                        sx={{ marginBottom: 2, border: 2 }}
+                        sx={{
+                            marginBottom: 2, border: 2,
+                            width: isMobile ? '100%' : 'auto',
+                        }}
                         onClick={triggerFileInput}>
                         Upload image
                     </Button>
-                    <Box>
+                    <Box sx={{ alignItems: isMobile ? 'flex-start' : 'auto', }}>
                         <Button type='submit' variant="contained" color="primary"
                             sx={{ marginBottom: 2, marginRight: 2 }}>
                             Save

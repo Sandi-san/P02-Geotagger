@@ -38,10 +38,12 @@ const AuthHeader: FC = () => {
                     <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
                 </Link>
                 {/* Text */}
-                <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
-                    <span style={{ color: theme.palette.primary.main }}>Geo</span>
-                    <span style={{ color: theme.palette.primary.dark }}>tagger</span>
-                </Typography>
+                <Link href="/" sx={{ textDecoration: 'none' }}>
+                    <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
+                        <span style={{ color: theme.palette.primary.main }}>Geo</span>
+                        <span style={{ color: theme.palette.primary.dark }}>tagger</span>
+                    </Typography>
+                </Link>
             </Box>
             {isMobile && (
                 <>
@@ -52,7 +54,7 @@ const AuthHeader: FC = () => {
                                 '&:hover': {
                                     cursor: 'pointer',
                                 }
-                            }} 
+                            }}
                             onClick={menuOpen} />
                     </Box>
                     <HeaderMenu isOpen={isMenuOpen} handleClose={menuClose} />

@@ -12,6 +12,7 @@ import userStore from '../../stores/user.store';
 import fetchUser from '../../utils/fetchLocalUser';
 import { UserType } from '../../models/user';
 import AuthHeader from '../../components/ui/AuthHeader';
+import saveLocalUser from '../../utils/loginUser';
 
 const Login: FC = () => {
   //mediaQuery for Responsive Web Design
@@ -50,14 +51,7 @@ const Login: FC = () => {
       tokenStorage.setToken(loginResponse.access_token)
       // console.log('Local user:', tokenStorage.getToken());
 
-      //if User is not locally saved yet, fetch the User from DB and login
-      if (!userStore.user) {
-        const fetchUserResponse = await fetchUser();
-        // console.log('Returned user:', fetchUserResponse);
-        if (typeof (fetchUserResponse as UserType) === 'object' &&
-          fetchUserResponse !== undefined && fetchUserResponse !== null)
-          userStore.login(fetchUserResponse)
-      }
+      saveLocalUser()
     }
     catch (err) {
       console.error("Error during login: ", err)

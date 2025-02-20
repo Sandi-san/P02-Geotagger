@@ -80,6 +80,10 @@ const Location: FC<LocationProps> = ({ locationId }) => {
 
                 setRefreshKey(prevKey => prevKey + 1)
             }
+            else {
+                //force call catch error block
+                throw new Error()
+            }
         }
         catch (err) {
             console.error("Error during creation of guess: ", err)

@@ -66,10 +66,12 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
                             <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
                         </Link>
                         {/* Text */}
+                        <Link href="/" sx={{ textDecoration: 'none' }}>
                         <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
                             <span style={{ color: theme.palette.primary.main }}>Geo</span>
                             <span style={{ color: theme.palette.primary.dark }}>tagger</span>
                         </Typography>
+                        </Link>
                     </Box>
                     <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end", flexGrow: 1, marginRight: '4vh', marginTop: 1, }}>
                         <Box component="img" src="/icon-close-mobile.svg" alt="X"

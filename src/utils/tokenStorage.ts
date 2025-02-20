@@ -1,18 +1,9 @@
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { UserType } from '../models/user';
 
 const user_prefix = 'access_token';
 
 //Save access_token into user storage (saves only access_token)
 const tokenStorage = {
-  //get user from access_token - DELETE
-  // getUser: (): UserType => {
-  //   if (typeof window === 'undefined') return {} as UserType;
-  //   return JSON.parse(
-  //     window.localStorage.getItem(`${user_prefix}`) as string,
-  //   ) as UserType;
-  // },
-  //get access_token
   getToken: (): string => {
     if (typeof window === 'undefined') return '';
     return JSON.parse(

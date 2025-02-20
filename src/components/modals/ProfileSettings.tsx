@@ -10,11 +10,14 @@ import theme from "../../theme";
 import { useUpdateUserMutation, useUpdateUserPasswordMutation, useUploadImageMutation } from "../../slices/api/user.slice";
 import getValidImagePath from "../../utils/validImagePath";
 import SuccessConformation from "./SuccessConformation";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 //use forwardRef to recieve a functional component (handleClose function), required by Modal
 const ProfileSettings = forwardRef((
     { handleClose }: { handleClose: () => void },
     ref) => {
+    const { isMobile } = useMediaQuery(720)
+
     const [showPasswordForm, setShowPasswordForm] = useState(false);
     const [showAvatarForm, setShowAvatarForm] = useState(false);
 
@@ -139,9 +142,10 @@ const ProfileSettings = forwardRef((
                             setShowError(true);
                         }
                         else {
-                            setApiError("An unexpected error has occured.");
-                            setShowError(true);
+                            //force call catch error block
+                            throw new Error()
                         }
+            
                     }
                 }
                 else {
@@ -210,6 +214,7 @@ const ProfileSettings = forwardRef((
                             <Box
                                 sx={{
                                     display: 'flex',
+                                    flexDirection: isMobile ? 'column' : 'row',
                                     gap: 2,
                                 }}
                             >

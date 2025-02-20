@@ -31,7 +31,7 @@ const App: FC = () => {
       else {
         // console.log("User data is set: ", userStore.user ? 'true' : 'false')
         //if local token is set, but user is not set, fetch user from DB
-        //if User is not locally saved yet, fetch the User from DB and login
+        //(code copied from loginUser.ts, just calling the method refuses the user to access ActivityLog) 
         if (!userStore.user) {
           try {
             const fetchUserResponse = await fetchUser();

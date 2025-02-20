@@ -13,6 +13,7 @@ import { tokenStorage } from '../../utils/tokenStorage';
 import fetchUser from '../../utils/fetchLocalUser';
 import { UserType } from '../../models/user';
 import AuthHeader from '../../components/ui/AuthHeader';
+import saveLocalUser from '../../utils/loginUser';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
@@ -74,14 +75,7 @@ const Register: FC = () => {
                     userStore.login(imageUploadResponse.data)
             }
             //image was not uploaded or User data was not returned 
-            if (!userStore.user) {
-                //fetch newly created User from DB (with access token) and login
-                const fetchUserResponse = await fetchUser();
-                // console.log('Returned user:', fetchUserResponse);
-                if (typeof (fetchUserResponse as UserType) === 'object' &&
-                    fetchUserResponse !== undefined && fetchUserResponse !== null)
-                    userStore.login(fetchUserResponse)
-            }
+            saveLocalUser()
         }
         catch (err) {
             console.error("Error during registration: ", err)

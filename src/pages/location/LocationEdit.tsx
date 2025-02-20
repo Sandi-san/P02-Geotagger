@@ -116,8 +116,8 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                         setShowError(true);
                     }
                     else {
-                        setApiError("An unexpected error has occured.");
-                        setShowError(true);
+                        //force call catch error block
+                        throw new Error()
                     }
                 }
                 else {

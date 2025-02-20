@@ -48,7 +48,6 @@ const ForgottenPassword: FC = () => {
                 setShowSuccess(true)
             }
             else {
-                //TODO: copy to other pages
                 //force call catch error block
                 throw new Error()
             }

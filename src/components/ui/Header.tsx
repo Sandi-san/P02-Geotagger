@@ -68,6 +68,7 @@ const Header: FC = () => {
                         <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
                     </Link>
                     {/* Text */}
+                    <Link href="/" sx={{ textDecoration: 'none' }}>
                     <Typography variant="h4" component="span" sx={{
                         //do not display if mobile mode is enabled and showing tokens box
                         display: isMobile && tokenStorage.getToken() ? "none" : "flex",
@@ -76,6 +77,7 @@ const Header: FC = () => {
                         <span style={{ color: theme.palette.primary.main }}>Geo</span>
                         <span style={{ color: theme.palette.primary.dark }}>tagger</span>
                     </Typography>
+                    </Link>
                 </Box>
                 {/* Far-right items */}
                 {/* If screen is mobile */}

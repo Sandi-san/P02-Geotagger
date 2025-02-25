@@ -1,19 +1,19 @@
 import { FC, useEffect, useState } from 'react';
 import { Avatar, Box, Button, DialogContent, Modal, Typography } from '@mui/material';
 import Card from '../../components/ui/Card';
-import { FetchGuessType, FetchPaginatedGuessType } from '../../models/guess';
-import { FetchPaginatedLocationType, LocationType } from '../../models/location';
+import { FetchGuessType } from '../../models/guess';
+import { LocationType } from '../../models/location';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import userStore from '../../stores/user.store';
 import { UserType } from '../../models/user';
 import Layout from '../../components/ui/Layout';
 import getValidImagePath from '../../utils/validImagePath';
 import { useGetGuessesQuery, useGetLocationsQuery } from '../../slices/api/user.slice';
-import { computeHeadingLevel } from '@testing-library/react';
 import Loading from '../../components/ui/Loading';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
 import { useNavigate } from 'react-router-dom';
+import { routes } from '../../constants/routesConstants';
 
 const Profile: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -27,7 +27,7 @@ const Profile: FC = () => {
     useEffect(() => {
         if (!userStore.user) {
             console.error("Cannot access local user object on this widget! Redirecting...")
-            navigate("/")
+            navigate(routes.HOME)
         }
     }, []);
 
@@ -102,10 +102,11 @@ const Profile: FC = () => {
         }
     }
 
+    //show error instead of rendering page if error on api occurs
     if (locationsError || guessesError) {
         return <Modal
-            open={showError} // Modal visibility tied to the showError state
-            onClose={() => setShowError(false)} // Close the modal on backdrop click
+            open={showError}
+            onClose={() => setShowError(false)}
             aria-labelledby="error-modal-title"
             aria-describedby="error-modal-description"
         >
@@ -217,7 +218,6 @@ const Profile: FC = () => {
                         variant="contained"
                         color='primary'
                         href='/'
-                        // onClick={() => console.log("Open locations")}
                         sx={{ marginTop: 2, flex: 2 }}
                     >
                         Go to locations

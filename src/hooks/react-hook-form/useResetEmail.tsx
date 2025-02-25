@@ -6,6 +6,7 @@ export interface EmailUserFields {
   email: string;
 }
 
+//for passing email for sending password reset token
 export const useEmailForm = () => {
   const EmailSchema = Yup.object().shape({
     email: Yup.string().email().required('Please enter a valid email'),

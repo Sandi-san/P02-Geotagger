@@ -10,6 +10,8 @@ import { PasswordUserFields, usePasswordForm } from '../../hooks/react-hook-form
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SuccessConformation from '../../components/modals/SuccessConformation';
 import AuthHeader from '../../components/ui/AuthHeader';
+import isConnectionError from '../../utils/connectionErrorChecker';
+import { routes } from '../../constants/routesConstants';
 
 const ResetPassword: FC = () => {
     //mediaQuery for Responsive Web Design
@@ -71,10 +73,9 @@ const ResetPassword: FC = () => {
             }
             else {
                 //check if thrown error is a FETCH_ERROR
-                if (typeof err === 'object' && (err !== undefined || null)
-                    && 'status' in (err as any) && 'error' in (err as any)) {
-                    setApiStatus((err as any).status);
-                    setApiError("Check your connection. " + (err as any).error);
+                if (isConnectionError(err)) {
+                    setApiStatus(err.status);
+                    setApiError("Check your connection. " + err.error)
                 }
                 else
                     setApiError("An unexpected error has occured.");
@@ -104,12 +105,12 @@ const ResetPassword: FC = () => {
         }
     }, []);
 
-    // Handle invalid token
+    //handle invalid token
     if (showTokenError) {
         return (
             <Modal
                 open={showTokenError}
-                onClose={() => navigate('/')} // Redirect on close
+                onClose={() => navigate(routes.HOME)} //redirect on close
                 aria-labelledby="error-modal-title"
                 aria-describedby="error-modal-description"
             >
@@ -117,7 +118,7 @@ const ResetPassword: FC = () => {
                     <ErrorDisplay message={apiError} errorStatus={apiStatus}
                         handleClose={() => {
                             setShowTokenError(false);
-                            navigate('/');
+                            navigate(routes.HOME);
                         }} />
                 </DialogContent>
             </Modal>
@@ -147,8 +148,6 @@ const ResetPassword: FC = () => {
                         alignItems: 'center',
                         bgcolor: 'background.paper',
                         paddingX: isMobile ? 0 : 8,
-                        // width: '100%',
-                        // maxWidth: '100vh',
                         minHeight: 0,
                         overflow: 'auto',
                     }}
@@ -323,13 +322,13 @@ const ResetPassword: FC = () => {
                     {showSuccess && (
                         <Modal
                             open={showSuccess}
-                            onClose={() => navigate("/login")}
+                            onClose={() => navigate(routes.LOGIN)}
                             aria-labelledby="success-modal-title"
                             aria-describedby="success-modal-description"
                         >
                             <DialogContent>
                                 <SuccessConformation
-                                    handleClose={() => navigate("/login")}
+                                    handleClose={() => navigate(routes.LOGIN)}
                                     title={"Reset successful"}
                                     message={successResponse} />
                             </DialogContent>

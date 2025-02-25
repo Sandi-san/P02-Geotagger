@@ -30,6 +30,7 @@ const App: FC = () => {
       }
       else {
         // console.log("User data is set: ", userStore.user ? 'true' : 'false')
+        
         //if local token is set, but user is not set, fetch user from DB
         //(code copied from loginUser.ts, just calling the method refuses the user to access ActivityLog) 
         if (!userStore.user) {

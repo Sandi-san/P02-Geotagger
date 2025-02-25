@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { FC } from "react";
 import theme from "../../theme";
 import useMediaQuery from "../../hooks/useMediaQuery";

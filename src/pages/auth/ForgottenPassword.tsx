@@ -10,6 +10,7 @@ import { EmailUserFields, useEmailForm } from '../../hooks/react-hook-form/useRe
 import SuccessConformation from '../../components/modals/SuccessConformation';
 import Loading from '../../components/ui/Loading';
 import AuthHeader from '../../components/ui/AuthHeader';
+import isConnectionError from '../../utils/connectionErrorChecker';
 
 const ForgottenPassword: FC = () => {
     //mediaQuery for Responsive Web Design
@@ -61,10 +62,9 @@ const ForgottenPassword: FC = () => {
             }
             else {
                 //check if thrown error is a FETCH_ERROR
-                if (typeof err === 'object' && (err !== undefined || null)
-                    && 'status' in (err as any) && 'error' in (err as any)) {
-                    setApiStatus((err as any).status);
-                    setApiError("Check your connection. " + (err as any).error);
+                if (isConnectionError(err)) {
+                    setApiStatus(err.status);
+                    setApiError("Check your connection. " + err.error)
                 }
                 else
                     setApiError("An unexpected error has occured.");
@@ -72,7 +72,7 @@ const ForgottenPassword: FC = () => {
             }
         }
         finally {
-            setLoading(false); // Stop loading after response
+            setLoading(false); //stop loading after response
         }
     }
 
@@ -150,7 +150,6 @@ const ForgottenPassword: FC = () => {
                         display: 'flex',
                         textAlign: 'center',
                         justifyContent: 'space-between',
-                        // minHeight: 0,
                         maxWidth: '45vh',
                     }}>
                         <Box sx={{ alignItems: 'flex-start', textAlign: 'left' }}>
@@ -193,8 +192,8 @@ const ForgottenPassword: FC = () => {
                     {/* If api error occurs, show error widget  */}
                     {showError && (
                         <Modal
-                            open={showError} // Modal visibility tied to the showError state
-                            onClose={() => setShowError(false)} // Close the modal on backdrop click
+                            open={showError}
+                            onClose={() => setShowError(false)}
                             aria-labelledby="error-modal-title"
                             aria-describedby="error-modal-description"
                         >

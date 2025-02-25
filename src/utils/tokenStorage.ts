@@ -10,14 +10,17 @@ const tokenStorage = {
       window.localStorage.getItem(`${user_prefix}`) as string,
     );
   },
+
   //set access_token
   setToken: (token: string): void => {
     window.localStorage.setItem(`${user_prefix}`, JSON.stringify(token));
   },
+
   //clear access_token
   clearToken: (): void => {
     window.localStorage.removeItem(`${user_prefix}`);
   },
+  
   isTokenValid: (): boolean => {
     try {
       const token = window.localStorage.getItem(`${user_prefix}`) as string
@@ -37,12 +40,6 @@ const tokenStorage = {
       return false
     }
   },
-  //set token for explicit period of time
-  // setTokenExpiration: (token: string, durationInMs: number) => {
-  //   const expirationTime = Date.now() + durationInMs
-  //   const tokenData = {token, expirationTime}
-  //   window.localStorage.setItem(`${user_prefix}`,JSON.stringify(tokenData))
-  // },
 };
 
 export { tokenStorage };

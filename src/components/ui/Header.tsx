@@ -8,6 +8,7 @@ import ProfileSettings from "../modals/ProfileSettings";
 import getValidImagePath from "../../utils/validImagePath";
 import { useNavigate } from "react-router-dom";
 import HeaderMenu from "../modals/HeaderMenu";
+import { routes } from "../../constants/routesConstants";
 
 const Header: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -34,10 +35,10 @@ const Header: FC = () => {
     }
 
     const handleOpenActivityLog = () => {
-        navigate("/activity-log")
+        navigate(routes.LOG)
     }
     const handleOpenHomePage = () => {
-        navigate("/")
+        navigate(routes.HOME)
     }
 
     //check if User avatar image can be displayed 
@@ -63,7 +64,6 @@ const Header: FC = () => {
                 {/* Far-left items */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* Logo */}
-                    {/* <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} /> */}
                     <Link href="/">
                         <Box component="img" src="/logo.svg" alt="Logo" sx={{ height: 40 }} />
                     </Link>
@@ -135,7 +135,6 @@ const Header: FC = () => {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    // marginLeft: 1,
                                                     bgcolor: 'primary.main',
                                                     '&:hover': {
                                                         bgcolor: 'primary.light',

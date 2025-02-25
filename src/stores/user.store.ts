@@ -27,7 +27,7 @@ class UserStore {
     this.user = undefined;
   }
 
-  //set guessToken (same as login for token only)
+  //set guessToken (same as login but for token only)
   setToken(token: number){
     if(this.user)
       this.user.guessTokens = token

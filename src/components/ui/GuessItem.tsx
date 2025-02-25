@@ -42,7 +42,7 @@ const GuessItem: FC<GuessItemProps> = ({
             case 1: return 'linear-gradient(to right, #FE7F2D, #FCCA46)'; // Gold
             case 2: return 'linear-gradient(to right, #B3AEAE, #D6D6D6)'; // Silver
             case 3: return 'linear-gradient(to right, #924107, #E8913A)'; // Bronze
-            default: return '#233D4D'; // Default color for ranks 4 and beyond
+            default: return '#233D4D'; // Default color
         }
     };
 
@@ -50,9 +50,9 @@ const GuessItem: FC<GuessItemProps> = ({
     const formatDate = (creationDate: Date) => {
         const convertedDate = new Date(creationDate)
         const now = new Date()
-        const diffMs = now.getTime() - convertedDate.getTime() // Difference in milliseconds
-        const diffMinutes = Math.floor(diffMs / (1000 * 60)) // Convert to minutes
-        const diffHours = Math.floor(diffMinutes / 60) // Convert to hours
+        const diffMs = now.getTime() - convertedDate.getTime() //difference in milliseconds
+        const diffMinutes = Math.floor(diffMs / (1000 * 60)) //convert to minutes
+        const diffHours = Math.floor(diffMinutes / 60) //convert to hours
 
         //return text
         if (diffMinutes < 60) {
@@ -116,8 +116,8 @@ const GuessItem: FC<GuessItemProps> = ({
                             width: validImage ? '100%' : '80%',
                             height: validImage ? '100%' : '80%',
                             objectFit: 'cover',
-                            boxSizing: 'border-box', //ensures padding is accounted inside the box
-                            borderRadius: validImage ? '100%' : '50%', //ensures the placeholder image remains circular
+                            boxSizing: 'border-box', //padding is accounted inside the box
+                            borderRadius: validImage ? '100%' : '50%', //placeholder image remains circular
                         }}
                         onError={(e) => {
                             setValidImage(false);

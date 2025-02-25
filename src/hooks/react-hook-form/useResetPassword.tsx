@@ -8,6 +8,7 @@ export interface PasswordUserFields {
   resetToken: string;
 }
 
+//form for resetting user password (forgotten password)
 export const usePasswordForm = () => {
   const PasswordSchema = Yup.object().shape({
     password: Yup.string()

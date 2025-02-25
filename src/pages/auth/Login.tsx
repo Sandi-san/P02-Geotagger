@@ -8,11 +8,9 @@ import theme from '../../theme';
 import { LoginUserFields, useLoginForm } from '../../hooks/react-hook-form/useLogin';
 import { useLoginUserMutation } from '../../slices/api/auth.slice';
 import { tokenStorage } from '../../utils/tokenStorage';
-import userStore from '../../stores/user.store';
-import fetchUser from '../../utils/fetchLocalUser';
-import { UserType } from '../../models/user';
 import AuthHeader from '../../components/ui/AuthHeader';
 import saveLocalUser from '../../utils/loginUser';
+import isConnectionError from '../../utils/connectionErrorChecker';
 
 const Login: FC = () => {
   //mediaQuery for Responsive Web Design
@@ -22,11 +20,6 @@ const Login: FC = () => {
   const { handleSubmit, errors, control } = useLoginForm();
   //initialize mutation hook for login User (register user api call)
   const [loginUser] = useLoginUserMutation()
-
-  //initialize mutation hook to redirect to Google OAuth page
-  // const [redirectOAuthUser] = useRedirectOAuthUserMutation()
-  //initialize mutation hook for login User with OAuth
-  // const [loginOAuthUser] = useLoginOAuthUserMutation()
 
   //toggle buttons for showing values inside password form
   const [showPassword, setShowPassword] = useState(false);
@@ -62,10 +55,9 @@ const Login: FC = () => {
       }
       else {
         //check if thrown error is a FETCH_ERROR
-        if (typeof err === 'object' && (err !== undefined || null)
-          && 'status' in (err as any) && 'error' in (err as any)) {
-          setApiStatus((err as any).status);
-          setApiError("Check your connection. " + (err as any).error);
+        if (isConnectionError(err)) {
+          setApiStatus(err.status);
+          setApiError("Check your connection. " + err.error);
         }
         else
           setApiError("An unexpected error has occured.");
@@ -74,6 +66,7 @@ const Login: FC = () => {
     }
   }
 
+  //access Google OAuth page
   const handleOAuthLogin = async () => {
     try {
       window.location.href = `${process.env.REACT_APP_BACKEND_DOMAIN}/auth/google`
@@ -258,8 +251,8 @@ const Login: FC = () => {
           {/* If api error occurs, show error widget  */}
           {showError && (
             <Modal
-              open={showError} // Modal visibility tied to the showError state
-              onClose={() => setShowError(false)} // Close the modal on backdrop click
+              open={showError}
+              onClose={() => setShowError(false)}
               aria-labelledby="error-modal-title"
               aria-describedby="error-modal-description"
             >
@@ -268,9 +261,6 @@ const Login: FC = () => {
               </DialogContent>
             </Modal>
           )}
-          {/* {isLoading && (
-                        <Typography color='info'>Registering...</Typography>
-                    )}*/}
         </Box>
         {!isMobile && (
           <Box

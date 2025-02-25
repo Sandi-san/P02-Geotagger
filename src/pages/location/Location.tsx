@@ -23,7 +23,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
     const isUnpadded = useMediaQuery(1000)
 
     //form for creating/updating Location 
-    const { handleSubmit, control, errors, setValue } = useCreateGuessForm();
+    const { handleSubmit, setValue } = useCreateGuessForm();
     //location data
     const { data: dataLocation, error: locationError, isLoading: isLoadingLocation } = useGetLocationQuery({ id: locationId })
 
@@ -135,7 +135,6 @@ const Location: FC<LocationProps> = ({ locationId }) => {
             <Box sx={{
                 position: 'relative',
                 display: 'flex',
-                // height: '100vh',
                 width: '100%',
                 flexDirection: isMobile ? 'column' : 'row',
                 textAlign: 'center',
@@ -146,7 +145,6 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                 <Box
                     sx={{
                         flex: 1,
-                        // height: '100%',
                         bgcolor: 'background.paper',
                         minHeight: 0,
                     }}
@@ -182,7 +180,6 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                                     backgroundColor: '#f0f0f0',
                                     display: 'inline-block', //label behaves like block but only takes up the size of the content
                                     borderRadius: 2,
-                                    // width: '66%',  //set width relative on parent    
                                 }}
                             />
                         </Box>
@@ -204,8 +201,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                                     width: '100%',
                                     height: '30vh',
                                     objectFit: 'cover',
-                                    // border: '2px solid #ccc', // Optional border for styling
-                                    backgroundColor: '#f0f0f0', // Fallback color if no image
+                                    backgroundColor: '#f0f0f0',
                                 }}
                             >
                                 <WorldMap onSelectLocation={handleLocationSelect} />
@@ -280,8 +276,6 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                     sx={{
                         flex: 1,
                         height: '100vh', //stretch through entire height
-                        // justifyContent: 'center',
-                        // alignItems: 'center',
                         marginLeft: isUnpadded.isMobile ? 1 : 2,
                         marginRight: isUnpadded.isMobile ? '2vh' : '8vh',
                         marginTop: isMobile ? 4 : 0,

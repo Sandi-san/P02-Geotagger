@@ -1,9 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RegisterUserFields } from '../../hooks/react-hook-form/useRegister';
 import { LoginUserFields } from '../../hooks/react-hook-form/useLogin';
-import { CreateUpdateUserForm } from '../../hooks/react-hook-form/useCreateUpdateUser';
 import { EmailUserFields } from '../../hooks/react-hook-form/useResetEmail';
-import { PasswordForm, PasswordUserFields } from '../../hooks/react-hook-form/useResetPassword';
+import { PasswordUserFields } from '../../hooks/react-hook-form/useResetPassword';
 
 //api for /user route in backend
 export const authSlice = createApi({
@@ -31,14 +30,13 @@ export const authSlice = createApi({
       query: () => ({
         url: '/google',
         method: 'GET',
-        credentials: 'include', // Include cookies if needed
+        credentials: 'include', //include cookies
       }),
     }),
     loginOAuthUser: builder.mutation<{ access_token: string }, void>({
       query: () => ({
         url: '/google/redirect',
         method: 'GET',
-        // credentials: 'include', // Include cookies if needed
       }),
     }),
     forgottenPassword: builder.mutation<{ response: string }, EmailUserFields>({

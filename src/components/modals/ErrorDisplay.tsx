@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { Box, Typography, Button, Alert } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 
 interface ErrorDisplayProps {
     message: string; //message to display
@@ -31,7 +31,6 @@ const ErrorDisplay = forwardRef<HTMLDivElement, ErrorDisplayProps>(
                     borderRadius: 2,
                 }}
             >
-                {/* <Alert severity="error" sx={{}}> */}
                 <Typography variant="h6" component="h2" color='error' gutterBottom>
                     Oops! Error
                     {isCodeNumber(errorStatus) ? (` code ${errorStatus}`) :
@@ -40,7 +39,6 @@ const ErrorDisplay = forwardRef<HTMLDivElement, ErrorDisplayProps>(
                 <Typography variant="body1" color='error' sx={{ marginBottom: 0 }}>
                     {message}
                 </Typography>
-                {/* </Alert> */}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                     <Button variant="contained" color="primary"
                         onClick={handleClose}>

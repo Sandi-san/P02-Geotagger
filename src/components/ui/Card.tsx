@@ -8,6 +8,7 @@ import { useDeleteLocationMutation } from "../../slices/api/location.slice"
 import ErrorDisplay from "../modals/ErrorDisplay"
 import isApiError from "../../utils/apiErrorChecker"
 import DeleteQuoteConformation from "../modals/DeleteQuoteConformation"
+import { routes } from "../../constants/routesConstants"
 
 interface CardProps {
     imageUrl: string //image to display on card
@@ -36,11 +37,11 @@ const Card: FC<CardProps> = ({
 
     const navigate = useNavigate()
     const handleOpenEditLocation = () => {
-        navigate(`/location/edit/${id}`)
+        navigate(`${routes.LOCATION_EDIT}/${id}`)
     }
     const handleOpenLocation = () => {
         if (isLocation && !isLocked)
-            navigate(`/location/${id}`)
+            navigate(`${routes.LOCATION}/${id}`)
     }
 
     //states for opening Error Modal
@@ -97,6 +98,7 @@ const Card: FC<CardProps> = ({
         }
     }
 
+    //display distance in km if erorr is more than 1000 meters
     const formatDistance = (errorDistance: number) => {
         if(errorDistance<1000)
             return `${errorDistance} m`
@@ -182,7 +184,6 @@ const Card: FC<CardProps> = ({
                             minWidth: '6vh',
                             minHeight: '6vh',
                         }}
-                        // onClick={() => console.log(`Delete location ${id}`)}
                         onClick={handleOpenDeleteLocation}
                     >
                         <Box component="img" src="/icon-trash.svg" alt="X" sx={{ height: '4vh' }} />

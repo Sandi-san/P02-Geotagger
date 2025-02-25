@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -22,7 +22,6 @@ const WorldMap: FC<WorldMapProps> = ({ onSelectLocation }) => {
     // Component to handle map click events
     const MapClickHandler = ({ onSelectLocation }:
         { onSelectLocation: (lat: number, lng: number, address: string) => void }) => {
-        // const MapClickHandler = ({ setPinPosition }: { setPinPosition: (pos: [number, number]) => void }) => {
         useMapEvents({
             click: async (event: L.LeafletMouseEvent) => {
                 const { lat, lng } = event.latlng;
@@ -34,7 +33,7 @@ const WorldMap: FC<WorldMapProps> = ({ onSelectLocation }) => {
             },
         });
 
-        return null; // This component doesn't render anything visually
+        return null; //component doesn't render anything visually
     };
 
     //Reverse Geocode: get address from latitude and longitude using openstreemaps API
@@ -51,7 +50,7 @@ const WorldMap: FC<WorldMapProps> = ({ onSelectLocation }) => {
 
     return (
         <MapContainer
-            center={[20, 0]} // Centered on the world map
+            center={[20, 0]} //centered on the world map
             zoom={2}
             style={{ height: "100%", width: "100%" }}
         >

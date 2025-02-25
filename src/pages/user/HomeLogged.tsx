@@ -232,8 +232,8 @@ const HomeLogged: FC = () => {
 
             {showError && (
                 <Modal
-                    open={showError} // Modal visibility tied to the showError state
-                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    open={showError}
+                    onClose={() => setShowError(false)}
                     aria-labelledby="error-modal-title"
                     aria-describedby="error-modal-description"
                 >

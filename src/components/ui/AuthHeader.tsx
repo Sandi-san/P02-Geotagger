@@ -1,4 +1,4 @@
-import { Box, Drawer, Link, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import theme from "../../theme";
 import useMediaQuery from "../../hooks/useMediaQuery";
@@ -22,7 +22,6 @@ const AuthHeader: FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 width: isMobile ? 'stretch' : '',
-                // width: 1,
                 padding: isMobile ? 2 : 0,
                 justifyContent: isMobile ? 'space-between' : 'flex-start',
                 boxShadow: isMobile ? 3 : 0,

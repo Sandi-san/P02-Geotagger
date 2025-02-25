@@ -109,7 +109,6 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: '100%',
-                                // color: 'gray',
                                 fontStyle: 'italic',
                                 fontWeight: 'bold',
                             }}
@@ -124,7 +123,6 @@ const GuessesLeaderboard: FC<GuessesLeaderboardProps> = ({ locationId, refreshKe
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: '100%',
-                                // color: 'gray',
                                 fontStyle: 'italic',
                             }}
                         >

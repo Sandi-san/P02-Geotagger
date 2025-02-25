@@ -10,10 +10,9 @@ import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
 import { useUploadImageMutation } from '../../slices/api/user.slice';
 import { tokenStorage } from '../../utils/tokenStorage';
-import fetchUser from '../../utils/fetchLocalUser';
-import { UserType } from '../../models/user';
 import AuthHeader from '../../components/ui/AuthHeader';
 import saveLocalUser from '../../utils/loginUser';
+import isConnectionError from '../../utils/connectionErrorChecker';
 
 const Register: FC = () => {
     //mediaQuery for Responsive Web Design
@@ -86,10 +85,9 @@ const Register: FC = () => {
             }
             else {
                 //check if thrown error is a FETCH_ERROR
-                if (typeof err === 'object' && (err !== undefined || null)
-                    && 'status' in (err as any) && 'error' in (err as any)) {
-                    setApiStatus((err as any).status);
-                    setApiError("Check your connection. " + (err as any).error);
+                if (isConnectionError(err)) {
+                    setApiStatus(err.status);
+                    setApiError("Check your connection. " + err.error)
                 }
                 else
                     setApiError("An unexpected error has occured.");
@@ -347,8 +345,8 @@ const Register: FC = () => {
                     {/* If api error occurs, show error widget  */}
                     {showError && (
                         <Modal
-                            open={showError} // Modal visibility tied to the showError state
-                            onClose={() => setShowError(false)} // Close the modal on backdrop click
+                            open={showError}
+                            onClose={() => setShowError(false)}
                             aria-labelledby="error-modal-title"
                             aria-describedby="error-modal-description"
                         >
@@ -357,9 +355,6 @@ const Register: FC = () => {
                             </DialogContent>
                         </Modal>
                     )}
-                    {/* {isLoading && (
-                        <Typography color='info'>Registering...</Typography>
-                    )}*/}
                 </Box>
                 {!isMobile && (
                     <Box

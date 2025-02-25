@@ -84,7 +84,6 @@ export const AppRoutes: AppRoute[] = [
     path: '/location/:id',
     children: <LocationWrapper />,
   },
-  
   {
     type: RouteType.PRIVATE,
     path: '/activity-log',

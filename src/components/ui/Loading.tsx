@@ -3,8 +3,8 @@ import { FC } from 'react';
 import theme from '../../theme';
 
 interface LoadingProps {
-  backgroundColor?: string,
-  backgroundOpacity?: number,
+  backgroundColor?: string, //option to pass background color for widget
+  backgroundOpacity?: number, //option to pass background opacity for widget
 }
 
 //custom loading spinner widget for when data is loading
@@ -20,11 +20,11 @@ const Loading: FC<LoadingProps> = ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh", // Full-page height
+        height: "100vh", //full-page height
         // background: "linear-gradient(135deg, #667eea, #764ba2)",
         bgcolor: backgroundColor
-          ? alpha(backgroundColor, backgroundOpacity ?? 1) // Default to full opacity
-          : "transparent", // Default if no color is provided
+          ? alpha(backgroundColor, backgroundOpacity ?? 1) //default to full opacity
+          : "transparent", //default if no color is provided
       }}
     >
       {/* Animated Loading Spinner */}

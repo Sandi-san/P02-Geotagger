@@ -119,7 +119,7 @@ const HomeUnlogged: FC = () => {
                     }}
                 >
                     <Card
-                        //check if locations is valid array and can be accessed at index, 
+                        //check if locations is valid array (was fetched) and can be accessed at index, 
                         //then check if it has an image. if these conditions are not all fullfilled
                         //display the placeholder image instead
                         imageUrl={locations ? (locations.at(0) ?

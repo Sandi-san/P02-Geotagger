@@ -3,7 +3,6 @@ import { Box, Button, DialogContent, FormControl, Modal, TextField, Typography }
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Layout from '../../components/ui/Layout';
 import theme from '../../theme';
-import { CreateLocationFields, useCreateLocationForm } from '../../hooks/react-hook-form/useCreateLocation';
 import { useGetLocationQuery, useUpdateLocationMutation, useUploadImageMutation } from '../../slices/api/location.slice';
 import isApiError from '../../utils/apiErrorChecker';
 import ErrorDisplay from '../../components/modals/ErrorDisplay';
@@ -14,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import getValidImagePath from '../../utils/validImagePath';
 import { Controller } from 'react-hook-form';
 import { UpdateLocationFields, useUpdateLocationForm } from '../../hooks/react-hook-form/useUpdateLocation';
+import { routes } from '../../constants/routesConstants';
 
 interface LocationEditProps {
     id: number
@@ -143,7 +143,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
         if (window.history.length > 2) {
             navigate(-1); //go back if there's history
         } else {
-            navigate('/profile'); //otherwise go to Profile page
+            navigate(routes.PROFILE); //otherwise go to Profile page
         }
     };
 
@@ -153,6 +153,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
             const checkAccess = location.userId === userStore.user?.id;
             // console.log("Access: ", checkAccess);
             // console.log(`Loc: ${location.userId} User: ${userStore.user?.id}`);
+            
             //handle unauthorization (user tries to delete location that isn't theirs)
             if (!checkAccess) {
                 console.log("Access denied! User unauthorized.");
@@ -186,7 +187,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
         return (
             <Modal
                 open={showAuthError}
-                onClose={() => navigate('/')} // Redirect on close
+                onClose={() => navigate(routes.HOME)} //redirect on close
                 aria-labelledby="error-modal-title"
                 aria-describedby="error-modal-description"
             >
@@ -194,7 +195,7 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                     <ErrorDisplay message={apiError} errorStatus={apiStatus}
                         handleClose={() => {
                             setShowAuthError(false);
-                            navigate('/');
+                            navigate(routes.HOME);
                         }} />
                 </DialogContent>
             </Modal>
@@ -252,7 +253,6 @@ const LocationEdit: FC<LocationEditProps> = ({ id }) => {
                                 objectFit: 'cover',
                                 backgroundColor: '#f0f0f0',
                                 borderRadius: 2,
-                                // border: '2px solid #ccc',
                             }}
                         />
                     </label>

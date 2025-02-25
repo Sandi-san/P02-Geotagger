@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import Layout from "../../components/ui/Layout";
-import { Avatar, Box, DialogContent, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, DialogContent, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import userStore from "../../stores/user.store";
 import { useNavigate } from "react-router-dom";
 import { FetchActionType } from "../../models/action";
@@ -10,6 +10,7 @@ import Loading from "../../components/ui/Loading";
 import ErrorDisplay from "../../components/modals/ErrorDisplay";
 import isApiError from "../../utils/apiErrorChecker";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { routes } from "../../constants/routesConstants";
 
 const ActivityLog: FC = () => {
     const { isMobile } = useMediaQuery(720)
@@ -35,7 +36,7 @@ const ActivityLog: FC = () => {
     useEffect(() => {
         if (userStore.user?.role !== "admin") {
             console.error("Unauthorized user. Redirecting to home page.")
-            navigate('/')
+            navigate(routes.HOME)
         }
     }, []);
 
@@ -250,8 +251,8 @@ const ActivityLog: FC = () => {
 
             {showError && (
                 <Modal
-                    open={showError} // Modal visibility tied to the showError state
-                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    open={showError}
+                    onClose={() => setShowError(false)}
                     aria-labelledby="error-modal-title"
                     aria-describedby="error-modal-description"
                 >

@@ -180,7 +180,6 @@ const LocationAdd: FC = () => {
                                 objectFit: 'cover',
                                 backgroundColor: '#f0f0f0',
                                 borderRadius: 2,
-                                // border: '2px solid #ccc',
                             }}
                         />
                     </label>
@@ -218,8 +217,7 @@ const LocationAdd: FC = () => {
                             width: isMobile ? '100%' : '66%',
                             height: '30vh',
                             objectFit: 'cover',
-                            // border: '2px solid #ccc', // Optional border for styling
-                            backgroundColor: '#f0f0f0', // Fallback color if no image
+                            backgroundColor: '#f0f0f0',
                         }}
                     >
                         <WorldMap onSelectLocation={handleLocationSelect} />
@@ -272,8 +270,8 @@ const LocationAdd: FC = () => {
             </form>
             {showError && (
                 <Modal
-                    open={showError} // Modal visibility tied to the showError state
-                    onClose={() => setShowError(false)} // Close the modal on backdrop click
+                    open={showError}
+                    onClose={() => setShowError(false)}
                     aria-labelledby="error-modal-title"
                     aria-describedby="error-modal-description"
                 >

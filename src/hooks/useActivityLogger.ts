@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import userStore from "../stores/user.store";
 import { useSaveActionsMutation } from "../slices/api/user.slice";
 import { ActionType } from "../models/action";
@@ -16,9 +16,9 @@ const useActivityLogger = () => {
 
     //input debouncer
     let inputTimeout: NodeJS.Timeout | null = null;
-    let lastInputValues: Record<string, string> = {}; // Track previous values of inputs
+    let lastInputValues: Record<string, string> = {}; //track previous values of inputs
 
-    // Function to log user actions
+    //function to log user actions
     const logAction = (action: string, type: string, newValue?: string) => {
         setLogs((prevLogs) => [
             ...prevLogs,
@@ -33,7 +33,6 @@ const useActivityLogger = () => {
         ]);
     };
 
-    // Handle Scroll Logging with Debounce
     const handleScroll = () => {
         if (!isScrolling) {
             isScrolling = true;
@@ -48,10 +47,9 @@ const useActivityLogger = () => {
         }, 500);
     };
 
-    // Handle Input Logging with Debounce
     const handleInputChange = (event: Event) => {
         const target = event.target as HTMLInputElement;
-        const fieldId = target.name || target.id || "unknown-field"; // Unique identifier for the input field
+        const fieldId = target.name || target.id || "unknown-field";
         const newValue = target.value;
         const oldValue = lastInputValues[fieldId] || "";
 
@@ -61,12 +59,12 @@ const useActivityLogger = () => {
             if (newValue !== oldValue) {
                 const actionType = newValue.length > oldValue.length ? "added value" : "removed value";
                 logAction(actionType, "input", newValue);
-                lastInputValues[fieldId] = newValue; // Update last known value
+                lastInputValues[fieldId] = newValue; //update last known value
             }
-        }, 500); // Wait 500ms after last keypress before logging
+        }, 500); //wait 500ms after last keypress before logging
     };
 
-    // Event listeners for clicks, scrolls, and inputs
+    //event listeners for clicks, scrolls, and inputs
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
@@ -85,15 +83,16 @@ const useActivityLogger = () => {
     }, []);
 
 
-    // Send logs to the backend when the user navigates to a new page
+    //pass saved logs to backend when user navigates to new page
     useEffect(() => {
         //do not log if user is admin
         if (logs.length > 0 && userStore.user?.role !== "admin") {
-            console.log("Actions: ", logs)
+            // console.log("Actions: ", logs)
             const response = saveActions({ actions: logs })
                 .unwrap()
-                .then(() => setLogs([])) // Clear logs after successful submission
+                .then(() => setLogs([])) //clear logs after successful submission
                 .catch(console.error);
+            // console.log("Actions: ", response)
         }
     }, [location.pathname]);
 

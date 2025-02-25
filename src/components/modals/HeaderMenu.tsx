@@ -7,6 +7,7 @@ import getValidImagePath from '../../utils/validImagePath';
 import { UserType } from '../../models/user';
 import userStore from '../../stores/user.store';
 import { useNavigate } from 'react-router-dom';
+import { routes } from '../../constants/routesConstants';
 
 interface HeaderMenuProps {
     isOpen: boolean;
@@ -29,7 +30,7 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
             //redirect from page when user is not set, except when user has not logged yet (login, register, etc.)
             if (tokenStorage.getToken() && !userStore.user) {
                 console.error("Cannot access local user object on this widget! Redirecting...")
-                navigate("/")
+                navigate(routes.HOME)
             }
             else if (userStore.user)
                 setUser(userStore.user)

@@ -2,7 +2,7 @@ import { Avatar, Box, Button, DialogContent, FormControl, IconButton, InputAdorn
 import { forwardRef, useState } from "react"
 import { Controller } from "react-hook-form"
 import { UpdateUserFields, useCreateUpdateUserForm } from "../../hooks/react-hook-form/useCreateUpdateUser";
-import { UpdateUserType, UserType } from "../../models/user";
+import { UpdateUserType } from "../../models/user";
 import userStore from "../../stores/user.store";
 import isApiError from "../../utils/apiErrorChecker";
 import ErrorDisplay from "./ErrorDisplay";
@@ -54,8 +54,6 @@ const ProfileSettings = forwardRef((
 
     //form validation for updating user
     const { handleSubmit, errors, control } = useCreateUpdateUserForm({ defaultValues });
-    //initialize mutation hook for updating User
-    // const [registerUser] = useRegisterUserMutation()
 
     //toggle buttons for showing values inside password and confirm_password forms
     const [showPassword, setShowPassword] = useState(false);

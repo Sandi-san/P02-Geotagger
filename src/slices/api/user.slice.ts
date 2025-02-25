@@ -1,17 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { UserType } from '../../models/user';
-import { RootState } from '../../stores/configure.store';
 import { tokenStorage } from '../../utils/tokenStorage';
 import { UpdateUserFields } from '../../hooks/react-hook-form/useCreateUpdateUser';
-import { FetchPaginatedLocationType, LocationType } from '../../models/location';
-import { FetchGuessType, FetchPaginatedGuessType, GuessType } from '../../models/guess';
+import { FetchPaginatedLocationType } from '../../models/location';
+import { FetchPaginatedGuessType } from '../../models/guess';
 import { ActionType, FetchActionType } from '../../models/action';
 
 //api for /user route in backend 
 export const userSlice = createApi({
-  reducerPath: 'user', //identifier for this slice
+  reducerPath: 'user',
   baseQuery: fetchBaseQuery({
-    //base URL (matches backend)
     baseUrl: `${process.env.REACT_APP_BACKEND_DOMAIN}/user`,
     prepareHeaders: (headers) => {
       //retrieve user access_token from local storage 

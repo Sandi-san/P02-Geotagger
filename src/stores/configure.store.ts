@@ -27,19 +27,3 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 export default store
-
-/* USING API:
-const UserDetail = ({ userId }: { userId: string }) => {
-  const { data: user, error, isLoading } = useGetUserByIdQuery(userId);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading user</p>;
-
-  return (
-    <div>
-      <h1>{user.firstName} {user.lastName}</h1>
-      <p>Email: {user.email}</p>
-    </div>
-  );
-
-*/

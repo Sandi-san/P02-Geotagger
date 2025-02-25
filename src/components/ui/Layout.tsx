@@ -1,10 +1,6 @@
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { tokenStorage } from "../../utils/tokenStorage";
-import userStore from "../../stores/user.store";
-import fetchUser from "../../utils/fetchLocalUser";
-import { UserType } from "../../models/user";
 import { Box } from "@mui/material";
 
 interface Props {

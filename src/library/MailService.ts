@@ -11,17 +11,18 @@ export class MailService {
         },
     });
 
-    async sendPasswordResetRequest(email: string, token: string){
+    async sendPasswordResetRequest(email: string, token: string) {
         const resetUrl = `${process.env.FRONTEND_DOMAIN}/reset-password?token=${token}`;
-    
+
         await this.transporter.sendMail({
             from: '"Guess Location App" <no-reply@geotagger.com>',
             to: email,
             subject: 'Password Reset Request',
             text: `You requested a password reset. Your reset token is: ${token} Click the link to reset your password: ${resetUrl}`,
-            html: `<p>You requested a password reset. Your reset token is: <b>${token}</b> Click the link to reset your password:</p>
+            html: `<p>You requested a password reset. Your reset token is: <b>${token}</b></p>
+                    <p>Follow the link to reset your password:</p>
                    <a href="${resetUrl}">${resetUrl}</a>`,
-          });
+        });
     }
 
     async testConnection() {

@@ -33,7 +33,6 @@ export class AuthController {
   /*
   CREATE NEW USER
   */
-  //TODO: upload image
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async register(@Body() dto: UserRegisterDto): Promise<{ access_token: string }> {

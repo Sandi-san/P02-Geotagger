@@ -90,7 +90,7 @@ export class GuessService {
                     }
                 }
             })
-            console.log("Guess: ", guess)
+            // console.log("Guess: ", guess)
             return guess
         }
         catch (error) {

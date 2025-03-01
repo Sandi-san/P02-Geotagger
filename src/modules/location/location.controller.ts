@@ -53,7 +53,6 @@ export class LocationController {
         @GetLoggedUser('') user: User,
         @Body() dto: CreateLocationDto
     ): Promise<Location> {
-        //TODO: add image on creation
         return this.locationService.create(user, dto)
     }
 

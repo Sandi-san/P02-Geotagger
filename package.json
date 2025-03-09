@@ -9,7 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "prisma generate && node dist/main.js",
+    "postinstall": "prisma generate",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -25,6 +26,8 @@
     "test:e2e": "cross-env NODE_ENV=test jest --runInBand --config ./test/jest-e2e.config.json"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.758.0",
+    "@aws-sdk/s3-request-presigner": "^3.758.0",
     "@nestjs/common": "^8.4.7",
     "@nestjs/config": "^2.0.0",
     "@nestjs/core": "^8.4.7",

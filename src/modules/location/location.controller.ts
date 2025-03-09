@@ -7,9 +7,11 @@ import { JwtAuthGuard } from '../auth/jwt';
 import { CreateLocationDto, UpdateLocationDto } from './dto';
 import { GetLoggedUser } from '../auth/decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveImageToStorage } from 'src/common/helpers/image-storage.helper';
-import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
+import { saveImageToStorage } from 'src/common/helpers/local-image-storage.helper';
+import { saveImageLocally } from 'src/common/middleware/local-image-storage.middleware';
 import { CreateGuessDto } from '../guess/dto/guess-create.dto';
+import { uploadImageToS3 } from 'src/common/middleware/remote-image-storage.middleware';
+import { saveImageToRemote } from 'src/common/helpers/remote-image-storage.helper';
 
 @ApiTags('location')
 @Controller('location')
@@ -91,15 +93,18 @@ export class LocationController {
         },
     })
     //'image' must have same name as 'id' in frontend
-    @UseInterceptors(FileInterceptor('image', saveImageToStorage))
+    // @UseInterceptors(FileInterceptor('image', saveImageToStorage)) //local
+    @UseInterceptors(FileInterceptor('image', saveImageToRemote)) //remote
     async updateImage(
         @Param('id', ParseIntPipe) id: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<Location> {
         Logger.log(file);
         //console.log(file)
-        //call method that saves image file in /files folder    
-        const filename = await saveImageLocally(file)
+        
+        //call method that saves image file
+        const filename = await saveImageLocally(file) //locally in /files
+        // const filename = await uploadImageToS3(file) //upload to AWS S3 bucket (remote)
         return this.locationService.updateImage(id, filename);
     }
 

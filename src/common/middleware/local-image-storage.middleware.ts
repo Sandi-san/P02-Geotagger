@@ -1,6 +1,6 @@
 import { BadRequestException, Logger } from "@nestjs/common";
 import { join } from "path";
-import { isFileExtensionSafe, removeFile } from "../helpers/image-storage.helper";
+import { isFileExtensionSafe, removeFile } from "../helpers/local-image-storage.helper";
 import { promises as fs } from 'fs';
 
 export const saveImageLocally = async (

@@ -6,9 +6,11 @@ import { GetLoggedUser } from 'src/modules/auth/decorator/index';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto, CreateUserActionDto } from './dto/index';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveImageToStorage } from 'src/common/helpers/image-storage.helper';
-import { saveImageLocally } from 'src/common/middleware/image-storage.middleware';
+import { saveImageToStorage } from 'src/common/helpers/local-image-storage.helper';
+import { saveImageLocally } from 'src/common/middleware/local-image-storage.middleware';
 import { PaginatedResult } from 'src/common/interfaces/paginated-result.interface';
+import { uploadImageToS3 } from 'src/common/middleware/remote-image-storage.middleware';
+import { saveImageToRemote } from 'src/common/helpers/remote-image-storage.helper';
 
 @ApiTags('user')
 //so Swagger can input Authorization into request
@@ -75,15 +77,18 @@ export class UserController {
         },
     })
     //'image' must have same name as 'id' in frontend
-    @UseInterceptors(FileInterceptor('image', saveImageToStorage))
+    @UseInterceptors(FileInterceptor('image', saveImageToStorage)) //local
+    // @UseInterceptors(FileInterceptor('image', saveImageToRemote)) //remote
     async updateImage(
         @GetLoggedUser('') user: User,
         @UploadedFile() file: Express.Multer.File
     ): Promise<User> {
         Logger.log(file);
         //console.log(file)
-        //call method that saves image file in /files folder    
-        const filename = await saveImageLocally(file, user.image)
+        
+        //call method that saves image file
+        const filename = await saveImageLocally(file, user.image) //locally in /files
+        // const filename = await uploadImageToS3(file) //upload to AWS S3 bucket (remote)
         return this.userService.updateImage(user.id, filename);
     }
 

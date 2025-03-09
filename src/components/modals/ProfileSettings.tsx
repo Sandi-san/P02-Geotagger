@@ -24,13 +24,13 @@ const ProfileSettings = forwardRef((
     const handleShowPasswordForm = () => {
         setShowPasswordForm(true)
         setShowAvatarForm(false)
-        console.log(`Open Password form: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
+        // console.log(`Open Password form: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
     };
 
     const handleShowAvatarForm = () => {
         setShowAvatarForm(true)
         setShowPasswordForm(false)
-        console.log(`Open Password form: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
+        // console.log(`Open Password form: Pass: ${showPasswordForm} Avatar: ${showAvatarForm}`)
     };
 
     const handleClosePassword = () => {

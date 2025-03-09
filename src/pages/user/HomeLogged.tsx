@@ -159,6 +159,14 @@ const HomeLogged: FC = () => {
                     )}
                 </Box>
             )}
+            {/* Show text if no data */}
+            {guesses.length == 0 && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', paddingY: 2 }}>
+                    <Typography color='primary' variant='h4'>
+                        No data yet.
+                    </Typography>
+                </Box>
+            )}
             {/* Show error text if fetching fails */}
             {guessesError && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', paddingY: 2 }}>
@@ -219,6 +227,14 @@ const HomeLogged: FC = () => {
                             {isLoadingLocation ? 'Loading...' : 'Load more'}
                         </Button>
                     )}
+                </Box>
+            )}
+            {/* Show text if no data */}
+            {locations.length == 0 && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', paddingY: 2 }}>
+                    <Typography color='primary' variant='h4'>
+                        No data yet.
+                    </Typography>
                 </Box>
             )}
             {/* Show error text if fetching fails */}

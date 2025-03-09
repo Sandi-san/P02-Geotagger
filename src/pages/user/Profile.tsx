@@ -137,6 +137,7 @@ const Profile: FC = () => {
                         height: isMobile ? '10vh' : '12vh',
                         marginRight: 3,
                         marginLeft: 1,
+                        bgcolor: userImage ? '' : 'grey.400',
                     }}
                 />
                 <Typography

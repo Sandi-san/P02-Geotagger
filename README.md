@@ -1,163 +1,229 @@
-# GUESS LOCATION
+# GEOTAGGER
 
 <img alt="image" src="https://brotherants.com/skillupmentor/images/02-project-header.png" width="600px" /> 
 
-**Short description** :
+## Description:
 
-Create a Full-stack application that allows users to upload an image and mark the exact location on the Google map where the image was taken. Registered users then try to guess where the image was taken by placing a pin on the Google map. As a result, the app returns how accurately he chose the location (error distance).
+Geotagger is a dynamic full-stack application that allows users to upload an image and mark the exact location on a world map where the image was taken.
+Registered users then try to guess where the image was taken by placing a pin on the map. The app then returns how accurate the chosen location was to the original (error distance).
+Users can compete against one another by how close they guess to a certain location.
 
-User can play Guess game only if he has game points. With registration user gets 10 points. For every location that user uploads – user gets 10 points. For every guess user loses points:
-- First guess per same location: 1 point
-- Second guess per same location: 2 points 
-- Third and every other guess per same location: 3 points
-
-
-**Technologies you will use** :
-Html, Css, Bootstrap, MUI (ex. MaterialUI), Tailwind, Figma, JavaScript, Typescript, Node, NestJS, Express, React, Docker, Amazon AWS, Amazon S3, Git, GitHub, Jest, PostgreSQL, Prisma, JWT, Swagger, Trello, Redux Toolkit, RTK Query.
-
-<img alt="image" src="https://brotherants.com/skillupmentor/images/image5.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image7.png" width="30px" /> <img alt="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/800px-Bootstrap_logo.svg.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/mui-icon.png" width="30px" /> <img alt="image" src="https://d3mxt5v3yxgcsr.cloudfront.net/courses/7443/course_7443_image.jpg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image12.png" width="25px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image17.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image4.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image3.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image19.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image1.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image11.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image18.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image16.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/aws-s3-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image2.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image10.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/jest-icon.jpeg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image8.png" width="30px" /> <img alt="image" src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/287/square_480/prismaHD.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image14.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image9.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/swagger.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image13.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:1200/1*AJpFZrofvxMn3MHh9p3i_Q.jpeg" width="30px" /> <img alt="image" src="https://res.cloudinary.com/practicaldev/image/fetch/s--zQbdpCQF--/c_imagga_scale,f_auto,fl_progressive,h_1080,q_auto,w_1080/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yxh98gmx3eydfi4kbw08.png" width="30px" />
-
-***Alert:***
-
-- Use Swagger instead of Postman (https://docs.nestjs.com/openapi/introduction)
-- Use Prisma instead of TypeORM.
-- Add OAuth for registration and login.
-- Deploy to AWS is a must.
-- EndToEnd test is a must.
+Users can play the guess game only if they have game points. A registered user starts with 10 points, and gains 10 points for every new location they upload. User loses guess points by guessing on a location:
+- First guess on specific location: 1 point
+- Second guess on specific location: 2 points 
+- Third and every subsequent guess on specific location: 3 points
 
 
-**Pre-requirements** :
+## Technologies used:
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image3.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image19.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image1.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/jest-icon.jpeg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image8.png" width="30px" /> <img alt="image" src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/287/square_480/prismaHD.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image14.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/swagger.png" width="30px" /> <img alt="image" src="https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:450/1*vSuf2h3TCpcUuTwsMzsI_w.png" width="30px" />
 
-- all from 01-project
-- Google account (for maps)
+**Backend:**
+- NodeJS (main environment)
+- NestJS (main application structure)
+- Express (main framework)
+- Jest (test module)
+- PostgreSQL (database manager)
+- Prisma (database connection)
+- JWT (token authentication)
+- Swagger (API documentation)
+- Nodemailer (email service)
+- Google OAuth2 (login with google)
 
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image5.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image7.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/mui-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image11.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:1200/1*AJpFZrofvxMn3MHh9p3i_Q.jpeg" width="30px" /> <img alt="image" src="https://images.velog.io/images/jungsangu/post/7b8d2e90-49f0-45cd-8701-34bed5d1f4a6/logo_waifu2x_art_scale_tta_1.png" width="30px" />
 
-**Prepared** :
+**Frontend:**
+- HTML (browser display)
+- CSS (browser styling)
+- MUI (CSS styling)
+- React (main application structure)
+- Redux Toolkit (state management)
+- RTK Query (data manipulation)
 
-- Figma design and UX for frontend
-- Tests for users are prepared
-- API in NestJS for user prepared
-- Credentials for PostgreSQL DBMS (use local database and before deploying ask for credentials to our database).
-- Trello template for managing tasks
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image17.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image4.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image12.png" width="25px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image18.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image16.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/aws-s3-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image2.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image10.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image13.png" width="30px" />
 
-**Use** :
-- The latest stable Node
-- **Typescript**
-- For DBMS use PostgreSQL
-- Latest stable NestJS with Express.js framework (**Typescript**)
-- Git &amp; GitHub (create separate Git for backend and frontend)
-- Latest stable ReactJS for frontend (with **TypeScript** )
-- MUI or Bootstrap or Tailwind (choose different technology that you used for 01-project)
-- Jest for tests
-- Trello (Breakdown task, Estimate time for task)
-- Redux Toolkit for state management in ReactJS.
-- RTK Query for data manipulation in ReactJS.
-
-
-**Required functionality** :
-- JWT token authentication
-- Implement forgot password functionality (send reset token to user email)
-- Add latest OAuth (google, facebook).
-- File upload on Amazon S3
-- JSON server responses
-- Implement general error handling. On root component add ModalComponent that will display general server error, if something goes wrong with any request. Displaying of this modal component can be triggered from anywhere in the app (use state management).
-- Docker
--  Docker: For local environment configuration (database, env vars, ...)
--  Docker: Dockerfile for building a docker image from the application code
-- Deploy backend Docker Container on AWS
-- Deploy frontend on AWS S3
-- **Think about security issues that can emerge (https://owasp.org/www-project-top-ten).**
-- Tests (backend only) - EndToEnd test
--  Tests: All your endpoints must have at least one test, multiple edge case tests are a bonus
--  Tests: All tests must pass
--  Tests: Separate environment for testing
-- Implement Logging (logger)
-- Implement Cors (Cross-origin resource sharing)
-- Reactive form validation
-- Migrations for database
-- Figma pixel perfect design
-- Swagger for API documentation
-- Use .ENV for database credentials (security).
-- **Write at least one custom react hook (example: https://www.w3schools.com/react/react_customhooks.asp).**
-
-**Special part (required)**
-You need to create a log of all the actions a user performs on the frontend and store them in the database. The actions you need to log are:
-- clicks
-- scrolls
-- user inputs (textbox, dropdown, checkbox, radio changes)
-
-**You need to store in the database:**
-- user
-- action (click, scroll, added value, changed value, removed value)
-- component type (link, button, input type (null if the action was scroll))
-- new value
-- location of the action (URL)
-
-Then allow the administrator to view the last 100 entities saved (but all action must be saved in database). Since there is a relatively large number of actions stored in the database, consider how to structure the database, what data types to use, and what improvements can be done in the database so that it will provide data quicker. Also, consider how to separate the administrator from the normal users.
-There is no Figma design for this part, so you can customize the design for this part yourself so it makes sense. Do not spend too much time on the design of this part.
-
-**Don&#39;t forget** :
-- Prepare Readme.md to describe the application in GitHub.
-- Maintain a consistent code style (Usage of linters/prettifiers is recommended).
-- Divide the tasks in Trello according to the instructions. For each task estimated time (in hours) for completing the task.
-- Branch each task in Github (GitFlow).
-
-**Design and explanation** :
-- [Link to Figma](https://www.figma.com/file/DmN8FJw8sB664weoiYY7na/Geotagger-2023?type=design&mode=design)
-- For location save only latitude and longitude (location name is optional).
-
-**Description** :
-The REST API should provide adequate JSON responses to these endpoints. The **bolded** endpoints are authenticated calls. Select the appropriate REST calls (get, put, post, delete) by yourself.
-
-Endpoints (add other endpoints that you need):
-/auth/login
-/auth/register
-
-/location
-
-```Return list of latest locations (you can add pagination)```
-
-/location/random 
-
-```Return random location```
-
-/location 
-
-```Create location```
-
-/location/guess/:id 
-
-```Guess the location lat/lon```
-
-***Explanation***:
-- For calculating distance, you can use Google Maps API or you can use PostgreSQL PostGIS ([https://postgis.net/](https://postgis.net/)).
-- You will have to make pagination (on the backend) for displaying a list of locations.
-- Upload user avatar images on AWS S3 is required.
+**Other:**
+- JS (programming)
+- TS (typed JS)
+- Figma (frontend design)
+- Docker (packaging)
+- AWS (remote deployment)
+- AWS S3 (remote file saving)
+- Git, GitHub (versioning)
+- Trello (task management)
+- JSON (API data structure)
 
 
-**Material (tutorials …)**:
-- <a href="https://ionian-pram-941.notion.site/SkillUp-Mentor-Pre-Boarding-SLO-6867a8fefbee4e6c8e073a72c0119aa2" target="_blank">Pre-boarding document</a>
-- <a href="https://trello.com/b/zDGE8zl0/project-template" target="_blank">Trello template</a>
-- <a href="https://ionian-pram-941.notion.site/SkillUp-Mentor-Project-Materials-ENG-951d7f30080a43cb8363c5daa32e08be" target="_blank">Project materials</a>
-- Jest for test
-- End to end testing 
-- MaterialUI + Styled ([https://mui.com/system/styled/](https://mui.com/system/styled/))
-- Swagger
-- Logging
-- Cors
-- Form validation
+## Installation:
 
-**But first**:
-- Share your GitHub repository with mentors@skillupmentor.com
-- Share your Trello board with mentors@skillupmentor.com
+1. Open command prompt in directory where you want to run the project.
+2. Download Node Package Manager (NPM): [Node.js](https://nodejs.org/)
+3. Clone this repo:
+   ```sh
+   git clone https://github.com/Sandi-san/P02-Geotagger.git
+4. Navigate to project directory (example):
+    ```sh
+   cd P02-Geotagger
+5.	Install project dependencies:
+    ```sh
+    npm install
+6.	Configure project:
+  - Create database
+  - Create credentials in `.env` file
+    ```sh
+    DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/DB_NAME?schema=public"
+    JWT_SECRET="YOUR_JWT_TOKEN"
+7.	Run the application:
+    ```sh
+    npm run
+8.	Access the API documentation on URL: http://localhost:8080/
 
-**Use Functional Components in React!**
 
-<img alt="Use Functional Components in React!" src="https://brotherants.com/skillupmentor/images/functional-class-compnent.png" width="600px" />
+## Endpoints
 
-**CODE REVIEW**:
-When you finish the project, apply for a code review: <a href="https://forms.gle/sxtxWrzJaom81Dxx8" target="_blank">Code review apply</a>
+The backend portion of the project consists of API endpoint routes that the frontend portion of the application calls to receive or change data in the database.
 
-**Disclaimer :**
+The endpoints expect and return requests in JSON format. They consist of three main classes: User, Location, and Guess. User is split into two classes: User and Auth.
 
-*This assignment is protected with SkillUp Mentor copyright. The Candidate may upload the assignment on his closed profile on GitHub (or other platform), but any other reproduction and distribution of the assignment itself or the assignment&#39;s solutions without written permission of SkillUp Mentor is prohibited.*
+All available endpoint routes are noted below. The **bolded endpoints** require authentication to be accessed: `Authorization: Bearer "TOKEN_VALUE"`. Bolded arguments are **required**.
+
+### Auth class:
+
+- POST /auth/login
+
+    Login as a user (**email, password**).
+
+- POST /auth/register
+
+    Register with a new user profile (first name, last name, **email, password**).
+
+- POST /auth/forgotten-password
+
+    Sends a reset password token to a certain email address (**email**).
+
+- POST /auth/reset-password
+
+    Reset the user's password (**reset_token, password, confirm password**). The reset token is uniquely tied to the account of the change. 
+
+- GET /auth/google
+
+    Redirects the user to the Google OAuth login page.
+
+- GET /auth/google/redirect
+
+    Retrieves Google OAuth data. Used to login or register a user with OAuth data.
+
+
+### User class:
+
+- **GET /user**
+    
+    Returns the user data of the currently logged user.
+    
+- **PATCH /user/update**
+    
+    Updates user's basic data (firstName, lastName, email).
+
+- **PATCH /user/update-password**
+    
+    Updates user's password only (**password, confirm_password, new_password**).
+
+- **POST /user/update-image**
+    
+    Uploads image file and updates user's image entity (**image**).
+
+- **GET /user/locations**
+    
+    Returns paginated locations made by user (page, take). Recieves the page number and number of elements to fetch.
+
+- **GET /user/guesses**
+    
+    Returns paginated guesses made by user (page, take). 
+
+- **POST /user/actions**
+    
+    Posts an array of actions made by user (**actions**: {action, type, newValue, url, timestamp}).
+
+- **GET /user/actions**
+    
+    Returns the last 100 actions saved within the database.
+
+
+### Location class:
+
+- GET /location
+    
+    Returns paginated locations made by all users (page, take). Recieves the page number and number of elements to fetch.
+    
+- **POST /location**
+    
+    Creates new location (image, **lat, lon**, address).
+    
+- GET /location/{id}
+    
+    Returns a certain location with a specific id.
+    
+- **PATCH /location/{id}**
+    
+    Updates a certain location with a specific id (image, lat, lon, address).
+    
+- **DELETE /location/{id}**
+    
+    Deletes a certain location with a specific id.
+
+- **POST /location/{id}/update-image**
+    
+    Uploads image file and updates a certain location's image entity (**image**).
+    
+- **POST /location/{id}/guess**
+    
+    Creates a new guess for a certain location with a specific id (**lat, lon**).
+    
+- **GET /location/{id}/guesses**
+    
+    Returns all guesses from a certain location with a specific id.
+    
+
+## Database scheme:
+
+To access the database, use the `npx prisma studio` command.
+
+The database scheme can be found in the following path: `prisma/schema.prisma`
+
+To generate database tables from the scheme, use the `npx prisma migrate dev` command.
+
+
+## Mail service:
+
+This application uses **Nodemailer** as a mail service for sending reset tokens to emails for resetting passwords.
+
+To enable this functionality, add the following variables to your `.env` file:
+```sh
+EMAIL_USER="YOUR_HOST_EMAIL"
+EMAIL_PASS="YOUR_GENERATED_PASSWORD"
+```
+You can create `YOUR_GENERATED_PASSWORD` by following the next steps:
+
+1. Go to your **Google account** settings.
+2. Go to **Security**.
+3. Enable **2-Step Verification**.
+4. Go to **app passwords** section in your Google account and **create a new app instance**.
+5. **Generate the application password** and save it into your `.env` file.
+
+
+## Google OAuth:
+
+This application supports registration and login using **Google OAuth**.
+
+To enable this functionality, add the following variables to your `.env` file:
+```sh
+GOOGLE_CLIENT_ID="YOUR_CLIENT_ID"
+GOOGLE_CLIENT_SECRET="YOUR_CLIENT_SECRET"
+```
+You can create `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` by following the next steps:
+
+1. Go to your **Google Cloud console**.
+2. Create a new **project**.
+3. In the console, select the **APIs and Services** tab and go to **Credentials**.
+4. Create a new **credential**.
+5. Fill the necessary requirements and add the following route to the **Authorized redirect URIs** section: `http://localhost:8080/auth/google/redirect`
+6. Go back to the **Credentials** page and look under your newly created credential to get the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` variables and save them to your `.env` file.

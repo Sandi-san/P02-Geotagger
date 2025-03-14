@@ -1,163 +1,193 @@
-# GUESS LOCATION
+# GEOTAGGER
 
 <img alt="image" src="https://brotherants.com/skillupmentor/images/02-project-header.png" width="600px" /> 
 
-**Short description** :
+## Description:
 
-Create a Full-stack application that allows users to upload an image and mark the exact location on the Google map where the image was taken. Registered users then try to guess where the image was taken by placing a pin on the Google map. As a result, the app returns how accurately he chose the location (error distance).
+Geotagger is a dynamic full-stack application that allows users to upload an image and mark the exact location on a world map where the image was taken.
+Registered users then try to guess where the image was taken by placing a pin on the map. The app then returns how accurate the chosen location was to the original (error distance).
+Users can compete against one another by how close they guess to a certain location.
 
-User can play Guess game only if he has game points. With registration user gets 10 points. For every location that user uploads – user gets 10 points. For every guess user loses points:
-- First guess per same location: 1 point
-- Second guess per same location: 2 points 
-- Third and every other guess per same location: 3 points
-
-
-**Technologies you will use** :
-Html, Css, Bootstrap, MUI (ex. MaterialUI), Tailwind, Figma, JavaScript, Typescript, Node, NestJS, Express, React, Docker, Amazon AWS, Amazon S3, Git, GitHub, Jest, PostgreSQL, Prisma, JWT, Swagger, Trello, Redux Toolkit, RTK Query.
-
-<img alt="image" src="https://brotherants.com/skillupmentor/images/image5.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image7.png" width="30px" /> <img alt="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/800px-Bootstrap_logo.svg.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/mui-icon.png" width="30px" /> <img alt="image" src="https://d3mxt5v3yxgcsr.cloudfront.net/courses/7443/course_7443_image.jpg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image12.png" width="25px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image17.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image4.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image3.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image19.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image1.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image11.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image18.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image16.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/aws-s3-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image2.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image10.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/jest-icon.jpeg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image8.png" width="30px" /> <img alt="image" src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/287/square_480/prismaHD.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image14.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image9.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/swagger.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image13.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:1200/1*AJpFZrofvxMn3MHh9p3i_Q.jpeg" width="30px" /> <img alt="image" src="https://res.cloudinary.com/practicaldev/image/fetch/s--zQbdpCQF--/c_imagga_scale,f_auto,fl_progressive,h_1080,q_auto,w_1080/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yxh98gmx3eydfi4kbw08.png" width="30px" />
-
-***Alert:***
-
-- Use Swagger instead of Postman (https://docs.nestjs.com/openapi/introduction)
-- Use Prisma instead of TypeORM.
-- Add OAuth for registration and login.
-- Deploy to AWS is a must.
-- EndToEnd test is a must.
+Users can play the guess game only if they have game points. A registered user starts with 10 points, and gains 10 points for every new location they upload. User loses guess points by guessing on a location:
+- First guess on specific location: 1 point
+- Second guess on specific location: 2 points 
+- Third and every subsequent guess on specific location: 3 points
 
 
-**Pre-requirements** :
+## Technologies used:
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image3.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image19.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image1.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/jest-icon.jpeg" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image8.png" width="30px" /> <img alt="image" src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/287/square_480/prismaHD.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image14.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/swagger.png" width="30px" /> <img alt="image" src="https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:450/1*vSuf2h3TCpcUuTwsMzsI_w.png" width="30px" />
 
-- all from 01-project
-- Google account (for maps)
+**Backend:**
+- NodeJS (main environment)
+- NestJS (main application structure)
+- Express (main framework)
+- Jest (test module)
+- PostgreSQL (database manager)
+- Prisma (database connection)
+- JWT (token authentication)
+- Swagger (API documentation)
+- Nodemailer (email service)
+- Google OAuth2 (login with google)
 
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image5.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image7.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/mui-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image11.png" width="30px" /> <img alt="image" src="https://miro.medium.com/v2/resize:fit:1200/1*AJpFZrofvxMn3MHh9p3i_Q.jpeg" width="30px" /> <img alt="image" src="https://images.velog.io/images/jungsangu/post/7b8d2e90-49f0-45cd-8701-34bed5d1f4a6/logo_waifu2x_art_scale_tta_1.png" width="30px" />
 
-**Prepared** :
+**Frontend:**
+- HTML (browser display)
+- CSS (browser styling)
+- MUI (CSS styling)
+- React (main application structure)
+- Redux Toolkit (state management)
+- RTK Query (data manipulation)
 
-- Figma design and UX for frontend
-- Tests for users are prepared
-- API in NestJS for user prepared
-- Credentials for PostgreSQL DBMS (use local database and before deploying ask for credentials to our database).
-- Trello template for managing tasks
+<img alt="image" src="https://brotherants.com/skillupmentor/images/image17.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image4.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image12.png" width="25px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image18.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image16.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/aws-s3-icon.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image2.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image10.png" width="30px" /> <img alt="image" src="https://brotherants.com/skillupmentor/images/image13.png" width="30px" />
 
-**Use** :
-- The latest stable Node
-- **Typescript**
-- For DBMS use PostgreSQL
-- Latest stable NestJS with Express.js framework (**Typescript**)
-- Git &amp; GitHub (create separate Git for backend and frontend)
-- Latest stable ReactJS for frontend (with **TypeScript** )
-- MUI or Bootstrap or Tailwind (choose different technology that you used for 01-project)
-- Jest for tests
-- Trello (Breakdown task, Estimate time for task)
-- Redux Toolkit for state management in ReactJS.
-- RTK Query for data manipulation in ReactJS.
-
-
-**Required functionality** :
-- JWT token authentication
-- Implement forgot password functionality (send reset token to user email)
-- Add latest OAuth (google, facebook).
-- File upload on Amazon S3
-- JSON server responses
-- Implement general error handling. On root component add ModalComponent that will display general server error, if something goes wrong with any request. Displaying of this modal component can be triggered from anywhere in the app (use state management).
-- Docker
--  Docker: For local environment configuration (database, env vars, ...)
--  Docker: Dockerfile for building a docker image from the application code
-- Deploy backend Docker Container on AWS
-- Deploy frontend on AWS S3
-- **Think about security issues that can emerge (https://owasp.org/www-project-top-ten).**
-- Tests (backend only) - EndToEnd test
--  Tests: All your endpoints must have at least one test, multiple edge case tests are a bonus
--  Tests: All tests must pass
--  Tests: Separate environment for testing
-- Implement Logging (logger)
-- Implement Cors (Cross-origin resource sharing)
-- Reactive form validation
-- Migrations for database
-- Figma pixel perfect design
-- Swagger for API documentation
-- Use .ENV for database credentials (security).
-- **Write at least one custom react hook (example: https://www.w3schools.com/react/react_customhooks.asp).**
-
-**Special part (required)**
-You need to create a log of all the actions a user performs on the frontend and store them in the database. The actions you need to log are:
-- clicks
-- scrolls
-- user inputs (textbox, dropdown, checkbox, radio changes)
-
-**You need to store in the database:**
-- user
-- action (click, scroll, added value, changed value, removed value)
-- component type (link, button, input type (null if the action was scroll))
-- new value
-- location of the action (URL)
-
-Then allow the administrator to view the last 100 entities saved (but all action must be saved in database). Since there is a relatively large number of actions stored in the database, consider how to structure the database, what data types to use, and what improvements can be done in the database so that it will provide data quicker. Also, consider how to separate the administrator from the normal users.
-There is no Figma design for this part, so you can customize the design for this part yourself so it makes sense. Do not spend too much time on the design of this part.
-
-**Don&#39;t forget** :
-- Prepare Readme.md to describe the application in GitHub.
-- Maintain a consistent code style (Usage of linters/prettifiers is recommended).
-- Divide the tasks in Trello according to the instructions. For each task estimated time (in hours) for completing the task.
-- Branch each task in Github (GitFlow).
-
-**Design and explanation** :
-- [Link to Figma](https://www.figma.com/file/DmN8FJw8sB664weoiYY7na/Geotagger-2023?type=design&mode=design)
-- For location save only latitude and longitude (location name is optional).
-
-**Description** :
-The REST API should provide adequate JSON responses to these endpoints. The **bolded** endpoints are authenticated calls. Select the appropriate REST calls (get, put, post, delete) by yourself.
-
-Endpoints (add other endpoints that you need):
-/auth/login
-/auth/register
-
-/location
-
-```Return list of latest locations (you can add pagination)```
-
-/location/random 
-
-```Return random location```
-
-/location 
-
-```Create location```
-
-/location/guess/:id 
-
-```Guess the location lat/lon```
-
-***Explanation***:
-- For calculating distance, you can use Google Maps API or you can use PostgreSQL PostGIS ([https://postgis.net/](https://postgis.net/)).
-- You will have to make pagination (on the backend) for displaying a list of locations.
-- Upload user avatar images on AWS S3 is required.
+**Other:**
+- JS (programming)
+- TS (typed JS)
+- Figma (frontend design)
+- Docker (packaging)
+- AWS (remote deployment)
+- AWS S3 (remote file saving)
+- Git, GitHub (versioning)
+- Trello (task management)
+- JSON (API data structure)
 
 
-**Material (tutorials …)**:
-- <a href="https://ionian-pram-941.notion.site/SkillUp-Mentor-Pre-Boarding-SLO-6867a8fefbee4e6c8e073a72c0119aa2" target="_blank">Pre-boarding document</a>
-- <a href="https://trello.com/b/zDGE8zl0/project-template" target="_blank">Trello template</a>
-- <a href="https://ionian-pram-941.notion.site/SkillUp-Mentor-Project-Materials-ENG-951d7f30080a43cb8363c5daa32e08be" target="_blank">Project materials</a>
-- Jest for test
-- End to end testing 
-- MaterialUI + Styled ([https://mui.com/system/styled/](https://mui.com/system/styled/))
-- Swagger
-- Logging
-- Cors
-- Form validation
+## Installation:
 
-**But first**:
-- Share your GitHub repository with mentors@skillupmentor.com
-- Share your Trello board with mentors@skillupmentor.com
+1. Open command prompt in directory where you want to run the project.
+2. Download Node Package Manager (NPM): [Node.js](https://nodejs.org/)
+3. Clone this repo:
+   ```sh
+   git clone https://github.com/Sandi-san/P02-Geotagger.git
+4. Navigate to project directory (example):
+    ```sh
+   cd P02-Geotagger
+5.	Install project dependencies:
+    ```sh
+    npm install
+6.	Configure project:
+  - Create database
+  - Create credentials in `.env` file
+    ```sh
+    REACT_APP_BACKEND_DOMAIN="YOUR_BACKEND_DOMAIN"
+7.	Run the application:
+    ```sh
+    npm run start
+8.	Access the web application on URL: http://localhost:3000
 
-**Use Functional Components in React!**
+## Structure:
 
-<img alt="Use Functional Components in React!" src="https://brotherants.com/skillupmentor/images/functional-class-compnent.png" width="600px" />
+The design of the web application is based on the following [Figma design](https://www.figma.com/design/DmN8FJw8sB664weoiYY7na/Geotagger-2023?node-id=0-1&p=f&t=q0hxFArijgD3EIVj-0).
 
-**CODE REVIEW**:
-When you finish the project, apply for a code review: <a href="https://forms.gle/sxtxWrzJaom81Dxx8" target="_blank">Code review apply</a>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A1.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A2.png" width="1000px" />
 
-**Disclaimer :**
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A3.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A4.png" width="1000px" />
 
-*This assignment is protected with SkillUp Mentor copyright. The Candidate may upload the assignment on his closed profile on GitHub (or other platform), but any other reproduction and distribution of the assignment itself or the assignment&#39;s solutions without written permission of SkillUp Mentor is prohibited.*
+
+## Design:
+
+The frontend is split into multiple tabs depending on main functionality:
+- Landing pages (home, login, register, **reset & forgotten password**)
+- Profile
+- Location (add, edit, guesses)
+- Activity log & others
+
+### Landing pages:
+
+**Home (Unlogged):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B1.png" width="1000px" /><br>
+The main landing page that displays as the index page, showing recently uploaded locations and options to log in. 
+
+**Login:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B2.png" width="1000px" /><br>
+The page used for an existing user to log in with their credentials.
+
+**Register:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B3.png" width="1000px" /><br>
+The page allowing the user to create a new profile on the application.
+
+**Forgotten password (not shown in design):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B4.png" width="1000px" /><br>
+The page used for sending a reset token to a user's email for resetting their password.
+
+**Reset password (not shown in design and hidden):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B5.png" width="1000px" /><br>
+The page the user can access in their reset password email, allowing them to set a new password for their account without login.
+
+
+### Profile:
+
+**Home (Logged):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C1.png" width="1000px" /><br>
+The main landing page when the user is logged in, showing their best guesses and the recently created locations.
+
+**Profile:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C2.png" width="1000px" /><br>
+The user's personal profile page, showing their best guesses and uploaded locations, also allowing for editing and deleting the latter.
+
+**Profile settings (popup form):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C3.png" width="300px" /><br>
+The logged user can change their credentials; first and last name, as well as the email.
+
+**Profile password (popup form):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C4.png" width="300px" /><br>
+The logged user can change their current password.
+
+**Profile image (popup form):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C5.png" width="300px" /><br>
+The logged user can add or change their avatar image.
+
+
+### Location:
+
+**Add location:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D1.png" width="1000px" /><br>
+The page for creating a new location with the specific image and position on the world map.
+
+**Edit location:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D2.png" width="1000px" /><br>
+The page for editing an existing location with the option of changing the image and address name.
+
+**Delete location (popup):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D3.png" width="300px" /><br>
+A confirmation form for when the user tries to delete any of their locations.
+
+**Location:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D4.png" width="1000px" /><br>
+The page for displaying the location, along with the image and the option to guess it's position. On the right side of the page is the leaderboard of the top guesses, with the current user's guesses highlighted in green.
+
+
+### Activity log & other:
+
+**Activity log (hidden for non-admin users):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E1.png" width="1000px" /><br>
+The page allows **admin users** to view the last 100 actions of other users created on the database.
+
+**Information changed (popup):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E2.png" width="300px" /><br>
+An information popup modal that informs the user that their settings were changed successfully.
+
+**Delete confirmation (popup):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E3.png" width="300px" /><br>
+An information popup modal that informs the user that their location was deleted successfully.
+
+**Error modal (popup):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E4.png" width="300px" /><br>
+An information popup modal that displays whenever the backend API returns an error that isn't otherwise handled by the application.
+
+
+## Mobile design:
+
+Every page has a subsequent **mobile design** used for displaying on smaller resolutions. Most designs scale down the text and elements, but some change the page layout entirely. Here are some examples of the mobile variations of pages which differ from the default:
+
+**Home (Logged):**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F1.png" width="300px" />
+
+**Activity log:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F2.png" width="300px" />
+
+**Header menu:**<br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F3.png" width="300px" />

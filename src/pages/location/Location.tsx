@@ -279,7 +279,7 @@ const Location: FC<LocationProps> = ({ locationId }) => {
                         marginLeft: isUnpadded.isMobile ? 1 : 2,
                         marginRight: isUnpadded.isMobile ? '2vh' : '8vh',
                         marginTop: isMobile ? 4 : 0,
-                        marginX: isMobile ? '7vh' : 0,
+                        marginX: isMobile ? '7vh' : isUnpadded.isMobile ? '2vh' : '4vh',
                         marginBottom: isMobile ? 8 : 0,
                     }}>
                     <GuessesLeaderboard locationId={locationId} refreshKey={refreshKey} />

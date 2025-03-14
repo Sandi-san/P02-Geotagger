@@ -80,11 +80,11 @@ Users can play the guess game only if they have game points. A registered user s
 
 The design of the web application is based on the following [Figma design](https://www.figma.com/design/DmN8FJw8sB664weoiYY7na/Geotagger-2023?node-id=0-1&p=f&t=q0hxFArijgD3EIVj-0).
 
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A1.png" width="1000px" /><br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A2.png" width="1000px" />
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A1.jpg" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A2.jpg" width="1000px" />
 
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A3.png" width="1000px" /><br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A4.png" width="1000px" />
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A3.jpg" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/A4.jpg" width="1000px" />
 
 
 ## Design:
@@ -98,84 +98,84 @@ The frontend is split into multiple tabs depending on main functionality:
 ### Landing pages:
 
 **Home (Unlogged):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B1.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B1.jpg" width="1000px" /><br>
 The main landing page that displays as the index page, showing recently uploaded locations and options to log in. 
 
 **Login:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B2.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B2.jpg" width="1000px" /><br>
 The page used for an existing user to log in with their credentials.
 
 **Register:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B3.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B3.jpg" width="1000px" /><br>
 The page allowing the user to create a new profile on the application.
 
 **Forgotten password (not shown in design):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B4.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B4.jpg" width="1000px" /><br>
 The page used for sending a reset token to a user's email for resetting their password.
 
 **Reset password (not shown in design and hidden):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B5.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/B5.jpg" width="1000px" /><br>
 The page the user can access in their reset password email, allowing them to set a new password for their account without login.
 
 
 ### Profile:
 
 **Home (Logged):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C1.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C1.jpg" width="1000px" /><br>
 The main landing page when the user is logged in, showing their best guesses and the recently created locations.
 
 **Profile:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C2.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C2.jpg" width="1000px" /><br>
 The user's personal profile page, showing their best guesses and uploaded locations, also allowing for editing and deleting the latter.
 
 **Profile settings (popup form):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C3.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C3.jpg" width="300px" /><br>
 The logged user can change their credentials; first and last name, as well as the email.
 
 **Profile password (popup form):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C4.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C4.jpg" width="300px" /><br>
 The logged user can change their current password.
 
 **Profile image (popup form):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C5.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/C5.jpg" width="300px" /><br>
 The logged user can add or change their avatar image.
 
 
 ### Location:
 
 **Add location:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D1.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D1.jpg" width="1000px" /><br>
 The page for creating a new location with the specific image and position on the world map.
 
 **Edit location:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D2.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D2.jpg" width="1000px" /><br>
 The page for editing an existing location with the option of changing the image and address name.
 
 **Delete location (popup):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D3.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D3.jpg" width="300px" /><br>
 A confirmation form for when the user tries to delete any of their locations.
 
 **Location:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D4.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/D4.jpg" width="1000px" /><br>
 The page for displaying the location, along with the image and the option to guess it's position. On the right side of the page is the leaderboard of the top guesses, with the current user's guesses highlighted in green.
 
 
 ### Activity log & other:
 
 **Activity log (hidden for non-admin users):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E1.png" width="1000px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E1.jpg" width="1000px" /><br>
 The page allows **admin users** to view the last 100 actions of other users created on the database.
 
 **Information changed (popup):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E2.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E2.jpg" width="300px" /><br>
 An information popup modal that informs the user that their settings were changed successfully.
 
 **Delete confirmation (popup):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E3.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E3.jpg" width="300px" /><br>
 An information popup modal that informs the user that their location was deleted successfully.
 
 **Error modal (popup):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E4.png" width="300px" /><br>
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/E4.jpg" width="300px" /><br>
 An information popup modal that displays whenever the backend API returns an error that isn't otherwise handled by the application.
 
 
@@ -184,10 +184,10 @@ An information popup modal that displays whenever the backend API returns an err
 Every page has a subsequent **mobile design** used for displaying on smaller resolutions. Most designs scale down the text and elements, but some change the page layout entirely. Here are some examples of the mobile variations of pages which differ from the default:
 
 **Home (Logged):**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F1.png" width="300px" />
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F1.jpg" width="300px" />
 
 **Activity log:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F2.png" width="300px" />
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F2.jpg" width="300px" />
 
 **Header menu:**<br>
-<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F3.png" width="300px" />
+<img alt="image" src="https://github.com/Sandi-san/P02-Geotagger/raw/frontend/public/readme_images/F3.jpg" width="300px" />

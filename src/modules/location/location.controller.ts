@@ -93,13 +93,13 @@ export class LocationController {
         },
     })
     //'image' must have same name as 'id' in frontend
-    // @UseInterceptors(FileInterceptor('image', saveImageToStorage)) //local
-    @UseInterceptors(FileInterceptor('image', saveImageToRemote)) //remote
+    @UseInterceptors(FileInterceptor('image', saveImageToStorage)) //local
+    //@UseInterceptors(FileInterceptor('image', saveImageToRemote)) //remote
     async updateImage(
         @Param('id', ParseIntPipe) id: number,
         @UploadedFile() file: Express.Multer.File
     ): Promise<Location> {
-        Logger.log(file);
+        //Logger.log(file);
         //console.log(file)
         
         //call method that saves image file

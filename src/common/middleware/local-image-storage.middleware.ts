@@ -8,7 +8,8 @@ export const saveImageLocally = async (
     oldFileLocation?: string
 ): Promise<string> => {
     //save file locally
-    const filename = file?.filename;
+    const filename = file?.filename; //previously as this but now throws error
+    
     if (!filename)
         throw new BadRequestException('File must be of type png, jpg or jpeg!');
     const imagesFolderPath = join(process.cwd(), 'files');
@@ -28,8 +29,6 @@ export const saveImageLocally = async (
             }
         }
     }
-
-    //console.log(`Path: ${fullImagePath}`)
 
     //check if file is valid and then return new filename
     if (await isFileExtensionSafe(fullImagePath)) {

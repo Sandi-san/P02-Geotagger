@@ -68,10 +68,10 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
                         </Link>
                         {/* Text */}
                         <Link href="/" sx={{ textDecoration: 'none' }}>
-                        <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
-                            <span style={{ color: theme.palette.primary.main }}>Geo</span>
-                            <span style={{ color: theme.palette.primary.dark }}>tagger</span>
-                        </Typography>
+                            <Typography variant="h4" component="span" sx={{ alignItems: 'center' }}>
+                                <span style={{ color: theme.palette.primary.main }}>Geo</span>
+                                <span style={{ color: theme.palette.primary.dark }}>tagger</span>
+                            </Typography>
                         </Link>
                     </Box>
                     <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end", flexGrow: 1, marginRight: '4vh', marginTop: 1, }}>
@@ -99,36 +99,38 @@ const HeaderMenu = forwardRef<HTMLDivElement, HeaderMenuProps>(
                     <Box>
                         {/* Profile Avatar and User name */}
                         {tokenStorage.getToken() && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center', //vertical center
-                                    textAlign: 'left',
-                                    paddingBottom: '3vh',
-                                    marginLeft: '3vh',
-                                }}
-                            >
-                                <Avatar
-                                    src={getValidImagePath(user?.image) ? (getValidImagePath(user?.image)) :
-                                        ('/placeholder-avatar.png')}
+                            <Link href="/profile" sx={{ flex: 1, display: 'flex', textDecoration: 'none' }}>
+                                <Box
                                     sx={{
-                                        width: '8vh',
-                                        height: '8vh',
-                                        marginRight: 2,
-                                        marginLeft: 1,
-                                    }}
-                                />
-                                <Typography
-                                    variant="h4"
-                                    color="primary.dark"
-                                    sx={{
-                                        marginBottom: 0, //remove margin-bottom for better alignment
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center', //vertical center
+                                        textAlign: 'left',
+                                        paddingBottom: '3vh',
+                                        marginLeft: '3vh',
                                     }}
                                 >
-                                    {user?.firstName} {user?.lastName}
-                                </Typography>
-                            </Box>
+                                    <Avatar
+                                        src={getValidImagePath(user?.image) ? (getValidImagePath(user?.image)) :
+                                            ('/placeholder-avatar.png')}
+                                        sx={{
+                                            width: '8vh',
+                                            height: '8vh',
+                                            marginRight: 2,
+                                            marginLeft: 1,
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="h4"
+                                        color="primary.dark"
+                                        sx={{
+                                            marginBottom: 0, //remove margin-bottom for better alignment
+                                        }}
+                                    >
+                                        {user?.firstName} {user?.lastName}
+                                    </Typography>
+                                </Box>
+                            </Link>
                         )}
 
                         {/* Home link */}
